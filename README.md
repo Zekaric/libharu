@@ -136,3 +136,17 @@ to the following restrictions:
 
 3. Adobe Systems Inc.
    We thank Adobe Systems Inc. for publishing PDF specification.
+
+
+# Zekaric Updates
+
+## Non-breaking API changes, master branch
+
+- Windows Unicode Save to File.
+- Fix compiler warnings (Windows)
+
+## Breaking API changes, separate branch
+
+- Const Correctness.  This requires changing the haru prototypes and typedefs.  Hiding the fact that a type is a pointer, IMO, is bad form and adding const correctness can't use the existing types as they are defined.
+- Function renaming.  My OCD kicking in since all types and functions are changing anyway, I would rather see the functions named a little more intuitive (my opinion and taste.)
+- Change to some memory functions to avoid potential type cast and allocation type mismatch errors.  There were no errors, just my experience.

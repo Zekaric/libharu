@@ -75,16 +75,14 @@ LoadType1FontFromStream (HPDF_Doc     pdf,
 static const char*
 LoadTTFontFromStream (HPDF_Doc         pdf,
                       HPDF_Stream      font_data,
-                      HPDF_BOOL        embedding,
-                       const char      *file_name);
+                      HPDF_BOOL        embedding);
 
 
 static const char*
 LoadTTFontFromStream2 (HPDF_Doc         pdf,
                        HPDF_Stream      font_data,
                        HPDF_UINT        index,
-                       HPDF_BOOL        embedding,
-                       const char      *file_name);
+                       HPDF_BOOL        embedding);
 
 
 /*---------------------------------------------------------------------------*/
@@ -774,6 +772,29 @@ HPDF_SaveToFile  (HPDF_Doc     pdf,
     return HPDF_CheckError (&pdf->error);
 }
 
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_SaveToFileW  (HPDF_Doc     pdf,
+                  const wchar_t  *file_name)
+{
+    HPDF_Stream stream;
+
+    HPDF_PTRACE ((" HPDF_SaveToFileW\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return HPDF_INVALID_DOCUMENT;
+
+    stream = HPDF_FileWriter_NewW (pdf->mmgr, file_name);
+    if (!stream)
+        return HPDF_CheckError (&pdf->error);
+
+    InternalSaveToStream (pdf, stream);
+
+    HPDF_Stream_Free (stream);
+
+    return HPDF_CheckError (&pdf->error);
+}
+#endif
 
 HPDF_EXPORT(HPDF_Page)
 HPDF_GetCurrentPage  (HPDF_Doc   pdf)
@@ -1441,6 +1462,49 @@ HPDF_LoadType1FontFromFile  (HPDF_Doc     pdf,
 }
 
 
+#if defined(WIN32)
+HPDF_EXPORT(const char*)
+HPDF_LoadType1FontFromFileW (HPDF_Doc        pdf,
+                             const wchar_t  *afm_file_name,
+                             const wchar_t  *data_file_name)
+{
+    HPDF_Stream afm;
+    HPDF_Stream pfm = NULL;
+    const char *ret;
+
+    HPDF_PTRACE ((" HPDF_LoadType1FontFromFileW\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+    /* create file stream */
+    afm = HPDF_FileReader_NewW (pdf->mmgr, afm_file_name);
+
+    if (data_file_name)
+        pfm = HPDF_FileReader_NewW (pdf->mmgr, data_file_name);
+
+    if (HPDF_Stream_Validate (afm) &&
+            (!data_file_name || HPDF_Stream_Validate (pfm))) {
+
+        ret = LoadType1FontFromStream (pdf, afm, pfm);
+    } else
+        ret = NULL;
+
+    /* destroy file stream */
+    if (afm)
+        HPDF_Stream_Free (afm);
+
+    if (pfm)
+        HPDF_Stream_Free (pfm);
+
+    if (!ret)
+        HPDF_CheckError (&pdf->error);
+
+    return ret;
+}
+#endif
+
+
 static const char*
 LoadType1FontFromStream  (HPDF_Doc      pdf,
                           HPDF_Stream   afmdata,
@@ -1476,22 +1540,22 @@ HPDF_GetTTFontDefFromFile (HPDF_Doc      pdf,
                            const char   *file_name,
                            HPDF_BOOL     embedding)
 {
-	HPDF_Stream font_data;
-	HPDF_FontDef def;
+    HPDF_Stream font_data;
+    HPDF_FontDef def;
 
-	HPDF_PTRACE ((" HPDF_GetTTFontDefFromFile\n"));
+    HPDF_PTRACE ((" HPDF_GetTTFontDefFromFile\n"));
 
-	/* create file stream */
-	font_data = HPDF_FileReader_New (pdf->mmgr, file_name);
+    /* create file stream */
+    font_data = HPDF_FileReader_New (pdf->mmgr, file_name);
 
-	if (HPDF_Stream_Validate (font_data)) {
-		def = HPDF_TTFontDef_Load (pdf->mmgr, font_data, embedding);
-	} else {
-		HPDF_CheckError (&pdf->error);
-		return NULL;
-	}
+    if (HPDF_Stream_Validate (font_data)) {
+        def = HPDF_TTFontDef_Load (pdf->mmgr, font_data, embedding);
+    } else {
+        HPDF_CheckError (&pdf->error);
+        return NULL;
+    }
 
-	return def;
+    return def;
 }
 
 HPDF_EXPORT(const char*)
@@ -1511,7 +1575,7 @@ HPDF_LoadTTFontFromFile (HPDF_Doc         pdf,
     font_data = HPDF_FileReader_New (pdf->mmgr, file_name);
 
     if (HPDF_Stream_Validate (font_data)) {
-        ret = LoadTTFontFromStream (pdf, font_data, embedding, file_name);
+        ret = LoadTTFontFromStream (pdf, font_data, embedding);
     } else
         ret = NULL;
 
@@ -1522,16 +1586,67 @@ HPDF_LoadTTFontFromFile (HPDF_Doc         pdf,
 }
 
 
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_FontDef)
+HPDF_GetTTFontDefFromFileW(HPDF_Doc       pdf,
+                           const wchar_t *file_name,
+                           HPDF_BOOL      embedding)
+{
+    HPDF_Stream font_data;
+    HPDF_FontDef def;
+
+    HPDF_PTRACE ((" HPDF_GetTTFontDefFromFileW\n"));
+
+    /* create file stream */
+    font_data = HPDF_FileReader_NewW (pdf->mmgr, file_name);
+
+    if (HPDF_Stream_Validate (font_data)) {
+        def = HPDF_TTFontDef_Load (pdf->mmgr, font_data, embedding);
+    } else {
+        HPDF_CheckError (&pdf->error);
+        return NULL;
+    }
+
+    return def;
+}
+
+HPDF_EXPORT(const char*)
+HPDF_LoadTTFontFromFileW(HPDF_Doc         pdf,
+                         const wchar_t   *file_name,
+                         HPDF_BOOL        embedding)
+{
+    HPDF_Stream font_data;
+    const char *ret;
+
+    HPDF_PTRACE ((" HPDF_LoadTTFontFromFileW\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+    /* create file stream */
+    font_data = HPDF_FileReader_NewW (pdf->mmgr, file_name);
+
+    if (HPDF_Stream_Validate (font_data)) {
+        ret = LoadTTFontFromStream (pdf, font_data, embedding);
+    } else
+        ret = NULL;
+
+    if (!ret)
+        HPDF_CheckError (&pdf->error);
+
+    return ret;
+}
+#endif
+
+
 static const char*
 LoadTTFontFromStream (HPDF_Doc         pdf,
                       HPDF_Stream      font_data,
-                      HPDF_BOOL        embedding,
-                      const char      *file_name)
+                      HPDF_BOOL        embedding)
 {
     HPDF_FontDef def;
 
     HPDF_PTRACE ((" HPDF_LoadTTFontFromStream\n"));
-    HPDF_UNUSED (file_name);
 
     def = HPDF_TTFontDef_Load (pdf->mmgr, font_data, embedding);
     if (def) {
@@ -1569,7 +1684,6 @@ LoadTTFontFromStream (HPDF_Doc         pdf,
     return def->base_font;
 }
 
-
 HPDF_EXPORT(const char*)
 HPDF_LoadTTFontFromFile2 (HPDF_Doc         pdf,
                           const char      *file_name,
@@ -1588,7 +1702,7 @@ HPDF_LoadTTFontFromFile2 (HPDF_Doc         pdf,
     font_data = HPDF_FileReader_New (pdf->mmgr, file_name);
 
     if (HPDF_Stream_Validate (font_data)) {
-        ret = LoadTTFontFromStream2 (pdf, font_data, index, embedding, file_name);
+        ret = LoadTTFontFromStream2 (pdf, font_data, index, embedding);
     } else
         ret = NULL;
 
@@ -1599,17 +1713,46 @@ HPDF_LoadTTFontFromFile2 (HPDF_Doc         pdf,
 }
 
 
+#if defined(WIN32)
+HPDF_EXPORT(const char*)
+HPDF_LoadTTFontFromFile2W(HPDF_Doc         pdf,
+                          const wchar_t   *file_name,
+                          HPDF_UINT        index,
+                          HPDF_BOOL        embedding)
+{
+    HPDF_Stream font_data;
+    const char *ret;
+
+    HPDF_PTRACE ((" HPDF_LoadTTFontFromFile2\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+    /* create file stream */
+    font_data = HPDF_FileReader_NewW (pdf->mmgr, file_name);
+
+    if (HPDF_Stream_Validate (font_data)) {
+        ret = LoadTTFontFromStream2 (pdf, font_data, index, embedding);
+    } else
+        ret = NULL;
+
+    if (!ret)
+        HPDF_CheckError (&pdf->error);
+
+    return ret;
+}
+#endif
+
+
 static const char*
 LoadTTFontFromStream2 (HPDF_Doc         pdf,
                        HPDF_Stream      font_data,
                        HPDF_UINT        index,
-                       HPDF_BOOL        embedding,
-                       const char      *file_name)
+                       HPDF_BOOL        embedding)
 {
     HPDF_FontDef def;
 
     HPDF_PTRACE ((" HPDF_LoadTTFontFromStream2\n"));
-    HPDF_UNUSED (file_name);
 
     def = HPDF_TTFontDef_Load2 (pdf->mmgr, font_data, index, embedding);
     if (def) {
@@ -1685,6 +1828,45 @@ HPDF_LoadRawImageFromFile  (HPDF_Doc          pdf,
 }
 
 
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_Image)
+HPDF_LoadRawImageFromFileW (HPDF_Doc          pdf,
+                            const wchar_t    *filename,
+                            HPDF_UINT         width,
+                            HPDF_UINT         height,
+                            HPDF_ColorSpace   color_space)
+{
+    HPDF_Stream imagedata;
+    HPDF_Image image;
+
+    HPDF_PTRACE ((" HPDF_LoadRawImageFromFileW\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+    /* create file stream */
+    imagedata = HPDF_FileReader_NewW (pdf->mmgr, filename);
+
+    if (HPDF_Stream_Validate (imagedata))
+        image = HPDF_Image_LoadRawImage (pdf->mmgr, imagedata, pdf->xref, width,
+                    height, color_space);
+    else
+        image = NULL;
+
+    /* destroy file stream */
+    HPDF_Stream_Free (imagedata);
+
+    if (!image)
+        HPDF_CheckError (&pdf->error);
+
+    if (image && pdf->compression_mode & HPDF_COMP_IMAGE)
+        image->filter = HPDF_STREAM_FILTER_FLATE_DECODE;
+
+    return image;
+}
+#endif
+
+
 HPDF_EXPORT(HPDF_Image)
 HPDF_LoadRawImageFromMem  (HPDF_Doc           pdf,
                            const HPDF_BYTE   *buf,
@@ -1747,26 +1929,59 @@ HPDF_LoadJpegImageFromFile  (HPDF_Doc     pdf,
     return image;
 }
 
+
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_Image)
+HPDF_LoadJpegImageFromFileW (HPDF_Doc       pdf,
+                             const wchar_t *filename)
+{
+    HPDF_Stream imagedata;
+    HPDF_Image image;
+
+    HPDF_PTRACE ((" HPDF_LoadJpegImageFromFileW\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+    /* create file stream */
+    imagedata = HPDF_FileReader_NewW (pdf->mmgr, filename);
+
+    if (HPDF_Stream_Validate (imagedata))
+        image = HPDF_Image_LoadJpegImage (pdf->mmgr, imagedata, pdf->xref);
+    else
+        image = NULL;
+
+    /* destroy file stream */
+    HPDF_Stream_Free (imagedata);
+
+    if (!image)
+        HPDF_CheckError (&pdf->error);
+
+    return image;
+}
+#endif
+
+
 HPDF_EXPORT(HPDF_Image)
 HPDF_LoadJpegImageFromMem  (HPDF_Doc    pdf,
                      const HPDF_BYTE   *buffer,
                            HPDF_UINT    size)
 {
-	HPDF_Image image;
+    HPDF_Image image;
 
-	HPDF_PTRACE ((" HPDF_LoadJpegImageFromMem\n"));
+    HPDF_PTRACE ((" HPDF_LoadJpegImageFromMem\n"));
 
-	if (!HPDF_HasDoc (pdf)) {
-		return NULL;
-	}
+    if (!HPDF_HasDoc (pdf)) {
+        return NULL;
+    }
 
-	image = HPDF_Image_LoadJpegImageFromMem (pdf->mmgr, buffer, size , pdf->xref);
+    image = HPDF_Image_LoadJpegImageFromMem (pdf->mmgr, buffer, size , pdf->xref);
 
-	if (!image) {
-		HPDF_CheckError (&pdf->error);
-	}
+    if (!image) {
+        HPDF_CheckError (&pdf->error);
+    }
 
-	return image;
+    return image;
 }
 
 /*----- Catalog ------------------------------------------------------------*/
@@ -1981,6 +2196,62 @@ HPDF_AttachFile  (HPDF_Doc    pdf,
 
     return efile;
 }
+
+
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_EmbeddedFile)
+HPDF_AttachFileW (HPDF_Doc       pdf,
+                  const wchar_t *file)
+{
+    HPDF_NameDict names;
+    HPDF_NameTree ntree;
+    HPDF_EmbeddedFile efile;
+    HPDF_String name;
+    HPDF_STATUS ret = HPDF_OK;
+
+    HPDF_PTRACE ((" HPDF_AttachFileW\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+    names = HPDF_Catalog_GetNames (pdf->catalog);
+    if (!names) {
+        names = HPDF_NameDict_New (pdf->mmgr, pdf->xref);
+        if (!names)
+            return NULL;
+
+        ret = HPDF_Catalog_SetNames (pdf->catalog, names);
+        if (ret != HPDF_OK)
+            return NULL;
+    }
+
+    ntree = HPDF_NameDict_GetNameTree (names, HPDF_NAME_EMBEDDED_FILES);
+    if (!ntree) {
+        ntree = HPDF_NameTree_New (pdf->mmgr, pdf->xref);
+        if (!ntree)
+            return NULL;
+
+        ret = HPDF_NameDict_SetNameTree (names, HPDF_NAME_EMBEDDED_FILES, ntree);
+        if (ret != HPDF_OK)
+            return NULL;
+    }
+
+    efile = HPDF_EmbeddedFile_NewW (pdf->mmgr, pdf->xref, file);
+    if (!efile)
+        return NULL;
+
+    name = HPDF_String_NewW (pdf->mmgr, file, NULL);
+    if (!name)
+        return NULL;
+
+    ret += HPDF_NameTree_Add (ntree, name, efile);
+    if (ret != HPDF_OK)
+        return NULL;
+
+    return efile;
+}
+#endif
+
 
 /*----- Info ---------------------------------------------------------------*/
 
@@ -2255,10 +2526,10 @@ HPDF_AddIntent(HPDF_Doc  pdf,
 /* "Perceptual", "RelativeColorimetric", "Saturation", "AbsoluteColorimetric" */
 HPDF_EXPORT(HPDF_OutputIntent)
 HPDF_ICC_LoadIccFromMem (HPDF_Doc   pdf,
-		                HPDF_MMgr   mmgr,
+                        HPDF_MMgr   mmgr,
                         HPDF_Stream iccdata,
                         HPDF_Xref   xref,
-						int         numcomponent)
+                        int         numcomponent)
 {
    HPDF_OutputIntent icc;
    HPDF_STATUS ret;
@@ -2272,14 +2543,14 @@ HPDF_ICC_LoadIccFromMem (HPDF_Doc   pdf,
    HPDF_Dict_AddNumber (icc, "N", numcomponent);
    switch (numcomponent) {
    case 1 :
-	   HPDF_Dict_AddName (icc, "Alternate", "DeviceGray");
-	   break;
+       HPDF_Dict_AddName (icc, "Alternate", "DeviceGray");
+       break;
    case 3 :
-	   HPDF_Dict_AddName (icc, "Alternate", "DeviceRGB");
-	   break;
+       HPDF_Dict_AddName (icc, "Alternate", "DeviceRGB");
+       break;
    case 4 :
-	   HPDF_Dict_AddName (icc, "Alternate", "DeviceCMYK");
-	   break;
+       HPDF_Dict_AddName (icc, "Alternate", "DeviceCMYK");
+       break;
    default : /* unsupported */
        HPDF_RaiseError (&pdf->error, HPDF_INVALID_ICC_COMPONENT_NUM, 0);
        HPDF_Dict_Free(icc);
@@ -2327,19 +2598,19 @@ HPDF_AddColorspaceFromProfile  (HPDF_Doc pdf,
         return NULL;
 
     iccentry = HPDF_Array_New(pdf->mmgr);
-	if (!iccentry)
+    if (!iccentry)
         return NULL;
 
     ret = HPDF_Array_AddName (iccentry, "ICCBased" );
     if (ret != HPDF_OK) {
-		HPDF_Array_Free(iccentry);
+        HPDF_Array_Free(iccentry);
         HPDF_CheckError (&pdf->error);
         return NULL;
     }
 
     ret = HPDF_Array_Add (iccentry, icc );
     if (ret != HPDF_OK) {
-		HPDF_Array_Free(iccentry);
+        HPDF_Array_Free(iccentry);
         return NULL;
     }
     return iccentry;
@@ -2348,7 +2619,7 @@ HPDF_AddColorspaceFromProfile  (HPDF_Doc pdf,
 HPDF_EXPORT(HPDF_OutputIntent)
 HPDF_LoadIccProfileFromFile  (HPDF_Doc pdf,
                            const char* icc_file_name,
-						           int numcomponent)
+                                   int numcomponent)
 {
     HPDF_Stream iccdata;
     HPDF_OutputIntent iccentry;
@@ -2376,3 +2647,35 @@ HPDF_LoadIccProfileFromFile  (HPDF_Doc pdf,
     return iccentry;
 }
 
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_OutputIntent)
+HPDF_LoadIccProfileFromFileW (HPDF_Doc pdf,
+                              const wchar_t * icc_file_name,
+                              int numcomponent)
+{
+    HPDF_Stream iccdata;
+    HPDF_OutputIntent iccentry;
+
+    HPDF_PTRACE ((" HPDF_LoadIccProfileFromFileW\n"));
+
+    if (!HPDF_HasDoc (pdf))
+        return NULL;
+
+      /* create file stream */
+    iccdata = HPDF_FileReader_NewW (pdf->mmgr, icc_file_name);
+
+    if (HPDF_Stream_Validate (iccdata)) {
+        iccentry = HPDF_ICC_LoadIccFromMem(pdf, pdf->mmgr, iccdata, pdf->xref, numcomponent);
+    } else
+        iccentry = NULL;
+
+    /* destroy file stream */
+    if (iccdata)
+        HPDF_Stream_Free (iccdata);
+
+    if (!iccentry)
+        HPDF_CheckError (&pdf->error);
+
+    return iccentry;
+}
+#endif

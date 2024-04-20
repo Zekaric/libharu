@@ -150,13 +150,22 @@ HPDF_Stream_WriteToStream  (HPDF_Stream   src,
 
 
 HPDF_Stream
-HPDF_FileReader_New  (HPDF_MMgr   mmgr,
+HPDF_FileReader_New  (HPDF_MMgr    mmgr,
                       const char  *fname);
-
 
 HPDF_Stream
-HPDF_FileWriter_New  (HPDF_MMgr        mmgr,
+HPDF_FileWriter_New  (HPDF_MMgr    mmgr,
                       const char  *fname);
+
+#if defined(WIN32)
+HPDF_Stream
+HPDF_FileReader_NewW (HPDF_MMgr       mmgr,
+                      const wchar_t  *fname);
+
+HPDF_Stream
+HPDF_FileWriter_NewW (HPDF_MMgr       mmgr,
+                      const wchar_t  *fname);
+#endif
 
 
 HPDF_Stream

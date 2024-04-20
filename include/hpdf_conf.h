@@ -50,6 +50,10 @@
 #define HPDF_SIN                    sin
 #define HPDF_COS                    cos
 
+#if defined(WIN32)
+#define HPDF_FOPEN_W                _wfopen
+#endif
+
 /*----------------------------------------------------------------------------*/
 /*----- parameters in relation to performance --------------------------------*/
 

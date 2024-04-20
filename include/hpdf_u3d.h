@@ -27,7 +27,6 @@ extern "C" {
 HPDF_EXPORT(HPDF_JavaScript) HPDF_CreateJavaScript(HPDF_Doc pdf, const char *code);
 HPDF_EXPORT(HPDF_JavaScript) HPDF_LoadJSFromFile  (HPDF_Doc pdf, const char *filename);
 
-
 HPDF_EXPORT(HPDF_U3D) HPDF_LoadU3DFromFile (HPDF_Doc pdf, const char *filename);
 HPDF_EXPORT(HPDF_Image) HPDF_LoadU3DFromMem (HPDF_Doc pdf, const HPDF_BYTE *buffer, HPDF_UINT size);
 HPDF_EXPORT(HPDF_Dict) HPDF_Create3DView (HPDF_MMgr mmgr, const char *name);
@@ -53,6 +52,13 @@ HPDF_3DView_New    ( HPDF_MMgr  mmgr,
 					 HPDF_Xref  xref,
 					 HPDF_U3D	u3d,
 					 const char *name);
+
+
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_JavaScript) HPDF_LoadJSFromFileW  (HPDF_Doc pdf, const wchar_t *filename);
+HPDF_EXPORT(HPDF_U3D)	     HPDF_LoadU3DFromFileW (HPDF_Doc pdf, const wchar_t *filename);
+#endif
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

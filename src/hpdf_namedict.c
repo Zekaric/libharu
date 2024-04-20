@@ -215,6 +215,57 @@ HPDF_EmbeddedFile_New  (HPDF_MMgr  mmgr,
     return ef;
 }
 
+
+#if defined(WIN32)
+HPDF_EmbeddedFile
+HPDF_EmbeddedFile_NewW (HPDF_MMgr      mmgr,
+                        HPDF_Xref      xref,
+                        const wchar_t *file)
+{
+    HPDF_STATUS ret = HPDF_OK;
+    HPDF_Dict ef;               /* the dictionary for the embedded file: /Type /EF */
+    HPDF_String name;           /* the name of the file: /F (name) */
+    HPDF_Dict eff;              /* ef has an /EF <<blah>> key - this is it */
+    HPDF_Dict filestream;       /* the stream that /EF <</F _ _ R>> refers to */
+    HPDF_Stream stream;
+
+    ef = HPDF_Dict_New (mmgr);
+    if (!ef)
+        return NULL;
+    if (HPDF_Xref_Add (xref, ef) != HPDF_OK)
+        return NULL;
+
+    filestream = HPDF_DictStream_New (mmgr, xref);
+    if (!filestream)
+        return NULL;
+    stream = HPDF_FileReader_NewW (mmgr, file);
+    if (!stream)
+        return NULL;
+    HPDF_Stream_Free(filestream->stream);
+    filestream->stream = stream;
+    filestream->filter = HPDF_STREAM_FILTER_FLATE_DECODE;
+
+    eff = HPDF_Dict_New (mmgr);
+    if (!eff)
+        return NULL;
+
+    name = HPDF_String_NewW (mmgr, file, NULL);
+    if (!name)
+        return NULL;
+
+    ret += HPDF_Dict_AddName (ef, "Type", "F");
+    ret += HPDF_Dict_Add (ef, "F", name);
+    ret += HPDF_Dict_Add (ef, "EF", eff);
+    ret += HPDF_Dict_Add (eff, "F", filestream);
+
+    if (ret != HPDF_OK)
+        return NULL;
+
+    return ef;
+}
+#endif
+
+
 HPDF_BOOL
 HPDF_EmbeddedFile_Validate  (HPDF_EmbeddedFile  emfile)
 {

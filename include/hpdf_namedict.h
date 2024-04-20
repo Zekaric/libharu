@@ -64,6 +64,13 @@ HPDF_EmbeddedFile_New  (HPDF_MMgr  mmgr,
                         HPDF_Xref  xref,
                         const char *file);
 
+#if defined(WIN32)
+HPDF_EmbeddedFile
+HPDF_EmbeddedFile_NewW (HPDF_MMgr  mmgr,
+                        HPDF_Xref  xref,
+                        const wchar_t *file);
+#endif
+
 HPDF_BOOL
 HPDF_EmbeddedFile_Validate  (HPDF_EmbeddedFile  emfile);
 

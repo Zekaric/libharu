@@ -46,9 +46,9 @@ UTF8_Encoder_ToUnicode_Func  (HPDF_Encoder   encoder,
 
 static char *
 UTF8_Encoder_EncodeText_Func  (HPDF_Encoder        encoder,
-			       const char         *text,
-			       HPDF_UINT           len,
-			       HPDF_UINT          *length);
+                   const char         *text,
+                   HPDF_UINT           len,
+                   HPDF_UINT          *length);
 
 static HPDF_STATUS
 UTF8_Init  (HPDF_Encoder    encoder);
@@ -81,11 +81,11 @@ UTF8_Encoder_ByteType_Func  (HPDF_Encoder        encoder,
     utf8_attr = (UTF8_EncoderAttr) ((void *)encoder_attr->cid_map[0]);
 
     if (state->index == 0) {
-	//First byte, initialize.
-	HPDF_PTRACE ((" UTF8_Encoder_ByteType_Func - Initialize: (%u) %s\n",
-		      state->len, state->text));
+    //First byte, initialize.
+    HPDF_PTRACE ((" UTF8_Encoder_ByteType_Func - Initialize: (%u) %s\n",
+              state->len, state->text));
 
-	utf8_attr->current_byte = 0;
+    utf8_attr->current_byte = 0;
     }
 
     byte = state->text[state->index];
@@ -94,31 +94,31 @@ UTF8_Encoder_ByteType_Func  (HPDF_Encoder        encoder,
     HPDF_PTRACE ((" UTF8_Encoder_ByteType_Func - Byte: %hx\n", byte));
 
     if (utf8_attr->current_byte == 0) {
-	utf8_attr->utf8_bytes[0] = byte;
-	utf8_attr->current_byte = 1;
+    utf8_attr->utf8_bytes[0] = byte;
+    utf8_attr->current_byte = 1;
 
-	if (!(byte & 0x80)) {
-	    utf8_attr->current_byte = 0;
-	    utf8_attr->end_byte = 0;
-	    return HPDF_BYTE_TYPE_SINGLE;
-	}
+    if (!(byte & 0x80)) {
+        utf8_attr->current_byte = 0;
+        utf8_attr->end_byte = 0;
+        return HPDF_BYTE_TYPE_SINGLE;
+    }
 
-	if ((byte & 0xf8) == 0xf0)
-	    utf8_attr->end_byte = 3;
-	else if ((byte & 0xf0) == 0xe0)
-	    utf8_attr->end_byte = 2;
-	else if ((byte & 0xe0) == 0xc0)
-	    utf8_attr->end_byte = 1;
-	else
-	    utf8_attr->current_byte = 0; //ERROR, skip this byte
+    if ((byte & 0xf8) == 0xf0)
+        utf8_attr->end_byte = 3;
+    else if ((byte & 0xf0) == 0xe0)
+        utf8_attr->end_byte = 2;
+    else if ((byte & 0xe0) == 0xc0)
+        utf8_attr->end_byte = 1;
+    else
+        utf8_attr->current_byte = 0; //ERROR, skip this byte
     } else {
-	utf8_attr->utf8_bytes[utf8_attr->current_byte] = byte;
-	if (utf8_attr->current_byte == utf8_attr->end_byte) {
-	    utf8_attr->current_byte = 0;
-	    return HPDF_BYTE_TYPE_SINGLE;
-	}
+    utf8_attr->utf8_bytes[utf8_attr->current_byte] = byte;
+    if (utf8_attr->current_byte == utf8_attr->end_byte) {
+        utf8_attr->current_byte = 0;
+        return HPDF_BYTE_TYPE_SINGLE;
+    }
 
-	utf8_attr->current_byte++;
+    utf8_attr->current_byte++;
     }
 
     return HPDF_BYTE_TYPE_TRAIL;
@@ -135,6 +135,7 @@ UTF8_Encoder_ToUnicode_Func  (HPDF_Encoder   encoder,
     // Supposed to convert CODE to unicode.
     // This function is always called after ByteType_Func.
     // ByteType_Func recognizes the utf-8 bytes belonging to one character.
+    HPDF_UNUSED(code);
 
     HPDF_CMapEncoderAttr encoder_attr;
     UTF8_EncoderAttr     utf8_attr;
@@ -145,38 +146,38 @@ UTF8_Encoder_ToUnicode_Func  (HPDF_Encoder   encoder,
 
     switch (utf8_attr->end_byte) {
     case 3:
-	val = (unsigned int) ((utf8_attr->utf8_bytes[0] & 0x7) << 18) +
-	    (unsigned int) ((utf8_attr->utf8_bytes[1]) << 12)       +
-	    (unsigned int) ((utf8_attr->utf8_bytes[2] & 0x3f) << 6) +
-	    (unsigned int) ((utf8_attr->utf8_bytes[3] & 0x3f));
-	break;
+    val = (unsigned int) ((utf8_attr->utf8_bytes[0] & 0x7) << 18) +
+        (unsigned int) ((utf8_attr->utf8_bytes[1]) << 12)       +
+        (unsigned int) ((utf8_attr->utf8_bytes[2] & 0x3f) << 6) +
+        (unsigned int) ((utf8_attr->utf8_bytes[3] & 0x3f));
+    break;
     case 2:
-	val = (unsigned int) ((utf8_attr->utf8_bytes[0] & 0xf) << 12) +
-	    (unsigned int) ((utf8_attr->utf8_bytes[1] & 0x3f) << 6) +
-	    (unsigned int) ((utf8_attr->utf8_bytes[2] & 0x3f));
-	break;
+    val = (unsigned int) ((utf8_attr->utf8_bytes[0] & 0xf) << 12) +
+        (unsigned int) ((utf8_attr->utf8_bytes[1] & 0x3f) << 6) +
+        (unsigned int) ((utf8_attr->utf8_bytes[2] & 0x3f));
+    break;
     case 1:
-	val = (unsigned int) ((utf8_attr->utf8_bytes[0] & 0x1f) << 6) +
-	    (unsigned int) ((utf8_attr->utf8_bytes[1] & 0x3f));
-	break;
+    val = (unsigned int) ((utf8_attr->utf8_bytes[0] & 0x1f) << 6) +
+        (unsigned int) ((utf8_attr->utf8_bytes[1] & 0x3f));
+    break;
     case 0:
-	val = (unsigned int)  utf8_attr->utf8_bytes[0];
-	break;
+    val = (unsigned int)  utf8_attr->utf8_bytes[0];
+    break;
     default:
-	val = 32; // Unknown character
+    val = 32; // Unknown character
     }
 
     if (val > 65535) //Convert everything outside UCS-2 to space
         val = 32;
 
-    return val;
+    return (HPDF_UNICODE) val;
 }
 
 static char *
 UTF8_Encoder_EncodeText_Func  (HPDF_Encoder        encoder,
-			       const char         *text,
-			       HPDF_UINT           len,
-			       HPDF_UINT          *length)
+                   const char         *text,
+                   HPDF_UINT           len,
+                   HPDF_UINT          *length)
 {
     char *result = malloc(len * 2);
     char *c = result;
@@ -184,18 +185,18 @@ UTF8_Encoder_EncodeText_Func  (HPDF_Encoder        encoder,
     HPDF_UINT i;
 
     HPDF_Encoder_SetParseText (encoder, &parse_state,
-			       (const HPDF_BYTE *)text, len);
+                   (const HPDF_BYTE *)text, len);
 
     for (i = 0; i < len; i++) {
-	HPDF_UNICODE tmp_unicode;
-	HPDF_ByteType btype = HPDF_Encoder_ByteType (encoder, &parse_state);
+    HPDF_UNICODE tmp_unicode;
+    HPDF_ByteType btype = HPDF_Encoder_ByteType (encoder, &parse_state);
 
-	if (btype != HPDF_BYTE_TYPE_TRAIL) {
-	    tmp_unicode = HPDF_Encoder_ToUnicode (encoder, 0);
+    if (btype != HPDF_BYTE_TYPE_TRAIL) {
+        tmp_unicode = HPDF_Encoder_ToUnicode (encoder, 0);
 
-	    HPDF_UInt16Swap (&tmp_unicode);
-	    HPDF_MemCpy ((HPDF_BYTE *)c, (const HPDF_BYTE*)&tmp_unicode, 2);
-	    c += 2;
+        HPDF_UInt16Swap (&tmp_unicode);
+        HPDF_MemCpy ((HPDF_BYTE *)c, (const HPDF_BYTE*)&tmp_unicode, 2);
+        c += 2;
         }
     }
 
@@ -226,7 +227,7 @@ UTF8_Init  (HPDF_Encoder  encoder)
         return encoder->error->error_no;
 
     if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, UTF8_SPACE_RANGE)
-	       != HPDF_OK)
+           != HPDF_OK)
       return encoder->error->error_no;
 
     if (HPDF_CMapEncoder_AddNotDefRange (encoder, UTF8_NOTDEF_RANGE)

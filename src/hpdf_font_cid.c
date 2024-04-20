@@ -55,9 +55,9 @@ UINT16ToHex  (char        *s,
 
 static char *
 CidRangeToHex (char        *s,
-	       HPDF_UINT16  from,
-	       HPDF_UINT16  to,
-	       char        *eptr);
+           HPDF_UINT16  from,
+           HPDF_UINT16  to,
+           char        *eptr);
 
 static HPDF_Dict
 CreateCMap  (HPDF_Encoder   encoder,
@@ -139,30 +139,30 @@ HPDF_Type0Font_New  (HPDF_MMgr        mmgr,
         ret += HPDF_Dict_AddName (font, "Encoding", encoder->name);
     } else {
         /*
-	 * Handle the Unicode encoding, see hpdf_encoding_utf.c For some
-	 * reason, xpdf-based readers cannot deal with our cmap but work
-	 * fine when using the predefined "Identity-H"
-	 * encoding. However, text selection does not work, unless we
-	 * add a ToUnicode cmap. This CMap should also be "Identity",
-	 * but that does not work -- specifying our cmap as a stream however
-	 * does work. Who can understand that ?
-	 */
+     * Handle the Unicode encoding, see hpdf_encoding_utf.c For some
+     * reason, xpdf-based readers cannot deal with our cmap but work
+     * fine when using the predefined "Identity-H"
+     * encoding. However, text selection does not work, unless we
+     * add a ToUnicode cmap. This CMap should also be "Identity",
+     * but that does not work -- specifying our cmap as a stream however
+     * does work. Who can understand that ?
+     */
         if (HPDF_StrCmp(encoder_attr->ordering, "Identity-H") == 0) {
-	    ret += HPDF_Dict_AddName (font, "Encoding", "Identity-H");
-	    attr->cmap_stream = CreateCMap (encoder, xref);
+        ret += HPDF_Dict_AddName (font, "Encoding", "Identity-H");
+        attr->cmap_stream = CreateCMap (encoder, xref);
 
-	    if (attr->cmap_stream) {
-	        ret += HPDF_Dict_Add (font, "ToUnicode", attr->cmap_stream);
-	    } else
-	        return NULL;
-	} else {
+        if (attr->cmap_stream) {
+            ret += HPDF_Dict_Add (font, "ToUnicode", attr->cmap_stream);
+        } else
+            return NULL;
+    } else {
             attr->cmap_stream = CreateCMap (encoder, xref);
 
-	    if (attr->cmap_stream) {
-	        ret += HPDF_Dict_Add (font, "Encoding", attr->cmap_stream);
-	    } else
-	      return NULL;
-	}
+        if (attr->cmap_stream) {
+            ret += HPDF_Dict_Add (font, "Encoding", attr->cmap_stream);
+        } else
+          return NULL;
+    }
     }
 
     if (ret != HPDF_OK)
@@ -397,25 +397,25 @@ CIDFontType2_New (HPDF_Font parent, HPDF_Xref xref)
         HPDF_UINT j;
 
         for (j = 0; j < 256; j++) {
-	    if (encoder->to_unicode_fn == HPDF_CMapEncoder_ToUnicode) {
-		HPDF_UINT16 cid = encoder_attr->cid_map[i][j];
-		if (cid != 0) {
-		    HPDF_UNICODE unicode = encoder_attr->unicode_map[i][j];
-		    HPDF_UINT16 gid = HPDF_TTFontDef_GetGlyphid (fontdef,
-								 unicode);
-		    tmp_map[cid] = gid;
-		    if (max < cid)
-			max = cid;
-		}
-	    } else {
-		HPDF_UNICODE unicode = (i << 8) | j;
-		HPDF_UINT16 gid = HPDF_TTFontDef_GetGlyphid (fontdef,
-							     unicode);
-		tmp_map[unicode] = gid;
-		if (max < unicode)
-		    max = unicode;
-	    }
-	}
+        if (encoder->to_unicode_fn == HPDF_CMapEncoder_ToUnicode) {
+        HPDF_UINT16 cid = encoder_attr->cid_map[i][j];
+        if (cid != 0) {
+            HPDF_UNICODE unicode = encoder_attr->unicode_map[i][j];
+            HPDF_UINT16 gid = HPDF_TTFontDef_GetGlyphid (fontdef,
+                                 unicode);
+            tmp_map[cid] = gid;
+            if (max < cid)
+            max = cid;
+        }
+        } else {
+        HPDF_UNICODE unicode = (HPDF_UNICODE) ((i << 8) | j);
+        HPDF_UINT16 gid = HPDF_TTFontDef_GetGlyphid (fontdef,
+                                 unicode);
+        tmp_map[unicode] = gid;
+        if (max < unicode)
+            max = unicode;
+        }
+    }
     }
 
     if (max > 0) {
@@ -725,7 +725,7 @@ MeasureText  (HPDF_Font          font,
                 if (real_width)
                     *real_width = w;
             } /* else
-			//Commenting this out fixes problem with HPDF_Text_Rect() splitting the words
+            //Commenting this out fixes problem with HPDF_Text_Rect() splitting the words
             if (last_btype == HPDF_BYTE_TYPE_TRAIL ||
                     (btype == HPDF_BYTE_TYPE_LEAD &&
                     last_btype == HPDF_BYTE_TYPE_SINGLE)) {

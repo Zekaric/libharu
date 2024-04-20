@@ -166,6 +166,11 @@ HPDF_EXPORT(HPDF_STATUS)
 HPDF_SaveToFile  (HPDF_Doc     pdf,
                   const char  *file_name);
 
+#if defined (WIN32)
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_SaveToFileW  (HPDF_Doc     pdf,
+                   const wchar_t  *file_name);
+#endif
 
 HPDF_EXPORT(HPDF_STATUS)
 HPDF_GetError  (HPDF_Doc   pdf);
@@ -292,7 +297,6 @@ HPDF_LoadType1FontFromFile  (HPDF_Doc     pdf,
                              const char  *afm_file_name,
                              const char  *data_file_name);
 
-
 HPDF_EXPORT(HPDF_FontDef)
 HPDF_GetTTFontDefFromFile (HPDF_Doc     pdf,
                            const char  *file_name,
@@ -309,6 +313,29 @@ HPDF_LoadTTFontFromFile2 (HPDF_Doc     pdf,
                           const char  *file_name,
                           HPDF_UINT    index,
                           HPDF_BOOL    embedding);
+
+#if defined(WIN32)
+HPDF_EXPORT(const char*)
+HPDF_LoadType1FontFromFileW (HPDF_Doc        pdf,
+                             const wchar_t  *afm_file_name,
+                             const wchar_t  *data_file_name);
+
+HPDF_EXPORT(HPDF_FontDef)
+HPDF_GetTTFontDefFromFileW (HPDF_Doc       pdf,
+                            const wchar_t *file_name,
+                            HPDF_BOOL      embedding);
+
+HPDF_EXPORT(const char*)
+HPDF_LoadTTFontFromFileW (HPDF_Doc       pdf,
+                          const wchar_t *file_name,
+                          HPDF_BOOL      embedding);
+
+HPDF_EXPORT(const char*)
+HPDF_LoadTTFontFromFile2W(HPDF_Doc       pdf,
+                          const wchar_t *file_name,
+                          HPDF_UINT      index,
+                          HPDF_BOOL      embedding);
+#endif
 
 
 HPDF_EXPORT(HPDF_STATUS)
@@ -800,6 +827,25 @@ HPDF_EXPORT(HPDF_Image)
 HPDF_LoadJpegImageFromFile (HPDF_Doc      pdf,
                             const char    *filename);
 
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_Image)
+HPDF_LoadPngImageFromFileW (HPDF_Doc       pdf,
+                            const wchar_t *filename);
+
+
+HPDF_EXPORT(HPDF_Image)
+HPDF_LoadPngImageFromFile2W (HPDF_Doc      pdf,
+                            const wchar_t *filename);
+
+HPDF_EXPORT(HPDF_Image)
+HPDF_LoadJpegImageFromFileW(HPDF_Doc       pdf,
+                            const wchar_t *filename);
+
+HPDF_EXPORT(HPDF_Image)
+HPDF_LoadU3DFromFileW (HPDF_Doc       pdf,
+                       const wchar_t *filename);
+#endif
+
 HPDF_EXPORT(HPDF_Image)
 HPDF_LoadJpegImageFromMem   (HPDF_Doc      pdf,
                       const HPDF_BYTE     *buffer,
@@ -831,6 +877,14 @@ HPDF_LoadRawImageFromFile  (HPDF_Doc           pdf,
                             HPDF_UINT          height,
                             HPDF_ColorSpace    color_space);
 
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_Image)
+HPDF_LoadRawImageFromFile  (HPDF_Doc           pdf,
+                            const char         *filename,
+                            HPDF_UINT          width,
+                            HPDF_UINT          height,
+                            HPDF_ColorSpace    color_space);
+#endif
 
 HPDF_EXPORT(HPDF_Image)
 HPDF_LoadRawImageFromMem  (HPDF_Doc           pdf,
@@ -992,6 +1046,11 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
 HPDF_AttachFile  (HPDF_Doc    pdf,
                   const char *file);
 
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_EmbeddedFile)
+HPDF_AttachFileW (HPDF_Doc    pdf,
+                  const wchar_t *file);
+#endif
 
 /*--------------------------------------------------------------------------*/
 /*----- extended graphics state --------------------------------------------*/
@@ -1623,6 +1682,13 @@ HPDF_EXPORT(HPDF_OutputIntent)
 HPDF_LoadIccProfileFromFile  (HPDF_Doc  pdf,
                             const char* icc_file_name,
                                    int  numcomponent);
+
+#if defined(WIN32)
+HPDF_EXPORT(HPDF_OutputIntent)
+HPDF_LoadIccProfileFromFileW (HPDF_Doc  pdf,
+                              const wchar_t *icc_file_name,
+                              int  numcomponent);
+#endif
 
 #ifdef __cplusplus
 }

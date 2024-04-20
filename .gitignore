@@ -41,3 +41,5 @@ CPackSourceConfig.cmake
 cmake_install.cmake
 depcomp
 /.vs/libHARU/v17
+/.vs
+/out/build/x64-Debug

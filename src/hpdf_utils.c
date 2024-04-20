@@ -220,7 +220,7 @@ HPDF_FToA  (char       *s,
 
     /* process integer part */
     do {
-        dig = modff(int_val/10.0, &int_val);
+        dig = modff(int_val/10.0f, &int_val);
         *t++ = (char)(dig*10.0 + 0.5) + '0';
     } while (int_val > 0);
 
@@ -233,7 +233,7 @@ HPDF_FToA  (char       *s,
    *s++ = '.';
    if(fpart_val != 0.0) {
        for (HPDF_UINT32 i = 0; i < prec; i++) {
-          fpart_val = modff(fpart_val*10.0, &int_val);
+          fpart_val = modff(fpart_val*10.0f, &int_val);
           *s++ = (char)(int_val + 0.5) + '0';
        }
    }

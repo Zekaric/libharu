@@ -2067,14 +2067,14 @@ HPDF_TTFontDef_SaveFontData  (HPDF_FontDef   fontdef,
             pmetric=attr->h_metric;
             for (j = 0; j < attr->num_h_metric; j++) {
                 // write all the used glyphs and write the last metric in the hMetrics array
-                if (attr->glyph_tbl.flgs[j] == 1 || j==attr->num_h_metric-1) {
+                if (attr->glyph_tbl.flgs[j] == 1 || j == (HPDF_UINT) (attr->num_h_metric - 1)) {
                     ret += WriteUINT16 (tmp_stream, pmetric->advance_width);
                     ret += WriteINT16 (tmp_stream, pmetric->lsb);
                 }
                 else
                 {
-                    ret += WriteUINT16 (tmp_stream, value);
-                    ret += WriteINT16 (tmp_stream, value);
+                    ret += WriteUINT16 (tmp_stream, (HPDF_UINT16) value);
+                    ret += WriteINT16 (tmp_stream, (HPDF_INT16) value);
                 }
                 pmetric++;
             }
@@ -2084,7 +2084,7 @@ HPDF_TTFontDef_SaveFontData  (HPDF_FontDef   fontdef,
                     ret += WriteINT16 (tmp_stream, pmetric->lsb);
                 }
                 else
-                    ret += WriteINT16 (tmp_stream, value);
+                    ret += WriteINT16 (tmp_stream, (HPDF_INT16) value);
                 pmetric++;
                 j++;
             }

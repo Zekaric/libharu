@@ -16,6 +16,11 @@
  */
 
 #include <string.h>
+
+#if defined(WIN32)
+#include <windows.h>
+#endif
+
 #include "hpdf_conf.h"
 #include "hpdf_utils.h"
 #include "hpdf_objects.h"
@@ -54,6 +59,40 @@ HPDF_String_New  (HPDF_MMgr        mmgr,
     return obj;
 }
 
+
+#if defined(WIN32)
+HPDF_String
+HPDF_String_NewW (HPDF_MMgr        mmgr,
+                  const wchar_t   *value,
+                  HPDF_Encoder     encoder)
+{
+    HPDF_String obj;
+    size_t      valueLen;
+    char       *utf8Value;
+    int         utf8ValueLen;
+
+    HPDF_PTRACE((" HPDF_String_NewW\n"));
+
+    /* Convert the wchar_t to UTF8 char * */
+    valueLen = wcslen(value);
+
+    utf8ValueLen = WideCharToMultiByte(CP_UTF8, 0, value, (int) valueLen, 0, 0, NULL, NULL);
+    utf8Value    = (char *) HPDF_GetMem(mmgr, (utf8ValueLen + 1) * sizeof(char));
+    if (utf8Value) 
+    {
+       WideCharToMultiByte(CP_UTF8, 0, value, (int) valueLen, utf8Value, utf8ValueLen, NULL, NULL);
+       utf8Value[utf8ValueLen] = '\0';
+    }
+
+    /* Use the existing function to get the string. */
+    obj = HPDF_String_New(mmgr, utf8Value, encoder);
+
+    /* Clean up */
+    HPDF_FreeMem(mmgr, utf8Value);
+
+    return obj;
+}
+#endif
 
 HPDF_STATUS
 HPDF_String_SetValue  (HPDF_String      obj,

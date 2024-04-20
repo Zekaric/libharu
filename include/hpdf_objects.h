@@ -260,6 +260,13 @@ HPDF_String_New  (HPDF_MMgr        mmgr,
                   const char  *value,
                   HPDF_Encoder     encoder);
 
+#if defined(WIN32)
+HPDF_String
+HPDF_String_NewW (HPDF_MMgr        mmgr,
+                  const wchar_t   *value,
+                  HPDF_Encoder     encoder);
+#endif
+
 
 HPDF_STATUS
 HPDF_String_SetValue  (HPDF_String      obj,

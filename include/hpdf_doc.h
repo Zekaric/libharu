@@ -33,130 +33,81 @@ extern "C" {
 
 #define HPDF_VER_DEFAULT  HPDF_VER_12
 
-typedef struct _HPDF_Doc_Rec {
-    HPDF_UINT32     sig_bytes;
-    HPDF_PDFVer     pdf_version;
+typedef struct _HPDF_Doc_Rec HpdfDoc;
 
-    HPDF_MMgr         mmgr;
-    HPDF_Catalog      catalog;
-    HPDF_Outline      outlines;
-    HPDF_Xref         xref;
-    HPDF_Pages        root_pages;
-    HPDF_Pages        cur_pages;
-    HPDF_Page         cur_page;
-    HPDF_List         page_list;
-    HPDF_Error_Rec    error;
-    HPDF_Dict         info;
-    HPDF_Dict         trailer;
+typedef struct _HPDF_Doc_Rec 
+{
+   HpdfUInt32       sig_bytes;
+   HPDF_PDFVer       pdf_version;
 
-    HPDF_List         font_mgr;
-    HPDF_BYTE         ttfont_tag[6];
+   HPDF_MMgr         mmgr;
+   HPDF_Catalog      catalog;
+   HPDF_Outline      outlines;
+   HPDF_Xref         xref;
+   HPDF_Pages        root_pages;
+   HPDF_Pages        cur_pages;
+   HPDF_Page         cur_page;
+   HPDF_List         page_list;
+   HPDF_Error_Rec    error;
+   HPDF_Dict         info;
+   HPDF_Dict         trailer;
 
-    /* list for loaded fontdefs */
-    HPDF_List         fontdef_list;
+   HPDF_List         font_mgr;
+   HpdfByte          ttfont_tag[6];
 
-    /* list for loaded encodings */
-    HPDF_List         encoder_list;
+   /* list for loaded fontdefs */
+   HPDF_List         fontdef_list;
 
-    HPDF_Encoder      cur_encoder;
+   /* list for loaded encodings */
+   HPDF_List         encoder_list;
 
-    /* default compression mode */
-    HPDF_BOOL         compression_mode;
+   HPDF_Encoder      cur_encoder;
 
-    HPDF_BOOL         encrypt_on;
-    HPDF_EncryptDict  encrypt_dict;
+   /* default compression mode */
+   HpdfBool         compression_mode;
 
-    HPDF_Encoder      def_encoder;
+   HpdfBool         encrypt_on;
+   HPDF_EncryptDict  encrypt_dict;
 
-    HPDF_UINT         page_per_pages;
-    HPDF_UINT         cur_page_num;
+   HPDF_Encoder      def_encoder;
 
-    /* buffer for saving into memory stream */
-    HPDF_Stream       stream;
+   HpdfUInt         page_per_pages;
+   HpdfUInt         cur_page_num;
+
+   /* buffer for saving into memory stream */
+   HPDF_Stream       stream;
 } HPDF_Doc_Rec;
 
-typedef struct _HPDF_Doc_Rec  *HPDF_Doc;
 
-
-HPDF_Encoder
-HPDF_Doc_FindEncoder (HPDF_Doc         pdf,
-                      const char  *encoding_name);
-
-
-HPDF_FontDef
-HPDF_Doc_FindFontDef (HPDF_Doc         pdf,
-                      const char  *font_name);
-
-
-HPDF_Font
-HPDF_Doc_FindFont  (HPDF_Doc         pdf,
-                    const char  *font_name,
-                    const char  *encoding_name);
-
-
-HPDF_BOOL
-HPDF_Doc_Validate  (HPDF_Doc  pdf);
-
+HPDF_Encoder   HPDF_Doc_FindEncoder(         HpdfDoc const * const pdf, char const * const encoding_name);
+HPDF_FontDef   HPDF_Doc_FindFontDef(         HpdfDoc const * const pdf, char const *font_name); 
+HPDF_Font      HPDF_Doc_FindFont(            HpdfDoc const * const pdf, char const *font_name, char const *encoding_name);
+HpdfBool      HPDF_Doc_Validate(            HpdfDoc const * const pdf);
 
 /*----- page handling -------------------------------------------------------*/
 
-HPDF_Pages
-HPDF_Doc_GetCurrentPages  (HPDF_Doc  pdf);
-
-
-HPDF_Pages
-HPDF_Doc_AddPagesTo  (HPDF_Doc     pdf,
-                      HPDF_Pages   parent);
-
-
-HPDF_STATUS
-HPDF_Doc_SetCurrentPages  (HPDF_Doc    pdf,
-                           HPDF_Pages  pages);
-
-
-HPDF_STATUS
-HPDF_Doc_SetCurrentPage  (HPDF_Doc   pdf,
-                          HPDF_Page  page);
-
-
-
+HPDF_Pages     HPDF_Doc_GetCurrentPages(     HpdfDoc       * const pdf);
+HPDF_Pages     HPDF_Doc_AddPagesTo(          HpdfDoc       * const pdf, HPDF_Pages   parent);
+HpdfStatus    HPDF_Doc_SetCurrentPages(     HpdfDoc       * const pdf, HPDF_Pages  pages);
+HpdfStatus    HPDF_Doc_SetCurrentPage(      HpdfDoc       * const pdf, HPDF_Page  page);
 
 /*----- font handling -------------------------------------------------------*/
 
-HPDF_FontDef
-HPDF_GetFontDef (HPDF_Doc         pdf,
-                 const char  *font_name);
-
-
-HPDF_STATUS
-HPDF_Doc_RegisterFontDef  (HPDF_Doc       pdf,
-                           HPDF_FontDef   fontdef);
-
+HPDF_FontDef   HPDF_GetFontDef(              HpdfDoc       * const pdf, char const *font_name);
+HpdfStatus    HPDF_Doc_RegisterFontDef(     HpdfDoc       * const pdf, HPDF_FontDef   fontdef);
 
 /*----- encoding handling ---------------------------------------------------*/
 
-HPDF_STATUS
-HPDF_Doc_RegisterEncoder  (HPDF_Doc       pdf,
-                           HPDF_Encoder   encoder);
+HpdfStatus    HPDF_Doc_RegisterEncoder(     HpdfDoc       * const pdf, HPDF_Encoder   encoder);
 
+/*----- encryption ----------------------------------------------------------*/
 
-
-/*----- encryptio------------------------------------------------------------*/
-
-HPDF_STATUS
-HPDF_Doc_SetEncryptOn (HPDF_Doc  pdf);
-
-
-HPDF_STATUS
-HPDF_Doc_SetEncryptOff (HPDF_Doc  pdf);
-
-
-HPDF_STATUS
-HPDF_Doc_PrepareEncryption (HPDF_Doc  pdf);
+HpdfStatus    HPDF_Doc_SetEncryptOn(        HpdfDoc       * const pdf);
+HpdfStatus    HPDF_Doc_SetEncryptOff(       HpdfDoc       * const pdf);
+HpdfStatus    HPDF_Doc_PrepareEncryption(   HpdfDoc       * const pdf);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
 #endif /* _HPDF_DOC_H */
-

@@ -27,21 +27,21 @@ void  __stdcall
 #else
 void
 #endif
-error_handler (HPDF_STATUS   error_no,
-               HPDF_STATUS   detail_no,
+error_handler (HpdfStatus   error_no,
+               HpdfStatus   detail_no,
                void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
 void
 show_stripe_pattern  (HPDF_Page   page,
-                      HPDF_REAL   x,
-                      HPDF_REAL   y)
+                      HpdfReal   x,
+                      HpdfReal   y)
 {
-    HPDF_UINT iy = 0;
+    HpdfUInt iy = 0;
 
     while (iy < 50) {
         HPDF_Page_SetRGBStroke (page, 0.0, 0.0, 0.5);
@@ -59,9 +59,9 @@ show_stripe_pattern  (HPDF_Page   page,
 
 void
 show_description  (HPDF_Page          page,
-                   HPDF_REAL          x,
-                   HPDF_REAL          y,
-                   const char   *text)
+                   HpdfReal          x,
+                   HpdfReal          y,
+                   char const  *text)
 {
     float fsize = HPDF_Page_GetCurrentFontSize (page);
     HPDF_Font font = HPDF_Page_GetCurrentFont (page);
@@ -83,7 +83,7 @@ int main (int argc, char **argv)
 {
     const char *page_title = "Text Demo";
 
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     HPDF_Font font;
     HPDF_Page page;
     char fname[256];

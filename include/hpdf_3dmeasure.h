@@ -27,27 +27,8 @@ extern "C" {
 /*----------------------------------------------------------------------------*/
 /*------ HPDF_3DMeasure -----------------------------------------------------*/
 
-
-HPDF_3DMeasure
-HPDF_3DC3DMeasure_New(HPDF_MMgr mmgr,
-		              HPDF_Xref xref,
-		              HPDF_Point3D    firstanchorpoint,
-		              HPDF_Point3D    textanchorpoint
-		);
-             
-HPDF_3DMeasure
-HPDF_PD33DMeasure_New(HPDF_MMgr mmgr,
-					  HPDF_Xref xref,
-					  HPDF_Point3D    annotationPlaneNormal,
-					  HPDF_Point3D    firstAnchorPoint,
-					  HPDF_Point3D    secondAnchorPoint,
-					  HPDF_Point3D    leaderLinesDirection,
-					  HPDF_Point3D    measurementValuePoint,
-					  HPDF_Point3D    textYDirection,
-					  HPDF_REAL       value,
-					  const char*     unitsString
-					  );
-
+HPDF_3DMeasure HPDF_3DC3DMeasure_New(HPDF_MMgr mmgr, HPDF_Xref xref, HpdfPoint3D const firstanchorpoint, HpdfPoint3D const textanchorpoint);
+HPDF_3DMeasure HPDF_PD33DMeasure_New(HPDF_MMgr mmgr, HPDF_Xref xref, HpdfPoint3D const annotationPlaneNormal, HpdfPoint3D const firstAnchorPoint, HpdfPoint3D const secondAnchorPoint, HpdfPoint3D const leaderLinesDirection, HpdfPoint3D const measurementValuePoint, HpdfPoint3D const textYDirection, HpdfReal const value, const char*     unitsString);
 
 #ifdef __cplusplus
 }

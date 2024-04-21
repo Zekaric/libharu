@@ -25,26 +25,31 @@ void  __stdcall
 #else
 void
 #endif
-error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
+error_handler  (HpdfStatus   error_no,
+                HpdfStatus   detail_no,
                 void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
 
 void
-print_page  (HPDF_Page  page, const char *caption, HPDF_Font font, 
-    HPDF_TransitionStyle style, HPDF_Page prev, HPDF_Page next)
+   print_page(
+      HPDF_Page  page, 
+      const char *caption, 
+      HPDF_Font font, 
+      HPDF_TransitionStyle style, 
+      HPDF_Page prev, 
+      HPDF_Page next)
 {
-    float r = (float)rand() / RAND_MAX;
-    float g = (float)rand() / RAND_MAX;
-    float b = (float)rand() / RAND_MAX;
-    HPDF_Rect rect;
-    HPDF_Destination dst;
-    HPDF_Annotation annot;
+    float             r = (float)rand() / RAND_MAX;
+    float             g = (float)rand() / RAND_MAX;
+    float             b = (float)rand() / RAND_MAX;
+    HpdfRect          rect;
+    HPDF_Destination  dst;
+    HPDF_Annotation   annot;
 
     HPDF_Page_SetWidth (page, 800);
     HPDF_Page_SetHeight (page, 600);
@@ -109,7 +114,7 @@ print_page  (HPDF_Page  page, const char *caption, HPDF_Font font,
 
 int main(int argc, char **argv)
 {
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     HPDF_Font font;
     HPDF_Page page[17];
     char fname[256];

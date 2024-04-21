@@ -110,7 +110,7 @@ extern "C" {
 #define HPDF_PAGE_INVALID_SIZE                    0x1054
 #define HPDF_PAGE_INVALID_XOBJECT                 0x1055
 #define HPDF_PAGE_OUT_OF_RANGE                    0x1056
-#define HPDF_REAL_OUT_OF_RANGE                    0x1057
+#define HpdfReal_OUT_OF_RANGE                    0x1057
 #define HPDF_STREAM_EOF                           0x1058
 #define HPDF_STREAM_READLN_CONTINUE               0x1059
 /*                                                0x105A */
@@ -154,49 +154,25 @@ extern "C" {
 /*---------------------------------------------------------------------------*/
 /*----- HPDF_Error ----------------------------------------------------------*/
 
-typedef struct  _HPDF_Error_Rec  *HPDF_Error;
+typedef struct  _HPDF_Error_Rec  HpdfError;
 
 typedef struct  _HPDF_Error_Rec {
-    HPDF_STATUS             error_no;
-    HPDF_STATUS             detail_no;
+    HpdfStatus             error_no;
+    HpdfStatus             detail_no;
     HPDF_Error_Handler      error_fn;
     void                    *user_data;
 } HPDF_Error_Rec;
 
-
 /*  HPDF_Error_init
- *
- *  if error_fn is NULL, the default-handlers are set as error-handler.
- *  user_data is used to identify the object which threw an error.
- *
- */
-void
-HPDF_Error_Init  (HPDF_Error    error,
-                  void         *user_data);
-
-
-void
-HPDF_Error_Reset  (HPDF_Error  error);
-
-
-HPDF_STATUS
-HPDF_Error_GetCode  (HPDF_Error  error);
-
-
-HPDF_STATUS
-HPDF_Error_GetDetailCode  (HPDF_Error  error);
-
-
-HPDF_STATUS
-HPDF_SetError  (HPDF_Error   error,
-                HPDF_STATUS  error_no,
-                HPDF_STATUS  detail_no);
-
-
-HPDF_STATUS
-HPDF_RaiseError  (HPDF_Error   error,
-                  HPDF_STATUS  error_no,
-                  HPDF_STATUS  detail_no);
+**
+**  if error_fn is NULL, the default-handlers are set as error-handler.
+**  user_data is used to identify the object which threw an error. */
+void        HPDF_Error_Init(           HpdfError       * const error, void *user_data);
+void        HPDF_Error_Reset(          HpdfError       * const error);
+HpdfStatus  HPDF_Error_GetCode(        HpdfError const * const error);
+HpdfStatus  HPDF_Error_GetDetailCode(  HpdfError const * const error);
+HpdfStatus  HPDF_SetError(             HpdfError       * const error, HpdfStatus  error_no, HpdfStatus  detail_no);
+HpdfStatus  HPDF_RaiseError(           HpdfError       * const error, HpdfStatus  error_no, HpdfStatus  detail_no);
 
 #ifdef __cplusplus
 }

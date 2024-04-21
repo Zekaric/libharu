@@ -28,12 +28,12 @@ void  __stdcall
 #else
 void
 #endif
-error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
+error_handler  (HpdfStatus   error_no,
+                HpdfStatus   detail_no,
                 void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
@@ -41,7 +41,7 @@ void
 show_description (HPDF_Page    page,
                   float        x,
                   float        y,
-                  const char  *text)
+                  char const *text)
 {
     char buf[255];
 
@@ -75,7 +75,7 @@ show_description (HPDF_Page    page,
 
 int main (int argc, char **argv)
 {
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     HPDF_Font font;
     HPDF_Page page;
     char fname[256];

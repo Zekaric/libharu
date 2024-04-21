@@ -27,55 +27,40 @@ extern "C" {
 
 typedef struct  _HPDF_MPool_Node_Rec  *HPDF_MPool_Node;
 
-typedef struct  _HPDF_MPool_Node_Rec {
-    HPDF_BYTE*       buf;
-    HPDF_UINT        size;
-    HPDF_UINT        used_size;
-    HPDF_MPool_Node  next_node;
+typedef struct  _HPDF_MPool_Node_Rec 
+{
+    HpdfByte         *buf;
+    HpdfUInt          size;
+    HpdfUInt          used_size;
+    HPDF_MPool_Node   next_node;
 } HPDF_MPool_Node_Rec;
 
 
 typedef struct  _HPDF_MMgr_Rec  *HPDF_MMgr;
 
 typedef struct  _HPDF_MMgr_Rec {
-    HPDF_Error        error;
+    HpdfError        *error;
     HPDF_Alloc_Func   alloc_fn;
     HPDF_Free_Func    free_fn;
     HPDF_MPool_Node   mpool;
-    HPDF_UINT         buf_size;
+    HpdfUInt         buf_size;
 
 #ifdef HPDF_MEM_DEBUG
-    HPDF_UINT         alloc_cnt;
-    HPDF_UINT         free_cnt;
+    HpdfUInt         alloc_cnt;
+    HpdfUInt         free_cnt;
 #endif
 } HPDF_MMgr_Rec;
 
 
 /*  HPDF_mpool_new
- *
- *  create new HPDF_mpool object. when memory allocation goes wrong,
- *  it returns NULL and error handling function will be called.
- *  if buf_size is non-zero, mmgr is configured to be using memory-pool
- */
-HPDF_MMgr
-HPDF_MMgr_New  (HPDF_Error       error,
-                HPDF_UINT        buf_size,
-                HPDF_Alloc_Func  alloc_fn,
-                HPDF_Free_Func   free_fn);
-
-
-void
-HPDF_MMgr_Free  (HPDF_MMgr  mmgr);
-
-
-void*
-HPDF_GetMem  (HPDF_MMgr  mmgr,
-              HPDF_UINT  size);
-
-
-void
-HPDF_FreeMem  (HPDF_MMgr  mmgr,
-               void       *aptr);
+**
+**  create new HPDF_mpool object. when memory allocation goes wrong,
+**  it returns NULL and error handling function will be called.
+**  if buf_size is non-zero, mmgr is configured to be using memory-pool */
+HPDF_MMgr HPDF_MMgr_New(   HpdfError       * const error, HpdfUInt buf_size, HPDF_Alloc_Func  alloc_fn, HPDF_Free_Func free_fn);
+void      HPDF_MMgr_Free(  HPDF_MMgr  mmgr);
+void     *HPDF_GetMem(     HPDF_MMgr  mmgr, HpdfUInt size);
+void      HPDF_FreeMem(    HPDF_MMgr  mmgr, void *aptr);
 
 #ifdef __cplusplus
 }

@@ -36,7 +36,7 @@ static const char * const HPDF_BM_NAMES[] = {
                                       };
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_ExtGState_Validate  (HPDF_ExtGState  ext_gstate)
 {
     if (!ext_gstate || (ext_gstate->header.obj_class != 
@@ -49,7 +49,7 @@ HPDF_ExtGState_Validate  (HPDF_ExtGState  ext_gstate)
 }
 
 
-HPDF_STATUS
+HpdfStatus
 ExtGState_Check  (HPDF_ExtGState  ext_gstate)
 {
     if (!HPDF_ExtGState_Validate (ext_gstate))
@@ -87,11 +87,11 @@ HPDF_ExtGState_New  (HPDF_MMgr   mmgr,
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_ExtGState_SetAlphaStroke  (HPDF_ExtGState   ext_gstate,
-                                HPDF_REAL        value)
+                                HpdfReal        value)
 {
-    HPDF_STATUS ret = ExtGState_Check (ext_gstate);
+    HpdfStatus ret = ExtGState_Check (ext_gstate);
     
     if (ret != HPDF_OK)
         return ret;
@@ -104,11 +104,11 @@ HPDF_ExtGState_SetAlphaStroke  (HPDF_ExtGState   ext_gstate,
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_ExtGState_SetAlphaFill  (HPDF_ExtGState   ext_gstate,
-                              HPDF_REAL        value)
+                              HpdfReal        value)
 {
-    HPDF_STATUS ret = ExtGState_Check (ext_gstate);
+    HpdfStatus ret = ExtGState_Check (ext_gstate);
     
     if (ret != HPDF_OK)
         return ret;
@@ -121,11 +121,11 @@ HPDF_ExtGState_SetAlphaFill  (HPDF_ExtGState   ext_gstate,
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_ExtGState_SetBlendMode  (HPDF_ExtGState   ext_gstate,
                               HPDF_BlendMode   bmode)
 {
-    HPDF_STATUS ret = ExtGState_Check (ext_gstate);
+    HpdfStatus ret = ExtGState_Check (ext_gstate);
     
     if (ret != HPDF_OK)
         return ret;
@@ -138,11 +138,11 @@ HPDF_ExtGState_SetBlendMode  (HPDF_ExtGState   ext_gstate,
 }
 
 /*
-HPDF_STATUS
+HpdfStatus
 HPDF_ExtGState_SetStrokeAdjustment  (HPDF_ExtGState   ext_gstate,
-                                     HPDF_BOOL        value)
+                                     HpdfBool        value)
 {
-    HPDF_STATUS ret = ExtGState_Check (ext_gstate);
+    HpdfStatus ret = ExtGState_Check (ext_gstate);
     
     if (ret != HPDF_OK)
         return ret;

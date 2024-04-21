@@ -63,14 +63,14 @@ HPDF_Destination_New  (HPDF_MMgr   mmgr,
 
     /* default type is HPDF_FIT */
     if (HPDF_Array_AddName (dst,
-            HPDF_DESTINATION_TYPE_NAMES[(HPDF_INT)HPDF_FIT]) != HPDF_OK)
+            HPDF_DESTINATION_TYPE_NAMES[(HpdfInt)HPDF_FIT]) != HPDF_OK)
         return NULL;
 
     return dst;
 }
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Destination_Validate (HPDF_Destination  dst)
 {
     HPDF_Obj_Header *header = (HPDF_Obj_Header *)dst;
@@ -94,13 +94,13 @@ HPDF_Destination_Validate (HPDF_Destination  dst)
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Destination_SetXYZ  (HPDF_Destination  dst,
-                          HPDF_REAL         left,
-                          HPDF_REAL         top,
-                          HPDF_REAL         zoom)
+                          HpdfReal         left,
+                          HpdfReal         top,
+                          HpdfReal         zoom)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Page target;
 
     HPDF_PTRACE((" HPDF_Destination_SetXYZ\n"));
@@ -120,7 +120,7 @@ HPDF_Destination_SetXYZ  (HPDF_Destination  dst,
     }
 
     ret += HPDF_Array_AddName (dst,
-                HPDF_DESTINATION_TYPE_NAMES[(HPDF_INT)HPDF_XYZ]);
+                HPDF_DESTINATION_TYPE_NAMES[(HpdfInt)HPDF_XYZ]);
     ret += HPDF_Array_AddReal (dst, left);
     ret += HPDF_Array_AddReal (dst, top);
     ret += HPDF_Array_AddReal (dst, zoom);
@@ -132,10 +132,10 @@ HPDF_Destination_SetXYZ  (HPDF_Destination  dst,
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Destination_SetFit  (HPDF_Destination  dst)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Page target;
 
     HPDF_PTRACE((" HPDF_Destination_SetFit\n"));
@@ -151,7 +151,7 @@ HPDF_Destination_SetFit  (HPDF_Destination  dst)
     }
 
     ret += HPDF_Array_AddName (dst,
-                HPDF_DESTINATION_TYPE_NAMES[(HPDF_INT)HPDF_FIT]);
+                HPDF_DESTINATION_TYPE_NAMES[(HpdfInt)HPDF_FIT]);
 
     if (ret != HPDF_OK)
         return HPDF_CheckError (dst->error);
@@ -160,11 +160,11 @@ HPDF_Destination_SetFit  (HPDF_Destination  dst)
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Destination_SetFitH  (HPDF_Destination  dst,
-                           HPDF_REAL         top)
+                           HpdfReal         top)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Page target;
 
     HPDF_PTRACE((" HPDF_Destination_SetFitH\n"));
@@ -180,7 +180,7 @@ HPDF_Destination_SetFitH  (HPDF_Destination  dst,
     }
 
     ret += HPDF_Array_AddName (dst,
-                HPDF_DESTINATION_TYPE_NAMES[(HPDF_INT)HPDF_FIT_H]);
+                HPDF_DESTINATION_TYPE_NAMES[(HpdfInt)HPDF_FIT_H]);
     ret += HPDF_Array_AddReal (dst, top);
 
     if (ret != HPDF_OK)
@@ -189,11 +189,11 @@ HPDF_Destination_SetFitH  (HPDF_Destination  dst,
     return HPDF_OK;
 }
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Destination_SetFitV  (HPDF_Destination  dst,
-                           HPDF_REAL         left)
+                           HpdfReal         left)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Page target;
 
     HPDF_PTRACE((" HPDF_Destination_SetFitV\n"));
@@ -209,7 +209,7 @@ HPDF_Destination_SetFitV  (HPDF_Destination  dst,
     }
 
     ret += HPDF_Array_AddName (dst,
-                HPDF_DESTINATION_TYPE_NAMES[(HPDF_INT)HPDF_FIT_V]);
+                HPDF_DESTINATION_TYPE_NAMES[(HpdfInt)HPDF_FIT_V]);
     ret += HPDF_Array_AddReal (dst, left);
 
     if (ret != HPDF_OK)
@@ -219,14 +219,14 @@ HPDF_Destination_SetFitV  (HPDF_Destination  dst,
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Destination_SetFitR  (HPDF_Destination  dst,
-                           HPDF_REAL         left,
-                           HPDF_REAL         bottom,
-                           HPDF_REAL         right,
-                           HPDF_REAL         top)
+                           HpdfReal         left,
+                           HpdfReal         bottom,
+                           HpdfReal         right,
+                           HpdfReal         top)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Page target;
 
     HPDF_PTRACE((" HPDF_Destination_SetFitR\n"));
@@ -242,7 +242,7 @@ HPDF_Destination_SetFitR  (HPDF_Destination  dst,
     }
 
     ret += HPDF_Array_AddName (dst,
-                HPDF_DESTINATION_TYPE_NAMES[(HPDF_INT)HPDF_FIT_R]);
+                HPDF_DESTINATION_TYPE_NAMES[(HpdfInt)HPDF_FIT_R]);
     ret += HPDF_Array_AddReal (dst, left);
     ret += HPDF_Array_AddReal (dst, bottom);
     ret += HPDF_Array_AddReal (dst, right);
@@ -255,10 +255,10 @@ HPDF_Destination_SetFitR  (HPDF_Destination  dst,
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Destination_SetFitB  (HPDF_Destination  dst)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Page target;
 
     HPDF_PTRACE((" HPDF_Destination_SetFitB\n"));
@@ -274,7 +274,7 @@ HPDF_Destination_SetFitB  (HPDF_Destination  dst)
     }
 
     ret += HPDF_Array_AddName (dst,
-                HPDF_DESTINATION_TYPE_NAMES[(HPDF_INT)HPDF_FIT_B]);
+                HPDF_DESTINATION_TYPE_NAMES[(HpdfInt)HPDF_FIT_B]);
 
     if (ret != HPDF_OK)
         return HPDF_CheckError (dst->error);
@@ -283,11 +283,11 @@ HPDF_Destination_SetFitB  (HPDF_Destination  dst)
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Destination_SetFitBH  (HPDF_Destination  dst,
-                            HPDF_REAL         top)
+                            HpdfReal         top)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Page target;
 
     HPDF_PTRACE((" HPDF_Destination_SetFitBH\n"));
@@ -303,7 +303,7 @@ HPDF_Destination_SetFitBH  (HPDF_Destination  dst,
     }
 
     ret += HPDF_Array_AddName (dst,
-                HPDF_DESTINATION_TYPE_NAMES[(HPDF_INT)HPDF_FIT_BH]);
+                HPDF_DESTINATION_TYPE_NAMES[(HpdfInt)HPDF_FIT_BH]);
     ret += HPDF_Array_AddReal (dst, top);
 
     if (ret != HPDF_OK)
@@ -312,11 +312,11 @@ HPDF_Destination_SetFitBH  (HPDF_Destination  dst,
     return HPDF_OK;
 }
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Destination_SetFitBV  (HPDF_Destination  dst,
-                            HPDF_REAL         left)
+                            HpdfReal         left)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Page target;
 
     HPDF_PTRACE((" HPDF_Destination_SetFitBV\n"));
@@ -332,7 +332,7 @@ HPDF_Destination_SetFitBV  (HPDF_Destination  dst,
     }
 
     ret += HPDF_Array_AddName (dst,
-                HPDF_DESTINATION_TYPE_NAMES[(HPDF_INT)HPDF_FIT_BV]);
+                HPDF_DESTINATION_TYPE_NAMES[(HpdfInt)HPDF_FIT_BV]);
     ret += HPDF_Array_AddReal (dst, left);
 
     if (ret != HPDF_OK)

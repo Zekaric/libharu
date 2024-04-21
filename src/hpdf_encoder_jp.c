@@ -3,8 +3,8 @@
  *
  * URL: http://libharu.org
  *
- * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
- * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
+ * Copyright(c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
+ * Copyright(c) 2007-2009 Antony Dovgal <tony@daylessday.org>
  *
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
@@ -15637,7 +15637,7 @@ static const HPDF_CidRange_Rec CMAP_ARRAY_EUC_V[] = {
     {0xffff, 0xffff, 0}
 };
 
-static const HPDF_UINT16 JWW_LINE_HEAD_SJIS[] = {
+static const HpdfUInt16 JWW_LINE_HEAD_SJIS[] = {
     0x8142,
     0x8141,
     0x829f,
@@ -15673,7 +15673,7 @@ static const HPDF_UINT16 JWW_LINE_HEAD_SJIS[] = {
     0x0000
 };
 
-static const HPDF_UINT16 JWW_LINE_HEAD_EUC[] = {
+static const HpdfUInt16 JWW_LINE_HEAD_EUC[] = {
     0xA1A3,
     0xA1A2,
     0xA4A1,
@@ -15711,422 +15711,430 @@ static const HPDF_UINT16 JWW_LINE_HEAD_EUC[] = {
 
 
 
-static const HPDF_CidRange_Rec MS_RKSJ_NOTDEF_RANGE = {0x00, 0x1F, 231};
+static const HPDF_CidRange_Rec MS_RKSJ_NOTDEF_RANGE = { 0x00, 0x1F, 231 };
 
-static const HPDF_CidRange_Rec MSP_RKSJ_NOTDEF_RANGE = {0x00, 0x1F, 1};
+static const HPDF_CidRange_Rec MSP_RKSJ_NOTDEF_RANGE = { 0x00, 0x1F, 1 };
 
-static const HPDF_CidRange_Rec EUC_NOTDEF_RANGE = {0x00, 0x1F, 231};
-
-
-static HPDF_BOOL
-RKSJ_IsLeadByte  (HPDF_Encoder    encoder,
-                  HPDF_BYTE       b);
+static const HPDF_CidRange_Rec EUC_NOTDEF_RANGE = { 0x00, 0x1F, 231 };
 
 
-static HPDF_BOOL
-RKSJ_IsTrialByte  (HPDF_Encoder    encoder,
-                   HPDF_BYTE       b);
+static HpdfBool
+RKSJ_IsLeadByte(HPDF_Encoder    encoder,
+   HpdfByte       b);
 
 
-static HPDF_STATUS
-RKSJ_AddCodeSpaceRange (HPDF_Encoder    encoder);
+static HpdfBool
+RKSJ_IsTrialByte(HPDF_Encoder    encoder,
+   HpdfByte       b);
 
 
-static HPDF_STATUS
-MS_RKSJ_H_Init  (HPDF_Encoder  encoder);
+static HpdfStatus
+RKSJ_AddCodeSpaceRange(HPDF_Encoder    encoder);
 
 
-static HPDF_STATUS
-MSP_RKSJ_H_Init  (HPDF_Encoder  encoder);
+static HpdfStatus
+MS_RKSJ_H_Init(HPDF_Encoder  encoder);
 
 
-static HPDF_STATUS
-MS_RKSJ_V_Init  (HPDF_Encoder  encoder);
+static HpdfStatus
+MSP_RKSJ_H_Init(HPDF_Encoder  encoder);
 
 
-static HPDF_BOOL
-EUC_IsLeadByte  (HPDF_Encoder    encoder,
-                 HPDF_BYTE       b);
+static HpdfStatus
+MS_RKSJ_V_Init(HPDF_Encoder  encoder);
 
 
-static HPDF_BOOL
-EUC_IsTrialByte  (HPDF_Encoder    encoder,
-                  HPDF_BYTE       b);
+static HpdfBool
+EUC_IsLeadByte(HPDF_Encoder    encoder,
+   HpdfByte       b);
 
 
-static HPDF_STATUS
-EUC_AddCodeSpaceRange (HPDF_Encoder    encoder);
+static HpdfBool
+EUC_IsTrialByte(HPDF_Encoder    encoder,
+   HpdfByte       b);
 
 
-static HPDF_STATUS
-EUC_H_Init  (HPDF_Encoder  encoder);
+static HpdfStatus
+EUC_AddCodeSpaceRange(HPDF_Encoder    encoder);
 
 
-static HPDF_STATUS
-EUC_V_Init  (HPDF_Encoder  encoder);
+static HpdfStatus
+EUC_H_Init(HPDF_Encoder  encoder);
+
+
+static HpdfStatus
+EUC_V_Init(HPDF_Encoder  encoder);
 
 
 /*--------------------------------------------------------------------------*/
 
-static HPDF_BOOL
-RKSJ_IsLeadByte  (HPDF_Encoder    encoder,
-                  HPDF_BYTE       b)
+static HpdfBool
+RKSJ_IsLeadByte(HPDF_Encoder    encoder,
+   HpdfByte       b)
 {
-    HPDF_UNUSED (encoder);
-    return ((b >= 0x81 && b <= 0x9f) || (b >= 0xe0 && b <= 0xfc));
+   HPDF_UNUSED(encoder);
+   return((b >= 0x81 && b <= 0x9f) ||(b >= 0xe0 && b <= 0xfc));
 }
 
 
-static HPDF_BOOL
-RKSJ_IsTrialByte  (HPDF_Encoder    encoder,
-                   HPDF_BYTE       b)
+static HpdfBool
+RKSJ_IsTrialByte(HPDF_Encoder    encoder,
+   HpdfByte       b)
 {
-    HPDF_UNUSED (encoder);
-    return (b >= 0x40 && b <= 0xfc && b != 0x7f);
+   HPDF_UNUSED(encoder);
+   return(b >= 0x40 && b <= 0xfc && b != 0x7f);
 }
 
 
-static HPDF_STATUS
-RKSJ_AddCodeSpaceRange (HPDF_Encoder    encoder)
+static HpdfStatus
+RKSJ_AddCodeSpaceRange(HPDF_Encoder    encoder)
 {
-    HPDF_CidRange_Rec code_space_range1 = {0x00, 0x80, 0};
-    HPDF_CidRange_Rec code_space_range2 = {0x8140, 0x9FFC, 0};
-    HPDF_CidRange_Rec code_space_range3 = {0xA0, 0xDF, 0};
-    HPDF_CidRange_Rec code_space_range4 = {0xE040, 0xFCFC, 0};
+   HPDF_CidRange_Rec code_space_range1 = { 0x00, 0x80, 0 };
+   HPDF_CidRange_Rec code_space_range2 = { 0x8140, 0x9FFC, 0 };
+   HPDF_CidRange_Rec code_space_range3 = { 0xA0, 0xDF, 0 };
+   HPDF_CidRange_Rec code_space_range4 = { 0xE040, 0xFCFC, 0 };
 
-    if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, code_space_range1)
-                    != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCodeSpaceRange(encoder, code_space_range1)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, code_space_range2)
-                    != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCodeSpaceRange(encoder, code_space_range2)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, code_space_range3)
-                    != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCodeSpaceRange(encoder, code_space_range3)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, code_space_range4)
-                    != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCodeSpaceRange(encoder, code_space_range4)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-MS_RKSJ_H_Init  (HPDF_Encoder  encoder)
+static HpdfStatus
+MS_RKSJ_H_Init(HPDF_Encoder  encoder)
 {
-    HPDF_CMapEncoderAttr attr;
-    HPDF_STATUS ret;
+   HPDF_CMapEncoderAttr attr;
+   HpdfStatus ret;
 
-    if ((ret = HPDF_CMapEncoder_InitAttr (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_InitAttr(encoder)) != HPDF_OK)
+      return ret;
 
-    attr = (HPDF_CMapEncoderAttr)encoder->attr;
+   attr =(HPDF_CMapEncoderAttr)encoder->attr;
 
-    if (HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_90ms_RKSJ_H) != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_90ms_RKSJ_H) != HPDF_OK)
+      return encoder->error->error_no;
 
-    if ((ret = RKSJ_AddCodeSpaceRange (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = RKSJ_AddCodeSpaceRange(encoder)) != HPDF_OK)
+      return ret;
 
-    if (HPDF_CMapEncoder_AddNotDefRange (encoder, MS_RKSJ_NOTDEF_RANGE)
-                != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddNotDefRange(encoder, MS_RKSJ_NOTDEF_RANGE)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    HPDF_CMapEncoder_SetUnicodeArray (encoder, CP932_UNICODE_ARRAY);
+   HPDF_CMapEncoder_SetUnicodeArray(encoder, CP932_UNICODE_ARRAY);
 
-    attr->is_lead_byte_fn = RKSJ_IsLeadByte;
-    attr->is_trial_byte_fn = RKSJ_IsTrialByte;
-    HPDF_StrCpy (attr->registry, "Adobe", attr->registry +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    HPDF_StrCpy (attr->ordering, "Japan1", attr->ordering +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    attr->suppliment = 2;
-    attr->uid_offset = 950;
-    attr->xuid[0] = 1;
-    attr->xuid[1] = 10;
-    attr->xuid[2] = 25343;
+   attr->is_lead_byte_fn = RKSJ_IsLeadByte;
+   attr->is_trial_byte_fn = RKSJ_IsTrialByte;
+   HPDF_StrCpy(attr->registry, "Adobe", attr->registry +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   HPDF_StrCpy(attr->ordering, "Japan1", attr->ordering +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   attr->suppliment = 2;
+   attr->uid_offset = 950;
+   attr->xuid[0] = 1;
+   attr->xuid[1] = 10;
+   attr->xuid[2] = 25343;
 
-    encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
+   encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
 
-    HPDF_CMapEncoder_AddJWWLineHead (encoder, JWW_LINE_HEAD_SJIS);
+   HPDF_CMapEncoder_AddJWWLineHead(encoder, JWW_LINE_HEAD_SJIS);
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-MSP_RKSJ_H_Init  (HPDF_Encoder  encoder)
+static HpdfStatus
+MSP_RKSJ_H_Init(HPDF_Encoder  encoder)
 {
-    HPDF_CMapEncoderAttr attr;
-    HPDF_STATUS ret;
+   HPDF_CMapEncoderAttr attr;
+   HpdfStatus ret;
 
-    if ((ret = HPDF_CMapEncoder_InitAttr (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_InitAttr(encoder)) != HPDF_OK)
+      return ret;
 
-    attr = (HPDF_CMapEncoderAttr)encoder->attr;
+   attr =(HPDF_CMapEncoderAttr)encoder->attr;
 
-    if ((ret = HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_90msp_RKSJ_H)) !=
-            HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_90msp_RKSJ_H)) !=
+      HPDF_OK)
+      return ret;
 
-    if ((ret = RKSJ_AddCodeSpaceRange (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = RKSJ_AddCodeSpaceRange(encoder)) != HPDF_OK)
+      return ret;
 
-    if (HPDF_CMapEncoder_AddNotDefRange (encoder, MSP_RKSJ_NOTDEF_RANGE)
-                != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddNotDefRange(encoder, MSP_RKSJ_NOTDEF_RANGE)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    HPDF_CMapEncoder_SetUnicodeArray (encoder, CP932_UNICODE_ARRAY);
+   HPDF_CMapEncoder_SetUnicodeArray(encoder, CP932_UNICODE_ARRAY);
 
-    attr->is_lead_byte_fn = RKSJ_IsLeadByte;
-    attr->is_trial_byte_fn = RKSJ_IsTrialByte;
-    HPDF_StrCpy (attr->registry, "Adobe", attr->registry +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    HPDF_StrCpy (attr->ordering, "Japan1", attr->ordering +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    attr->suppliment = 2;
-    attr->uid_offset = 950;
-    attr->xuid[0] = 1;
-    attr->xuid[1] = 10;
-    attr->xuid[2] = 25445;
+   attr->is_lead_byte_fn = RKSJ_IsLeadByte;
+   attr->is_trial_byte_fn = RKSJ_IsTrialByte;
+   HPDF_StrCpy(attr->registry, "Adobe", attr->registry +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   HPDF_StrCpy(attr->ordering, "Japan1", attr->ordering +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   attr->suppliment = 2;
+   attr->uid_offset = 950;
+   attr->xuid[0] = 1;
+   attr->xuid[1] = 10;
+   attr->xuid[2] = 25445;
 
-    encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
+   encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
 
-    HPDF_CMapEncoder_AddJWWLineHead (encoder, JWW_LINE_HEAD_SJIS);
+   HPDF_CMapEncoder_AddJWWLineHead(encoder, JWW_LINE_HEAD_SJIS);
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-MS_RKSJ_V_Init  (HPDF_Encoder  encoder)
+static HpdfStatus
+MS_RKSJ_V_Init(HPDF_Encoder  encoder)
 {
-    HPDF_CMapEncoderAttr attr;
-    HPDF_STATUS ret;
+   HPDF_CMapEncoderAttr attr;
+   HpdfStatus ret;
 
-    if ((ret = HPDF_CMapEncoder_InitAttr (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_InitAttr(encoder)) != HPDF_OK)
+      return ret;
 
-    attr = (HPDF_CMapEncoderAttr)encoder->attr;
+   attr =(HPDF_CMapEncoderAttr)encoder->attr;
 
-    if ((ret = HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_90ms_RKSJ_H)) !=
-            HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_90ms_RKSJ_H)) !=
+      HPDF_OK)
+      return ret;
 
-    if ((ret = HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_90ms_RKSJ_V)) !=
-            HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_90ms_RKSJ_V)) !=
+      HPDF_OK)
+      return ret;
 
-    if ((ret = RKSJ_AddCodeSpaceRange (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = RKSJ_AddCodeSpaceRange(encoder)) != HPDF_OK)
+      return ret;
 
-    if (HPDF_CMapEncoder_AddNotDefRange (encoder, MS_RKSJ_NOTDEF_RANGE)
-                != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddNotDefRange(encoder, MS_RKSJ_NOTDEF_RANGE)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    HPDF_CMapEncoder_SetUnicodeArray (encoder, CP932_UNICODE_ARRAY);
+   HPDF_CMapEncoder_SetUnicodeArray(encoder, CP932_UNICODE_ARRAY);
 
-    attr->is_lead_byte_fn = RKSJ_IsLeadByte;
-    attr->is_trial_byte_fn = RKSJ_IsTrialByte;
-    HPDF_StrCpy (attr->registry, "Adobe", attr->registry +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    HPDF_StrCpy (attr->ordering, "Japan1", attr->ordering +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    attr->suppliment = 2;
-    attr->uid_offset = 1020;
-    attr->xuid[0] = 1;
-    attr->xuid[1] = 10;
-    attr->xuid[2] = 25344;
+   attr->is_lead_byte_fn = RKSJ_IsLeadByte;
+   attr->is_trial_byte_fn = RKSJ_IsTrialByte;
+   HPDF_StrCpy(attr->registry, "Adobe", attr->registry +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   HPDF_StrCpy(attr->ordering, "Japan1", attr->ordering +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   attr->suppliment = 2;
+   attr->uid_offset = 1020;
+   attr->xuid[0] = 1;
+   attr->xuid[1] = 10;
+   attr->xuid[2] = 25344;
 
-    attr->writing_mode = HPDF_WMODE_VERTICAL;
+   attr->writing_mode = HPDF_WMODE_VERTICAL;
 
-    encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
+   encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
 
-    HPDF_CMapEncoder_AddJWWLineHead (encoder, JWW_LINE_HEAD_SJIS);
+   HPDF_CMapEncoder_AddJWWLineHead(encoder, JWW_LINE_HEAD_SJIS);
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_BOOL
-EUC_IsLeadByte  (HPDF_Encoder    encoder,
-                 HPDF_BYTE       b)
+static HpdfBool
+EUC_IsLeadByte(HPDF_Encoder    encoder,
+   HpdfByte       b)
 {
-    HPDF_UNUSED (encoder);
-    return ((b >= 0xa1 && b <= 0xfe) || b == 0x8e);
+   HPDF_UNUSED(encoder);
+   return((b >= 0xa1 && b <= 0xfe) || b == 0x8e);
 }
 
 
-static HPDF_BOOL
-EUC_IsTrialByte  (HPDF_Encoder    encoder,
-                  HPDF_BYTE       b)
+static HpdfBool
+EUC_IsTrialByte(HPDF_Encoder    encoder,
+   HpdfByte       b)
 {
-    HPDF_UNUSED (encoder);
-    return (b >= 0xa0 && b <= 0xfe);
+   HPDF_UNUSED(encoder);
+   return(b >= 0xa0 && b <= 0xfe);
 }
 
 
-static HPDF_STATUS
-EUC_AddCodeSpaceRange (HPDF_Encoder    encoder)
+static HpdfStatus
+EUC_AddCodeSpaceRange(HPDF_Encoder    encoder)
 {
-    HPDF_CidRange_Rec code_space_range1 = {0x00, 0x80, 0};
-    HPDF_CidRange_Rec code_space_range2 = {0x8EA0, 0x8EDF, 0};
-    HPDF_CidRange_Rec code_space_range3 = {0xA1A1, 0xFEFE, 0};
+   HPDF_CidRange_Rec code_space_range1 = { 0x00, 0x80, 0 };
+   HPDF_CidRange_Rec code_space_range2 = { 0x8EA0, 0x8EDF, 0 };
+   HPDF_CidRange_Rec code_space_range3 = { 0xA1A1, 0xFEFE, 0 };
 
-    if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, code_space_range1)
-                    != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCodeSpaceRange(encoder, code_space_range1)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, code_space_range2)
-                    != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCodeSpaceRange(encoder, code_space_range2)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, code_space_range3)
-                    != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCodeSpaceRange(encoder, code_space_range3)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-EUC_H_Init  (HPDF_Encoder  encoder)
+static HpdfStatus
+EUC_H_Init(HPDF_Encoder  encoder)
 {
-    HPDF_CMapEncoderAttr attr;
-    HPDF_STATUS ret;
+   HPDF_CMapEncoderAttr attr;
+   HpdfStatus ret;
 
-    if ((ret = HPDF_CMapEncoder_InitAttr (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_InitAttr(encoder)) != HPDF_OK)
+      return ret;
 
-    attr = (HPDF_CMapEncoderAttr)encoder->attr;
+   attr =(HPDF_CMapEncoderAttr)encoder->attr;
 
-    if (HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_EUC_H) != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_EUC_H) != HPDF_OK)
+      return encoder->error->error_no;
 
-    if ((ret = EUC_AddCodeSpaceRange (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = EUC_AddCodeSpaceRange(encoder)) != HPDF_OK)
+      return ret;
 
-    if (HPDF_CMapEncoder_AddNotDefRange (encoder, EUC_NOTDEF_RANGE) != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddNotDefRange(encoder, EUC_NOTDEF_RANGE) != HPDF_OK)
+      return encoder->error->error_no;
 
-    HPDF_CMapEncoder_SetUnicodeArray (encoder, EUC_UNICODE_ARRAY);
+   HPDF_CMapEncoder_SetUnicodeArray(encoder, EUC_UNICODE_ARRAY);
 
-    attr->is_lead_byte_fn = EUC_IsLeadByte;
-    attr->is_trial_byte_fn = EUC_IsTrialByte;
-    HPDF_StrCpy (attr->registry, "Adobe", attr->registry +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    HPDF_StrCpy (attr->ordering, "Japan1", attr->ordering +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    attr->suppliment = 1;
-    attr->uid_offset = 680;
-    attr->xuid[0] = 1;
-    attr->xuid[1] = 10;
-    attr->xuid[2] = 25329;
+   attr->is_lead_byte_fn = EUC_IsLeadByte;
+   attr->is_trial_byte_fn = EUC_IsTrialByte;
+   HPDF_StrCpy(attr->registry, "Adobe", attr->registry +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   HPDF_StrCpy(attr->ordering, "Japan1", attr->ordering +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   attr->suppliment = 1;
+   attr->uid_offset = 680;
+   attr->xuid[0] = 1;
+   attr->xuid[1] = 10;
+   attr->xuid[2] = 25329;
 
-    encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
+   encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
 
-    HPDF_CMapEncoder_AddJWWLineHead (encoder, JWW_LINE_HEAD_EUC);
+   HPDF_CMapEncoder_AddJWWLineHead(encoder, JWW_LINE_HEAD_EUC);
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-EUC_V_Init  (HPDF_Encoder  encoder)
+static HpdfStatus
+EUC_V_Init(HPDF_Encoder  encoder)
 {
-    HPDF_CMapEncoderAttr attr;
-    HPDF_STATUS ret;
+   HPDF_CMapEncoderAttr attr;
+   HpdfStatus ret;
 
-    if ((ret = HPDF_CMapEncoder_InitAttr (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_InitAttr(encoder)) != HPDF_OK)
+      return ret;
 
-    attr = (HPDF_CMapEncoderAttr)encoder->attr;
+   attr =(HPDF_CMapEncoderAttr)encoder->attr;
 
-    if (HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_EUC_H) != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_EUC_H) != HPDF_OK)
+      return encoder->error->error_no;
 
-    if (HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_EUC_V) != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_EUC_V) != HPDF_OK)
+      return encoder->error->error_no;
 
-    if ((ret = EUC_AddCodeSpaceRange (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = EUC_AddCodeSpaceRange(encoder)) != HPDF_OK)
+      return ret;
 
-    if (HPDF_CMapEncoder_AddNotDefRange (encoder, EUC_NOTDEF_RANGE) != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddNotDefRange(encoder, EUC_NOTDEF_RANGE) != HPDF_OK)
+      return encoder->error->error_no;
 
-    HPDF_CMapEncoder_SetUnicodeArray (encoder, EUC_UNICODE_ARRAY);
+   HPDF_CMapEncoder_SetUnicodeArray(encoder, EUC_UNICODE_ARRAY);
 
-    attr->is_lead_byte_fn = EUC_IsLeadByte;
-    attr->is_trial_byte_fn = EUC_IsTrialByte;
-    HPDF_StrCpy (attr->registry, "Adobe", attr->registry +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    HPDF_StrCpy (attr->ordering, "Japan1", attr->ordering +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    attr->suppliment = 1;
-    attr->writing_mode = HPDF_WMODE_VERTICAL;
-    attr->uid_offset = 800;
-    attr->xuid[0] = 1;
-    attr->xuid[1] = 10;
-    attr->xuid[2] = 25330;
+   attr->is_lead_byte_fn = EUC_IsLeadByte;
+   attr->is_trial_byte_fn = EUC_IsTrialByte;
+   HPDF_StrCpy(attr->registry, "Adobe", attr->registry +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   HPDF_StrCpy(attr->ordering, "Japan1", attr->ordering +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   attr->suppliment = 1;
+   attr->writing_mode = HPDF_WMODE_VERTICAL;
+   attr->uid_offset = 800;
+   attr->xuid[0] = 1;
+   attr->xuid[1] = 10;
+   attr->xuid[2] = 25330;
 
-    encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
+   encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
 
-    HPDF_CMapEncoder_AddJWWLineHead (encoder, JWW_LINE_HEAD_EUC);
+   HPDF_CMapEncoder_AddJWWLineHead(encoder, JWW_LINE_HEAD_EUC);
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
 /*--------------------------------------------------------------------------*/
 
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_UseJPEncodings   (HPDF_Doc   pdf)
+HPDF_EXPORT(HpdfStatus)
+   HPDF_UseJPEncodings(
+      HpdfDoc * const doc)
 {
-    HPDF_Encoder encoder;
-    HPDF_STATUS ret;
+   HPDF_Encoder encoder;
+   HpdfStatus ret;
 
-    if (!HPDF_Doc_Validate (pdf))
-        return HPDF_INVALID_DOCUMENT;
+   if (!HPDF_Doc_Validate(doc))
+   {
+      return HPDF_INVALID_DOCUMENT;
+   }
 
-    /* Microsoft Code Page 932, JIS X 0208 character */
-    encoder = HPDF_CMapEncoder_New (pdf->mmgr,  "90ms-RKSJ-H",
-                MS_RKSJ_H_Init);
+   /* Microsoft Code Page 932, JIS X 0208 character */
+   encoder = HPDF_CMapEncoder_New(doc->mmgr, "90ms-RKSJ-H", MS_RKSJ_H_Init);
 
-    if ((ret = HPDF_Doc_RegisterEncoder (pdf, encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterEncoder(doc, encoder)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    /* Microsoft Code Page 932, JIS X 0208 character (vertical writing) */
-    encoder = HPDF_CMapEncoder_New (pdf->mmgr,  "90ms-RKSJ-V",
-                MS_RKSJ_V_Init);
+   /* Microsoft Code Page 932, JIS X 0208 character(vertical writing) */
+   encoder = HPDF_CMapEncoder_New(doc->mmgr, "90ms-RKSJ-V", MS_RKSJ_V_Init);
 
-    if ((ret = HPDF_Doc_RegisterEncoder (pdf, encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterEncoder(doc, encoder)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    /* Microsoft Code Page 932, JIS X 0208 character (proportional) */
-    encoder = HPDF_CMapEncoder_New (pdf->mmgr,  "90msp-RKSJ-H",
-                MSP_RKSJ_H_Init);
+   /* Microsoft Code Page 932, JIS X 0208 character(proportional) */
+   encoder = HPDF_CMapEncoder_New(doc->mmgr, "90msp-RKSJ-H", MSP_RKSJ_H_Init);
 
-    if ((ret = HPDF_Doc_RegisterEncoder (pdf, encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterEncoder(doc, encoder)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    /* JIS X 0208 character set, EUC-JP encoding */
-    encoder = HPDF_CMapEncoder_New (pdf->mmgr,  "EUC-H",
-                EUC_H_Init);
+   /* JIS X 0208 character set, EUC-JP encoding */
+   encoder = HPDF_CMapEncoder_New(doc->mmgr, "EUC-H", EUC_H_Init);
 
-    if ((ret = HPDF_Doc_RegisterEncoder (pdf, encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterEncoder(doc, encoder)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    /* JIS X 0208 character set, EUC-JP encoding (vertical writing) */
-    encoder = HPDF_CMapEncoder_New (pdf->mmgr,  "EUC-V",
-                EUC_V_Init);
+   /* JIS X 0208 character set, EUC-JP encoding(vertical writing) */
+   encoder = HPDF_CMapEncoder_New(doc->mmgr, "EUC-V", EUC_V_Init);
 
-    if ((ret = HPDF_Doc_RegisterEncoder (pdf, encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterEncoder(doc, encoder)) != HPDF_OK)
+   {
+      return ret;
+   }
 
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 

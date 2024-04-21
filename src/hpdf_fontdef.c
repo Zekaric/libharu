@@ -46,7 +46,7 @@ HPDF_FontDef_Free (HPDF_FontDef  fontdef)
     HPDF_FreeMem (fontdef->mmgr, fontdef);
 }
 
-HPDF_BOOL
+HpdfBool
 HPDF_FontDef_Validate (HPDF_FontDef  fontdef)
 {
     HPDF_PTRACE ((" HPDF_FontDef_Validate\n"));

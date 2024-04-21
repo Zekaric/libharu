@@ -22,8 +22,8 @@
 
 HPDF_Binary
 HPDF_Binary_New  (HPDF_MMgr  mmgr,
-                  HPDF_BYTE  *value,
-                  HPDF_UINT  len)
+                  HpdfByte  *const value,
+                  HpdfUInt  len)
 {
     HPDF_Binary obj;
 
@@ -46,12 +46,12 @@ HPDF_Binary_New  (HPDF_MMgr  mmgr,
     return obj;
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Binary_Write  (HPDF_Binary   obj,
                     HPDF_Stream   stream,
                     HPDF_Encrypt  e)
 {
-    HPDF_STATUS ret;
+    HpdfStatus ret;
 
     if (obj->len == 0)
         return HPDF_Stream_WriteStr (stream, "<>");
@@ -70,10 +70,10 @@ HPDF_Binary_Write  (HPDF_Binary   obj,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Binary_SetValue  (HPDF_Binary  obj,
-                       HPDF_BYTE    *value,
-                       HPDF_UINT    len)
+                       HpdfByte    *const value,
+                       HpdfUInt    len)
 {
     if (len > HPDF_LIMIT_MAX_STRING_LEN)
         return HPDF_SetError (obj->error, HPDF_BINARY_LENGTH_ERR, 0);
@@ -106,13 +106,13 @@ HPDF_Binary_Free  (HPDF_Binary  obj)
     HPDF_FreeMem (obj->mmgr, obj);
 }
 
-HPDF_UINT
+HpdfUInt
 HPDF_Binary_GetLen  (HPDF_Binary  obj)
 {
     return obj->len;
 }
 
-HPDF_BYTE*
+HpdfByte*
 HPDF_Binary_GetValue  (HPDF_Binary  obj)
 {
     return obj->value;

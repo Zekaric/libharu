@@ -28,24 +28,24 @@ void  __stdcall
 #else
 void
 #endif
-error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
+error_handler  (HpdfStatus   error_no,
+                HpdfStatus   detail_no,
                 void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
 int main (int argc, char **argv)
 {
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     HPDF_Image image;
     HPDF_Stream stream;
 
-    HPDF_UINT iw;
-    HPDF_UINT ih;
-    HPDF_UINT bits_per_comp;
+    HpdfUInt iw;
+    HpdfUInt ih;
+    HpdfUInt bits_per_comp;
     const char *cs;
 
     if (argc < 2) {

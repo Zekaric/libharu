@@ -33,86 +33,93 @@
 #endif
 #endif
 
-void
-HPDF_CopyError  (HPDF_Error  dst,
-                 HPDF_Error  src);
+void HPDF_CopyError( HpdfError       * const dst, HpdfError const * const src);
 
-
-void
-HPDF_Error_Init  (HPDF_Error    error,
-                  void         *user_data)
+void 
+   HPDF_Error_Init(
+      HpdfError       * const error, 
+      void *user_data)
 {
-    HPDF_MemSet(error, 0, sizeof(HPDF_Error_Rec));
+   HPDF_MemSet(error, 0, sizeof(HPDF_Error_Rec));
 
-    error->user_data = user_data;
+   error->user_data = user_data;
 }
 
-HPDF_STATUS
-HPDF_Error_GetCode  (HPDF_Error  error)
+HpdfStatus 
+   HPDF_Error_GetCode(
+      HpdfError const * const error)
 {
-    return error->error_no;
+   return error->error_no;
 }
 
-HPDF_STATUS
-HPDF_Error_GetDetailCode  (HPDF_Error  error)
+HpdfStatus
+   HPDF_Error_GetDetailCode(
+      HpdfError const * const error)
 {
-    return error->detail_no;
+   return error->detail_no;
 }
 
 void
-HPDF_CopyError  (HPDF_Error  dst,
-                 HPDF_Error  src)
+   HPDF_CopyError(
+      HpdfError       * const dst,
+      HpdfError const * const src)
 {
-    dst->error_no = src->error_no;
+    dst->error_no  = src->error_no;
     dst->detail_no = src->detail_no;
-    dst->error_fn = src->error_fn;
+    dst->error_fn  = src->error_fn;
     dst->user_data = src->user_data;
 }
 
-HPDF_STATUS
-HPDF_SetError  (HPDF_Error   error,
-                HPDF_STATUS  error_no,
-                HPDF_STATUS  detail_no)
+HpdfStatus
+   HPDF_SetError(
+      HpdfError * const error,
+      HpdfStatus  error_no,
+      HpdfStatus  detail_no)
 {
-    HPDF_PTRACE((" HPDF_SetError: error_no=0x%04X "
-            "detail_no=0x%04X\n", (HPDF_UINT)error_no, (HPDF_UINT)detail_no));
+   HPDF_PTRACE(
+      (" HPDF_SetError: error_no=0x%04X detail_no=0x%04X\n", 
+       (HpdfUInt) error_no, 
+       (HpdfUInt) detail_no));
 
-    error->error_no = error_no;
-    error->detail_no = detail_no;
+   error->error_no  = error_no;
+   error->detail_no = detail_no;
 
-    return error_no;
+   return error_no;
 }
 
-
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_CheckError  (HPDF_Error   error)
+HPDF_EXPORT(HpdfStatus)
+   HPDF_CheckError(
+      HpdfError const * const error)
 {
-    HPDF_PTRACE((" HPDF_CheckError: error_no=0x%04X detail_no=0x%04X\n",
-                (HPDF_UINT)error->error_no, (HPDF_UINT)error->detail_no));
+   HPDF_PTRACE(
+      (" HPDF_CheckError: error_no=0x%04X detail_no=0x%04X\n",
+       (HpdfUInt) error->error_no, 
+       (HpdfUInt) error->detail_no));
 
-    if (error->error_no != HPDF_OK && error->error_fn)
-        error->error_fn (error->error_no, error->detail_no, error->user_data);
+   if (error->error_no != HPDF_OK && 
+       error->error_fn)
+   {
+      error->error_fn(error->error_no, error->detail_no, error->user_data);
+   }
 
-    return error->error_no;
+   return error->error_no;
 }
 
-
-HPDF_STATUS
-HPDF_RaiseError  (HPDF_Error   error,
-                  HPDF_STATUS  error_no,
-                  HPDF_STATUS  detail_no)
+HpdfStatus
+   HPDF_RaiseError(
+      HpdfError * const error,
+      HpdfStatus  error_no,
+      HpdfStatus  detail_no)
 {
-    HPDF_SetError (error, error_no, detail_no);
+   HPDF_SetError(error, error_no, detail_no);
 
-    return HPDF_CheckError (error);
+   return HPDF_CheckError(error);
 }
-
 
 void
-HPDF_Error_Reset (HPDF_Error error)
+   HPDF_Error_Reset(
+      HpdfError * const error)
 {
-    error->error_no = HPDF_NOERROR;
-    error->detail_no = HPDF_NOERROR;
+   error->error_no  = HPDF_NOERROR;
+   error->detail_no = HPDF_NOERROR;
 }
-
-

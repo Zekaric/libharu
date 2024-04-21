@@ -15130,49 +15130,49 @@ static const HPDF_CidRange_Rec CMAP_ARRAY_ETen_B5_V[] = {
 static const HPDF_CidRange_Rec ETen_B5_NOTDEF_RANGE = {0x00, 0x1F, 13648};
 
 
-static HPDF_BOOL
+static HpdfBool
 ETen_B5_IsLeadByte  (HPDF_Encoder    encoder,
-                     HPDF_BYTE       b);
+                     HpdfByte       b);
 
 
-static HPDF_BOOL
+static HpdfBool
 ETen_B5_IsTrialByte  (HPDF_Encoder    encoder,
-                      HPDF_BYTE       b);
+                      HpdfByte       b);
 
 
-static HPDF_STATUS
+static HpdfStatus
 ETen_B5_AddCodeSpaceRange (HPDF_Encoder    encoder);
 
 
-static HPDF_STATUS
+static HpdfStatus
 ETen_B5_H_Init  (HPDF_Encoder    encoder);
 
 
-static HPDF_STATUS
+static HpdfStatus
 ETen_B5_V_Init  (HPDF_Encoder    encoder);
 
 
 /*--------------------------------------------------------------------------*/
 
-static HPDF_BOOL
+static HpdfBool
 ETen_B5_IsLeadByte  (HPDF_Encoder    encoder,
-                  HPDF_BYTE       b)
+                  HpdfByte       b)
 {
     HPDF_UNUSED (encoder);
     return ((b >= 0x81 && b <= 0xfe));
 }
 
 
-static HPDF_BOOL
+static HpdfBool
 ETen_B5_IsTrialByte  (HPDF_Encoder    encoder,
-                   HPDF_BYTE       b)
+                   HpdfByte       b)
 {
     HPDF_UNUSED (encoder);
     return (b >= 0x40 && b <= 0xfe);
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 ETen_B5_AddCodeSpaceRange (HPDF_Encoder    encoder)
 {
     HPDF_CidRange_Rec code_space_range1 = {0x00, 0x80, 0};
@@ -15190,11 +15190,11 @@ ETen_B5_AddCodeSpaceRange (HPDF_Encoder    encoder)
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 ETen_B5_H_Init  (HPDF_Encoder  encoder)
 {
     HPDF_CMapEncoderAttr attr;
-    HPDF_STATUS ret;
+    HpdfStatus ret;
 
     if ((ret = HPDF_CMapEncoder_InitAttr (encoder)) != HPDF_OK)
         return ret;
@@ -15231,11 +15231,11 @@ ETen_B5_H_Init  (HPDF_Encoder  encoder)
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 ETen_B5_V_Init  (HPDF_Encoder  encoder)
 {
     HPDF_CMapEncoderAttr attr;
-    HPDF_STATUS ret;
+    HpdfStatus ret;
 
     if ((ret = HPDF_CMapEncoder_InitAttr (encoder)) != HPDF_OK)
         return ret;
@@ -15281,32 +15281,35 @@ ETen_B5_V_Init  (HPDF_Encoder  encoder)
 
 /*--------------------------------------------------------------------------*/
 
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_UseCNTEncodings   (HPDF_Doc   pdf)
+HPDF_EXPORT(HpdfStatus)
+   HPDF_UseCNTEncodings(
+      HpdfDoc * const doc)
 {
-    HPDF_Encoder encoder;
-    HPDF_STATUS ret;
+   HPDF_Encoder encoder;
+   HpdfStatus ret;
 
-    if (!HPDF_HasDoc (pdf))
-        return HPDF_INVALID_DOCUMENT;
+   if (!HPDF_HasDoc(doc))
+   {
+      return HPDF_INVALID_DOCUMENT;
+   }
 
-    /* Microsoft Code Page 950 (lfCharSet 0x88) Big Five character set with
-     * ETen extensions
-     */
-    encoder = HPDF_CMapEncoder_New (pdf->mmgr,  "ETen-B5-H",
-                ETen_B5_H_Init);
+   /* Microsoft Code Page 950 (lfCharSet 0x88) Big Five character set with
+   ** ETen extensions */
+   encoder = HPDF_CMapEncoder_New(doc->mmgr, "ETen-B5-H", ETen_B5_H_Init);
 
-    if ((ret = HPDF_Doc_RegisterEncoder (pdf, encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterEncoder(doc, encoder)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    /* Microsoft Code Page 950 (lfCharSet 0x88) Big Five character set with
-     * ETen extensions (vertical writing) */
-    encoder = HPDF_CMapEncoder_New (pdf->mmgr,  "ETen-B5-V",
-                ETen_B5_V_Init);
+   /* Microsoft Code Page 950 (lfCharSet 0x88) Big Five character set with
+   ** ETen extensions (vertical writing) */
+   encoder = HPDF_CMapEncoder_New(doc->mmgr, "ETen-B5-V", ETen_B5_V_Init);
 
-    if ((ret = HPDF_Doc_RegisterEncoder (pdf, encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterEncoder(doc, encoder)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
-

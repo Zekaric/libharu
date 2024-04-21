@@ -23,12 +23,12 @@ void  __stdcall
 #else
 void
 #endif
-error_handler (HPDF_STATUS   error_no,
-               HPDF_STATUS   detail_no,
+error_handler (HpdfStatus   error_no,
+               HpdfStatus   detail_no,
                void         *user_data)
 {
     printf ("ERROR: error_no=%04X, detail_no=%u\n",
-      (HPDF_UINT)error_no, (HPDF_UINT)detail_no);
+      (HpdfUInt)error_no, (HpdfUInt)detail_no);
 
     throw std::exception ();
 }
@@ -54,14 +54,14 @@ const char *font_list[] = {
 int main (int argc, char **argv)
 {
     const char *page_title = "Font Demo";
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     char fname[256];
     HPDF_Page page;
     HPDF_Font def_font;
-    HPDF_REAL tw;
-    HPDF_REAL height;
-    HPDF_REAL width;
-    HPDF_UINT i;
+    HpdfReal tw;
+    HpdfReal height;
+    HpdfReal width;
+    HpdfUInt i;
 
     strcpy (fname, argv[0]);
     strcat (fname, ".pdf");

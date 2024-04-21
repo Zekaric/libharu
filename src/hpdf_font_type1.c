@@ -19,7 +19,7 @@
 #include "hpdf_utils.h"
 #include "hpdf_font.h"
 
-static HPDF_STATUS
+static HpdfStatus
 Type1Font_OnWrite  (HPDF_Dict    obj,
           HPDF_Stream  stream);
 
@@ -30,23 +30,23 @@ Type1Font_OnFree  (HPDF_Dict  obj);
 
 static HPDF_TextWidth
 Type1Font_TextWidth  (HPDF_Font        font,
-                      const HPDF_BYTE  *text,
-                      HPDF_UINT        len);
+                      HpdfByte  const *const text,
+                      HpdfUInt        len);
 
 
-static HPDF_UINT
+static HpdfUInt
 Type1Font_MeasureText  (HPDF_Font          font,
-                        const HPDF_BYTE   *text,
-                        HPDF_UINT          len,
-                        HPDF_REAL          width,
-                        HPDF_REAL          font_size,
-                        HPDF_REAL          char_space,
-                        HPDF_REAL          word_space,
-                        HPDF_BOOL          wordwrap,
-                        HPDF_REAL         *real_width);
+                        HpdfByte   const *const text,
+                        HpdfUInt          len,
+                        HpdfReal          width,
+                        HpdfReal          font_size,
+                        HpdfReal          char_space,
+                        HpdfReal          word_space,
+                        HpdfBool          wordwrap,
+                        HpdfReal         *real_width);
 
 
-static HPDF_STATUS
+static HpdfStatus
 Type1Font_CreateDescriptor  (HPDF_MMgr  mmgr,
                              HPDF_Font  font,
                              HPDF_Xref  xref);
@@ -62,8 +62,8 @@ HPDF_Type1Font_New  (HPDF_MMgr        mmgr,
     HPDF_FontAttr attr;
     HPDF_Type1FontDefAttr fontdef_attr;
     HPDF_BasicEncoderAttr encoder_attr;
-    HPDF_STATUS ret = 0;
-    HPDF_UINT i;
+    HpdfStatus ret = 0;
+    HpdfUInt i;
 
     HPDF_PTRACE ((" HPDF_Type1Font_New\n"));
 
@@ -108,7 +108,7 @@ HPDF_Type1Font_New  (HPDF_MMgr        mmgr,
     /* singlebyte-font has a widths-array which is an array of 256 signed
      * short integer.
      */
-    attr->widths = HPDF_GetMem (mmgr, sizeof(HPDF_INT16) * 256);
+    attr->widths = HPDF_GetMem (mmgr, sizeof(HpdfInt16) * 256);
     if (!attr->widths) {
         HPDF_Dict_Free (font);
         return NULL;
@@ -116,11 +116,11 @@ HPDF_Type1Font_New  (HPDF_MMgr        mmgr,
 
     encoder_attr = (HPDF_BasicEncoderAttr)encoder->attr;
 
-    HPDF_MemSet (attr->widths, 0, sizeof(HPDF_INT16) * 256);
+    HPDF_MemSet (attr->widths, 0, sizeof(HpdfInt16) * 256);
     for (i = encoder_attr->first_char; i <= encoder_attr->last_char; i++) {
-        HPDF_UNICODE u = encoder_attr->unicode_map[i];
+        HpdfUnicode u = encoder_attr->unicode_map[i];
 
-        HPDF_UINT16 w = HPDF_Type1FontDef_GetWidth (fontdef, u);
+        HpdfUInt16 w = HPDF_Type1FontDef_GetWidth (fontdef, u);
         attr->widths[i] = w;
     }
 
@@ -150,7 +150,7 @@ HPDF_Type1Font_New  (HPDF_MMgr        mmgr,
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 Type1Font_CreateDescriptor  (HPDF_MMgr  mmgr,
                              HPDF_Font  font,
                              HPDF_Xref  xref)
@@ -163,7 +163,7 @@ Type1Font_CreateDescriptor  (HPDF_MMgr  mmgr,
 
     if (!font_attr->fontdef->descriptor) {
         HPDF_Dict descriptor = HPDF_Dict_New (mmgr);
-        HPDF_STATUS ret = 0;
+        HpdfStatus ret = 0;
         HPDF_Array array;
 
         if (!descriptor)
@@ -226,13 +226,13 @@ Type1Font_CreateDescriptor  (HPDF_MMgr  mmgr,
 
 static HPDF_TextWidth
 Type1Font_TextWidth  (HPDF_Font        font,
-                      const HPDF_BYTE  *text,
-                      HPDF_UINT        len)
+                      HpdfByte  const *const text,
+                      HpdfUInt        len)
 {
     HPDF_FontAttr attr = (HPDF_FontAttr)font->attr;
     HPDF_TextWidth ret = {0, 0, 0, 0};
-    HPDF_UINT i;
-    HPDF_BYTE b = 0;
+    HpdfUInt i;
+    HpdfByte b = 0;
 
     HPDF_PTRACE ((" HPDF_Type1Font_TextWidth\n"));
 
@@ -260,26 +260,26 @@ Type1Font_TextWidth  (HPDF_Font        font,
 }
 
 
-static HPDF_UINT
+static HpdfUInt
 Type1Font_MeasureText (HPDF_Font          font,
-                       const HPDF_BYTE   *text,
-                       HPDF_UINT          len,
-                       HPDF_REAL          width,
-                       HPDF_REAL          font_size,
-                       HPDF_REAL          char_space,
-                       HPDF_REAL          word_space,
-                       HPDF_BOOL          wordwrap,
-                       HPDF_REAL         *real_width)
+                       HpdfByte   const *const text,
+                       HpdfUInt          len,
+                       HpdfReal          width,
+                       HpdfReal          font_size,
+                       HpdfReal          char_space,
+                       HpdfReal          word_space,
+                       HpdfBool          wordwrap,
+                       HpdfReal         *real_width)
 {
-    HPDF_REAL w = 0;
-    HPDF_UINT tmp_len = 0;
-    HPDF_UINT i;
+    HpdfReal w = 0;
+    HpdfUInt tmp_len = 0;
+    HpdfUInt i;
     HPDF_FontAttr attr = (HPDF_FontAttr)font->attr;
 
     HPDF_PTRACE ((" HPDF_Type1Font_MeasureText\n"));
 
     for (i = 0; i < len; i++) {
-        HPDF_BYTE b = text[i];
+        HpdfByte b = text[i];
 
         if (HPDF_IS_WHITE_SPACE(b)) {
             tmp_len = i + 1;
@@ -313,7 +313,7 @@ Type1Font_MeasureText (HPDF_Font          font,
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 Type1Font_OnWrite  (HPDF_Dict    obj,
           HPDF_Stream  stream)
 {
@@ -322,8 +322,8 @@ Type1Font_OnWrite  (HPDF_Dict    obj,
                     (HPDF_Type1FontDefAttr)attr->fontdef->attr;
     HPDF_BasicEncoderAttr encoder_attr =
                     (HPDF_BasicEncoderAttr)attr->encoder->attr;
-    HPDF_UINT i;
-    HPDF_STATUS ret;
+    HpdfUInt i;
+    HpdfStatus ret;
     char buf[HPDF_TMP_BUF_SIZ];
     char *eptr = buf + HPDF_TMP_BUF_SIZ - 1;
 

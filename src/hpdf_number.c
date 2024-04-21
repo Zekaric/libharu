@@ -21,7 +21,7 @@
 
 HPDF_Number
 HPDF_Number_New  (HPDF_MMgr   mmgr,
-                  HPDF_INT32  value)
+                  HpdfInt32  value)
 {
     HPDF_Number obj = HPDF_GetMem (mmgr, sizeof(HPDF_Number_Rec));
 
@@ -35,7 +35,7 @@ HPDF_Number_New  (HPDF_MMgr   mmgr,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Number_Write  (HPDF_Number  obj,
                     HPDF_Stream  stream)
 {
@@ -45,7 +45,7 @@ HPDF_Number_Write  (HPDF_Number  obj,
 
 void
 HPDF_Number_SetValue  (HPDF_Number  obj,
-                       HPDF_INT32   value)
+                       HpdfInt32   value)
 {
     obj->value =value;
 }

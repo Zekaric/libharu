@@ -25,94 +25,24 @@
 extern "C" {
 #endif /* __cplusplus */
 
-HPDF_INT
-HPDF_AToI  (const char*  s);
-
-
-HPDF_DOUBLE
-HPDF_AToF  (const char*  s);
-
-
-char*
-HPDF_IToA  (char*  s,
-            HPDF_INT32  val,
-            char*  eptr);
-
-
-char*
-HPDF_IToA2  (char    *s,
-             HPDF_UINT32  val,
-             HPDF_UINT    len);
-
-
-char*
-HPDF_FToA  (char  *s,
-            HPDF_REAL  val,
-            char  *eptr);
-
-
-HPDF_BYTE*
-HPDF_MemCpy  (HPDF_BYTE*        out,
-              const HPDF_BYTE*  in,
-              HPDF_UINT         n);
-
-
-HPDF_BYTE*
-HPDF_StrCpy  (char*        out,
-              const char*  in,
-              char*        eptr);
-
-
-HPDF_INT
-HPDF_MemCmp  (const HPDF_BYTE*  s1,
-              const HPDF_BYTE*  s2,
-              HPDF_UINT         n);
-
-
-HPDF_INT
-HPDF_StrCmp  (const char*  s1,
-              const char*  s2);
-
-
-const char*
-HPDF_StrStr  (const char  *s1,
-              const char  *s2,
-              HPDF_UINT        maxlen);
-
-
-void*
-HPDF_MemSet  (void*      s,
-              HPDF_BYTE  c,
-              HPDF_UINT  n);
-
-
-HPDF_UINT
-HPDF_StrLen  (const char*  s,
-              HPDF_INT          maxlen);
-
-
-HPDF_Box
-HPDF_ToBox  (HPDF_INT16  left,
-             HPDF_INT16  bottom,
-             HPDF_INT16  right,
-             HPDF_INT16  top);
-
-
-HPDF_Point
-HPDF_ToPoint  (HPDF_INT16  x,
-               HPDF_INT16  y);
-
-
-HPDF_Rect
-HPDF_ToRect  (HPDF_REAL  left,
-              HPDF_REAL  bottom,
-              HPDF_REAL  right,
-              HPDF_REAL  top);
-
-
-void
-HPDF_UInt16Swap  (HPDF_UINT16  *value);
-
+HpdfInt      HPDF_AToI(       char const * const str);
+HpdfDouble   HPDF_AToF(       char const * const str);
+char        *HPDF_IToA(       char       * const str, HpdfInt32 value, char * const eptr);
+char        *HPDF_IToA2(      char       * const str, HpdfUInt32 value, HpdfUInt len);
+char        *HPDF_FToA(       char       * const s, HpdfReal val, char * const eptr);
+HpdfByte    *HPDF_MemCpy(     HpdfByte * const out, HpdfByte const * const in, HpdfUInt count);
+HpdfByte    *HPDF_StrCpy(     char       * const out, char const * const in, char * const eptr);
+HpdfInt      HPDF_MemCmp(     HpdfByte const * const s1, HpdfByte const * const s2, HpdfUInt count);
+HpdfInt      HPDF_StrCmp(     char const * const s1, char const * const s2);
+HpdfBool     HpdfMemIsEqual(  HpdfByte const * const buf1, HpdfByte const * const buf2, HpdfUInt count);
+HpdfBool     HpdfStrIsEqual(  char const * const s1, char const * const s2);
+const char  *HPDF_StrStr(     char const * const s1, char const * const s2, HpdfUInt maxlen);
+void        *HPDF_MemSet(     void * const buffer, HpdfByte value, HpdfUInt count);
+HpdfUInt     HPDF_StrLen(     char const * const str, HpdfInt maxlen);
+HPDF_Box     HPDF_ToBox(      HpdfInt16 left, HpdfInt16 bottom, HpdfInt16 right, HpdfInt16 top);
+HpdfPoint    HPDF_ToPoint(    HpdfInt16 x,    HpdfInt16 y);
+HpdfRect     HPDF_ToRect(     HpdfReal  left, HpdfReal  bottom, HpdfReal  right, HpdfReal  top);
+void         HPDF_UInt16Swap( HpdfUInt16 *value);
 
 #ifdef __cplusplus
 }

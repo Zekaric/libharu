@@ -36,7 +36,7 @@ HPDF_OutlineRoot_New  (HPDF_MMgr   mmgr,
 HPDF_Outline
 HPDF_Outline_New  (HPDF_MMgr          mmgr,
                    HPDF_Outline       parent,
-                   const char   *title,
+                   char const  *title,
                    HPDF_Encoder       encoder,
                    HPDF_Xref          xref);
 
@@ -61,12 +61,12 @@ HPDF_Outline
 HPDF_Outline_GetParent (HPDF_Outline outline);
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Outline_GetOpened  (HPDF_Outline  outline);
 
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Outline_Validate (HPDF_Outline  obj);
 
 #ifdef __cplusplus

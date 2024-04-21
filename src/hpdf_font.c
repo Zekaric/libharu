@@ -22,8 +22,8 @@
 
 HPDF_EXPORT(HPDF_TextWidth)
 HPDF_Font_TextWidth  (HPDF_Font        font,
-                      const HPDF_BYTE  *text,
-                      HPDF_UINT        len)
+                      HpdfByte  const *const text,
+                      HpdfUInt        len)
 {
     HPDF_TextWidth tw = {0, 0, 0, 0};
     HPDF_FontAttr attr;
@@ -51,16 +51,16 @@ HPDF_Font_TextWidth  (HPDF_Font        font,
 }
 
 
-HPDF_EXPORT(HPDF_UINT)
+HPDF_EXPORT(HpdfUInt)
 HPDF_Font_MeasureText (HPDF_Font          font,
-                       const HPDF_BYTE   *text,
-                       HPDF_UINT          len,
-                       HPDF_REAL          width,
-                       HPDF_REAL          font_size,
-                       HPDF_REAL          char_space,
-                       HPDF_REAL          word_space,
-                       HPDF_BOOL          wordwrap,
-                       HPDF_REAL         *real_width)
+                       HpdfByte   const *const text,
+                       HpdfUInt          len,
+                       HpdfReal          width,
+                       HpdfReal          font_size,
+                       HpdfReal          char_space,
+                       HpdfReal          word_space,
+                       HpdfBool          wordwrap,
+                       HpdfReal         *real_width)
 {
     HPDF_FontAttr attr;
 
@@ -118,9 +118,9 @@ HPDF_Font_GetEncodingName  (HPDF_Font font)
 }
 
 
-HPDF_EXPORT(HPDF_INT)
+HPDF_EXPORT(HpdfInt)
 HPDF_Font_GetUnicodeWidth  (HPDF_Font       font,
-                            HPDF_UNICODE    code)
+                            HpdfUnicode    code)
 {
     HPDF_FontAttr attr;
     HPDF_FontDef fontdef;
@@ -140,12 +140,12 @@ HPDF_Font_GetUnicodeWidth  (HPDF_Font       font,
     } else if (fontdef->type == HPDF_FONTDEF_TYPE_CID) {
         HPDF_CMapEncoderAttr encoder_attr =
             (HPDF_CMapEncoderAttr)attr->encoder->attr;
-        HPDF_UINT l, h;
+        HpdfUInt l, h;
 
         for (l = 0; l <= 255; l++) {
             for (h = 0; h < 255; h++) {
                 if (code == encoder_attr->unicode_map[l][h]) {
-                    HPDF_UINT16 cid = encoder_attr->cid_map[l][h];
+                    HpdfUInt16 cid = encoder_attr->cid_map[l][h];
 
                     return HPDF_CIDFontDef_GetCIDWidth (fontdef, cid);
                 }
@@ -171,7 +171,7 @@ HPDF_Font_GetBBox  (HPDF_Font  font)
     return bbox;
 }
 
-HPDF_EXPORT(HPDF_INT)
+HPDF_EXPORT(HpdfInt)
 HPDF_Font_GetAscent  (HPDF_Font  font)
 {
     HPDF_PTRACE((" HPDF_Font_GetAscent\n"));
@@ -182,7 +182,7 @@ HPDF_Font_GetAscent  (HPDF_Font  font)
     return 0;
 }
 
-HPDF_EXPORT(HPDF_INT)
+HPDF_EXPORT(HpdfInt)
 HPDF_Font_GetDescent  (HPDF_Font  font)
 {
     HPDF_PTRACE((" HPDF_Font_GetDescent\n"));
@@ -193,7 +193,7 @@ HPDF_Font_GetDescent  (HPDF_Font  font)
     return 0;
 }
 
-HPDF_EXPORT(HPDF_UINT)
+HPDF_EXPORT(HpdfUInt)
 HPDF_Font_GetXHeight  (HPDF_Font  font)
 {
     HPDF_PTRACE((" HPDF_Font_GetXHeight\n"));
@@ -204,7 +204,7 @@ HPDF_Font_GetXHeight  (HPDF_Font  font)
     return 0;
 }
 
-HPDF_EXPORT(HPDF_UINT)
+HPDF_EXPORT(HpdfUInt)
 HPDF_Font_GetCapHeight  (HPDF_Font  font)
 {
     HPDF_PTRACE((" HPDF_Font_GetCapHeight\n"));
@@ -216,7 +216,7 @@ HPDF_Font_GetCapHeight  (HPDF_Font  font)
 }
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Font_Validate  (HPDF_Font font)
 {
     HPDF_PTRACE((" HPDF_Font_Validate\n"));

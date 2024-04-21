@@ -18,7 +18,7 @@
 #include "hpdf.h"
 
 void
-print_grid  (HPDF_Doc     pdf,
+print_grid  (HpdfDoc *pdf,
              HPDF_Page    page);
 
 #endif /* __GRID_SHEET_H */

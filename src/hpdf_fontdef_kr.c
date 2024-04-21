@@ -19,7 +19,7 @@
 #include "hpdf_utils.h"
 #include "hpdf.h"
 
-/*----------------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------------*/
 
 static const HPDF_CID_Width DotumChe_W_ARRAY[] = {
     {1, 500},
@@ -1216,360 +1216,378 @@ static const HPDF_CID_Width Batang_W_ARRAY[] = {
 /*----- BatangChe Font ---------------------------------------------------------*/
 
 
-static HPDF_STATUS
-DotumChe_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+DotumChe_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret;
+   HpdfStatus ret;
 
-    HPDF_PTRACE ((" HPDF_FontDef_DotumChe_Init\n"));
+   HPDF_PTRACE((" HPDF_FontDef_DotumChe_Init\n"));
 
-    fontdef->ascent = 858;
-    fontdef->descent = -141;
-    fontdef->cap_height = 679;
-    fontdef->font_bbox = HPDF_ToBox(0, -150, 1000, 863);
-    fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, DotumChe_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
+   fontdef->ascent = 858;
+   fontdef->descent = -141;
+   fontdef->cap_height = 679;
+   fontdef->font_bbox = HPDF_ToBox(0, -150, 1000, 863);
+   fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, DotumChe_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
 
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-DotumChe_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+DotumChe_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = DotumChe_Init (fontdef);
+   HpdfStatus ret = DotumChe_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-static HPDF_STATUS
-DotumChe_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+DotumChe_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = DotumChe_Init (fontdef);
+   HpdfStatus ret = DotumChe_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
 }
 
-static HPDF_STATUS
-DotumChe_BoldItalic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+DotumChe_BoldItalic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = DotumChe_Init (fontdef);
+   HpdfStatus ret = DotumChe_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
-}
-
-
-static HPDF_STATUS
-Dotum_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret;
-
-    HPDF_PTRACE ((" HPDF_FontDef_Dotum_Init\n"));
-
-    fontdef->ascent = 858;
-    fontdef->descent = -141;
-    fontdef->cap_height = 679;
-    fontdef->font_bbox = HPDF_ToBox(0, -150, 1000, 863);
-    fontdef->flags = HPDF_FONT_SYMBOLIC;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, Dotum_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
-
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
-
-    return HPDF_OK;
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
 }
 
 
-static HPDF_STATUS
-Dotum_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+Dotum_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = Dotum_Init (fontdef);
+   HpdfStatus ret;
 
-    if (ret != HPDF_OK)
-        return ret;
+   HPDF_PTRACE((" HPDF_FontDef_Dotum_Init\n"));
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   fontdef->ascent = 858;
+   fontdef->descent = -141;
+   fontdef->cap_height = 679;
+   fontdef->font_bbox = HPDF_ToBox(0, -150, 1000, 863);
+   fontdef->flags = HPDF_FONT_SYMBOLIC;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, Dotum_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
+
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
+
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-Dotum_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+Dotum_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = Dotum_Init (fontdef);
+   HpdfStatus ret = Dotum_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
-}
-
-static HPDF_STATUS
-Dotum_BoldItalic_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret = Dotum_Init (fontdef);
-
-    if (ret != HPDF_OK)
-        return ret;
-
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-static HPDF_STATUS
-BatangChe_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+Dotum_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret;
+   HpdfStatus ret = Dotum_Init(fontdef);
 
-    HPDF_PTRACE ((" HPDF_FontDef_BatangChe_Init\n"));
+   if (ret != HPDF_OK)
+      return ret;
 
-    fontdef->ascent = 858;
-    fontdef->descent = -141;
-    fontdef->cap_height = 769;
-    fontdef->font_bbox = HPDF_ToBox(-0, -154, 1000, 861);
-    fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH +
-                HPDF_FONT_SERIF;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, BatangChe_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
+}
 
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
+static HpdfStatus
+Dotum_BoldItalic_Init(HPDF_FontDef   fontdef)
+{
+   HpdfStatus ret = Dotum_Init(fontdef);
 
-    return HPDF_OK;
+   if (ret != HPDF_OK)
+      return ret;
+
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
 }
 
 
-static HPDF_STATUS
-BatangChe_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+BatangChe_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = BatangChe_Init (fontdef);
+   HpdfStatus ret;
 
-    if (ret != HPDF_OK)
-        return ret;
+   HPDF_PTRACE((" HPDF_FontDef_BatangChe_Init\n"));
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   fontdef->ascent = 858;
+   fontdef->descent = -141;
+   fontdef->cap_height = 769;
+   fontdef->font_bbox = HPDF_ToBox(-0, -154, 1000, 861);
+   fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH +
+      HPDF_FONT_SERIF;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, BatangChe_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
+
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
+
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-BatangChe_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+BatangChe_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = BatangChe_Init (fontdef);
+   HpdfStatus ret = BatangChe_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
-}
-
-static HPDF_STATUS
-BatangChe_BoldItalic_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret = BatangChe_Init (fontdef);
-
-    if (ret != HPDF_OK)
-        return ret;
-
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-static HPDF_STATUS
-Batang_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+BatangChe_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret;
+   HpdfStatus ret = BatangChe_Init(fontdef);
 
-    HPDF_PTRACE ((" HPDF_FontDef_Batang_Init\n"));
+   if (ret != HPDF_OK)
+      return ret;
 
-    fontdef->ascent = 858;
-    fontdef->descent = -141;
-    fontdef->cap_height = 679;
-    fontdef->font_bbox = HPDF_ToBox(0, -154, 1000, 861);
-    fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_SERIF;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, Batang_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
+}
 
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
+static HpdfStatus
+BatangChe_BoldItalic_Init(HPDF_FontDef   fontdef)
+{
+   HpdfStatus ret = BatangChe_Init(fontdef);
 
-    return HPDF_OK;
+   if (ret != HPDF_OK)
+      return ret;
+
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
 }
 
 
-static HPDF_STATUS
-Batang_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+Batang_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = Batang_Init (fontdef);
+   HpdfStatus ret;
 
-    if (ret != HPDF_OK)
-        return ret;
+   HPDF_PTRACE((" HPDF_FontDef_Batang_Init\n"));
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   fontdef->ascent = 858;
+   fontdef->descent = -141;
+   fontdef->cap_height = 679;
+   fontdef->font_bbox = HPDF_ToBox(0, -154, 1000, 861);
+   fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_SERIF;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, Batang_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
+
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
+
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-Batang_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+Batang_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = Batang_Init (fontdef);
+   HpdfStatus ret = Batang_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
-}
-
-static HPDF_STATUS
-Batang_BoldItalic_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret = Batang_Init (fontdef);
-
-    if (ret != HPDF_OK)
-        return ret;
-
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_UseKRFonts   (HPDF_Doc   pdf)
+static HpdfStatus
+Batang_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_FontDef fontdef;
-    HPDF_STATUS ret;
+   HpdfStatus ret = Batang_Init(fontdef);
 
-    if (!HPDF_HasDoc (pdf))
-        return HPDF_INVALID_DOCUMENT;
+   if (ret != HPDF_OK)
+      return ret;
 
-    /* DotumChe */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "DotumChe",
-                DotumChe_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "DotumChe,Bold",
-                DotumChe_Bold_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "DotumChe,Italic",
-                DotumChe_Italic_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "DotumChe,BoldItalic",
-                DotumChe_BoldItalic_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    /* Dotum */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "Dotum",
-                Dotum_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "Dotum,Bold",
-                Dotum_Bold_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "Dotum,Italic",
-                Dotum_Italic_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "Dotum,BoldItalic",
-                Dotum_BoldItalic_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    /* BatangChe */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "BatangChe",
-                BatangChe_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "BatangChe,Bold",
-                BatangChe_Bold_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "BatangChe,Italic",
-                BatangChe_Italic_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "BatangChe,BoldItalic",
-                BatangChe_BoldItalic_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    /* Batang */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "Batang",
-                Batang_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "Batang,Bold",
-                Batang_Bold_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "Batang,Italic",
-                Batang_Italic_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "Batang,BoldItalic",
-                Batang_BoldItalic_Init);
-
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
-
-    return HPDF_OK;
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
 }
 
+static HpdfStatus
+Batang_BoldItalic_Init(HPDF_FontDef   fontdef)
+{
+   HpdfStatus ret = Batang_Init(fontdef);
+
+   if (ret != HPDF_OK)
+      return ret;
+
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
+}
+
+
+HPDF_EXPORT(HpdfStatus)
+   HPDF_UseKRFonts(
+      HpdfDoc * const doc)
+{
+   HPDF_FontDef fontdef;
+   HpdfStatus ret;
+
+   if (!HPDF_HasDoc(doc))
+   {
+      return HPDF_INVALID_DOCUMENT;
+   }
+
+   /* DotumChe */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "DotumChe", DotumChe_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "DotumChe,Bold", DotumChe_Bold_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "DotumChe,Italic", DotumChe_Italic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "DotumChe,BoldItalic", DotumChe_BoldItalic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   /* Dotum */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "Dotum", Dotum_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "Dotum,Bold", Dotum_Bold_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "Dotum,Italic", Dotum_Italic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "Dotum,BoldItalic", Dotum_BoldItalic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   /* BatangChe */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "BatangChe", BatangChe_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "BatangChe,Bold", BatangChe_Bold_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "BatangChe,Italic", BatangChe_Italic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "BatangChe,BoldItalic", BatangChe_BoldItalic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   /* Batang */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "Batang", Batang_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "Batang,Bold", Batang_Bold_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "Batang,Italic", Batang_Italic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "Batang,BoldItalic", Batang_BoldItalic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   return HPDF_OK;
+}

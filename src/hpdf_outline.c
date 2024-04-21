@@ -24,16 +24,16 @@
 #define HPDF_OUTLINE_OPENED     1
 
 
-static HPDF_STATUS
+static HpdfStatus
 AddChild  (HPDF_Outline  parent,
            HPDF_Outline  item);
 
 
-static HPDF_STATUS
+static HpdfStatus
 BeforeWrite  (HPDF_Dict obj);
 
 
-static HPDF_UINT
+static HpdfUInt
 CountChild (HPDF_Outline  outline);
 
 
@@ -46,7 +46,7 @@ HPDF_OutlineRoot_New  (HPDF_MMgr   mmgr,
                        HPDF_Xref   xref)
 {
     HPDF_Outline outline;
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Number open_flg;
 
     HPDF_PTRACE((" HPDF_OutlineRoot_New\n"));
@@ -81,13 +81,13 @@ HPDF_OutlineRoot_New  (HPDF_MMgr   mmgr,
 HPDF_Outline
 HPDF_Outline_New  (HPDF_MMgr          mmgr,
                    HPDF_Outline       parent,
-                   const char   *title,
+                   char const  *title,
                    HPDF_Encoder       encoder,
                    HPDF_Xref          xref)
 {
     HPDF_Outline outline;
     HPDF_String s;
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Number open_flg;
 
     HPDF_PTRACE((" HPDF_Outline_New\n"));
@@ -130,7 +130,7 @@ HPDF_Outline_New  (HPDF_MMgr          mmgr,
 
 
 
-static HPDF_STATUS
+static HpdfStatus
 AddChild  (HPDF_Outline  parent,
            HPDF_Outline  item)
 {
@@ -138,7 +138,7 @@ AddChild  (HPDF_Outline  parent,
                     HPDF_OCLASS_DICT);
     HPDF_Outline last = (HPDF_Outline)HPDF_Dict_GetItem (parent, "Last",
                     HPDF_OCLASS_DICT);
-    HPDF_STATUS ret = 0;
+    HpdfStatus ret = 0;
 
     HPDF_PTRACE((" AddChild\n"));
 
@@ -160,7 +160,7 @@ AddChild  (HPDF_Outline  parent,
 }
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Outline_GetOpened  (HPDF_Outline  outline)
 {
     HPDF_Number n = (HPDF_Number)HPDF_Dict_GetItem (outline, "_OPENED",
@@ -171,7 +171,7 @@ HPDF_Outline_GetOpened  (HPDF_Outline  outline)
     if (!n)
         return HPDF_FALSE;
 
-    return (HPDF_BOOL)n->value;
+    return (HpdfBool)n->value;
 }
 
 
@@ -222,12 +222,12 @@ HPDF_Outline_GetParent  (HPDF_Outline outline)
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 BeforeWrite  (HPDF_Dict obj)
 {
     HPDF_Number n = (HPDF_Number)HPDF_Dict_GetItem (obj, "Count",
                 HPDF_OCLASS_NUMBER);
-    HPDF_UINT count = CountChild ((HPDF_Outline)obj);
+    HpdfUInt count = CountChild ((HPDF_Outline)obj);
 
     HPDF_PTRACE((" BeforeWrite\n"));
 
@@ -247,11 +247,11 @@ BeforeWrite  (HPDF_Dict obj)
 }
 
 
-static HPDF_UINT
+static HpdfUInt
 CountChild (HPDF_Outline  outline)
 {
     HPDF_Outline  child = HPDF_Outline_GetFirst (outline);
-    HPDF_UINT count = 0;
+    HpdfUInt count = 0;
 
     HPDF_PTRACE((" CountChild\n"));
 
@@ -268,7 +268,7 @@ CountChild (HPDF_Outline  outline)
 }
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Outline_Validate (HPDF_Outline  outline)
 {
     if (!outline)
@@ -283,7 +283,7 @@ HPDF_Outline_Validate (HPDF_Outline  outline)
     return HPDF_TRUE;
 }
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Outline_SetDestination (HPDF_Outline      outline,
                              HPDF_Destination  dst)
 {
@@ -305,9 +305,9 @@ HPDF_Outline_SetDestination (HPDF_Outline      outline,
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
+HPDF_EXPORT(HpdfStatus)
 HPDF_Outline_SetOpened  (HPDF_Outline  outline,
-                         HPDF_BOOL     opened)
+                         HpdfBool     opened)
 {
     HPDF_Number n;
 
@@ -320,11 +320,11 @@ HPDF_Outline_SetOpened  (HPDF_Outline  outline,
     HPDF_PTRACE((" HPDF_Outline_SetOpened\n"));
 
     if (!n) {
-        n = HPDF_Number_New (outline->mmgr, (HPDF_INT)opened);
+        n = HPDF_Number_New (outline->mmgr, (HpdfInt)opened);
         if (!n || HPDF_Dict_Add (outline, "_OPENED", n) != HPDF_OK)
             return HPDF_CheckError (outline->error);
     } else
-        n->value = (HPDF_INT)opened;
+        n->value = (HpdfInt)opened;
 
     return HPDF_OK;
 }

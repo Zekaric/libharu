@@ -55,9 +55,9 @@ extern "C" {
 /*-- HPDF_FontDef ---------------------------------------*/
 
 typedef struct _HPDF_CharData {
-    HPDF_INT16     char_cd;
-    HPDF_UNICODE   unicode;
-    HPDF_INT16     width;
+    HpdfInt16     char_cd;
+    HpdfUnicode   unicode;
+    HpdfInt16     width;
 } HPDF_CharData;
 
 typedef enum  _HPDF_FontDefType {
@@ -69,8 +69,8 @@ typedef enum  _HPDF_FontDefType {
 } HPDF_FontDefType;
 
 typedef struct _HPDF_CID_Width {
-    HPDF_UINT16   cid;
-    HPDF_INT16    width;
+    HpdfUInt16   cid;
+    HpdfInt16    width;
 }  HPDF_CID_Width;
 
 /*----------------------------------------------------------------------------*/
@@ -82,30 +82,30 @@ typedef void  (*HPDF_FontDef_FreeFunc)  (HPDF_FontDef  fontdef);
 
 typedef void  (*HPDF_FontDef_CleanFunc)  (HPDF_FontDef  fontdef);
 
-typedef HPDF_STATUS  (*HPDF_FontDef_InitFunc)  (HPDF_FontDef  fontdef);
+typedef HpdfStatus  (*HPDF_FontDef_InitFunc)  (HPDF_FontDef  fontdef);
 
 typedef struct _HPDF_FontDef_Rec {
-    HPDF_UINT32              sig_bytes;
+    HpdfUInt32              sig_bytes;
     char                base_font[HPDF_LIMIT_MAX_NAME_LEN + 1];
     HPDF_MMgr                mmgr;
-    HPDF_Error               error;
+    HpdfError               *error;
     HPDF_FontDefType         type;
     HPDF_FontDef_CleanFunc   clean_fn;
     HPDF_FontDef_FreeFunc    free_fn;
     HPDF_FontDef_InitFunc    init_fn;
 
-    HPDF_INT16    ascent;
-    HPDF_INT16    descent;
-    HPDF_UINT     flags;
+    HpdfInt16    ascent;
+    HpdfInt16    descent;
+    HpdfUInt     flags;
     HPDF_Box      font_bbox;
-    HPDF_INT16    italic_angle;
-    HPDF_UINT16   stemv;
-    HPDF_INT16    avg_width;
-    HPDF_INT16    max_width;
-    HPDF_INT16    missing_width;
-    HPDF_UINT16   stemh;
-    HPDF_UINT16   x_height;
-    HPDF_UINT16   cap_height;
+    HpdfInt16    italic_angle;
+    HpdfUInt16   stemv;
+    HpdfInt16    avg_width;
+    HpdfInt16    max_width;
+    HpdfInt16    missing_width;
+    HpdfUInt16   stemh;
+    HpdfUInt16   x_height;
+    HpdfUInt16   cap_height;
 
     /*  the initial value of descriptor entry is NULL.
      *  when first font-object based on the fontdef object is created,
@@ -114,7 +114,7 @@ typedef struct _HPDF_FontDef_Rec {
     HPDF_Dict                descriptor;
     HPDF_Stream              data;
 
-    HPDF_BOOL                valid;
+    HpdfBool                valid;
     void                    *attr;
 } HPDF_FontDef_Rec;
 
@@ -127,7 +127,7 @@ void
 HPDF_FontDef_Cleanup  (HPDF_FontDef  fontdef);
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_FontDef_Validate  (HPDF_FontDef  fontdef);
 
 
@@ -137,19 +137,19 @@ HPDF_FontDef_Validate  (HPDF_FontDef  fontdef);
 typedef struct _HPDF_Type1FontDefAttrRec   *HPDF_Type1FontDefAttr;
 
 typedef struct _HPDF_Type1FontDefAttrRec {
-    HPDF_BYTE       first_char;                               /* Required */
-    HPDF_BYTE       last_char;                                /* Required */
+    HpdfByte        first_char;                               /* Required */
+    HpdfByte        last_char;                                /* Required */
     HPDF_CharData  *widths;                                   /* Required */
-    HPDF_UINT       widths_count;
+    HpdfUInt       widths_count;
 
-    HPDF_INT16      leading;
+    HpdfInt16      leading;
     char      *char_set;
     char       encoding_scheme[HPDF_LIMIT_MAX_NAME_LEN + 1];
-    HPDF_UINT       length1;
-    HPDF_UINT       length2;
-    HPDF_UINT       length3;
-    HPDF_BOOL       is_base14font;
-    HPDF_BOOL       is_fixed_pitch;
+    HpdfUInt       length1;
+    HpdfUInt       length2;
+    HpdfUInt       length3;
+    HpdfBool       is_base14font;
+    HpdfBool       is_fixed_pitch;
 
     HPDF_Stream     font_data;
 } HPDF_Type1FontDefAttr_Rec;
@@ -171,24 +171,24 @@ HPDF_Type1FontDef_Duplicate  (HPDF_MMgr     mmgr,
                               HPDF_FontDef  src);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Type1FontDef_SetWidths  (HPDF_FontDef         fontdef,
                               const HPDF_CharData  *widths);
 
 
-HPDF_INT16
+HpdfInt16
 HPDF_Type1FontDef_GetWidthByName  (HPDF_FontDef     fontdef,
-                                   const char  *gryph_name);
+                                   char const *gryph_name);
 
 
-HPDF_INT16
+HpdfInt16
 HPDF_Type1FontDef_GetWidth  (HPDF_FontDef  fontdef,
-                             HPDF_UNICODE  unicode);
+                             HpdfUnicode  unicode);
 
 
 HPDF_FontDef
 HPDF_Base14FontDef_New  (HPDF_MMgr        mmgr,
-                         const char  *font_name);
+                         char const *font_name);
 
 
 
@@ -199,88 +199,89 @@ HPDF_Base14FontDef_New  (HPDF_MMgr        mmgr,
 
 typedef struct _HPDF_TTF_Table {
         char     tag[4];
-        HPDF_UINT32   check_sum;
-        HPDF_UINT32   offset;
-        HPDF_UINT32   length;
+        HpdfUInt32   check_sum;
+        HpdfUInt32   offset;
+        HpdfUInt32   length;
 } HPDF_TTFTable;
 
 
 typedef struct _HPDF_TTF_OffsetTbl {
-        HPDF_UINT32     sfnt_version;
-        HPDF_UINT16     num_tables;
-        HPDF_UINT16     search_range;
-        HPDF_UINT16     entry_selector;
-        HPDF_UINT16     range_shift;
+        HpdfUInt32     sfnt_version;
+        HpdfUInt16     num_tables;
+        HpdfUInt16     search_range;
+        HpdfUInt16     entry_selector;
+        HpdfUInt16     range_shift;
         HPDF_TTFTable  *table;
 } HPDF_TTF_OffsetTbl;
 
 
 typedef struct _HPDF_TTF_CmapRange {
-        HPDF_UINT16   format;
-        HPDF_UINT16   length;
-        HPDF_UINT16   language;
-        HPDF_UINT16   seg_count_x2;
-        HPDF_UINT16   search_range;
-        HPDF_UINT16   entry_selector;
-        HPDF_UINT16   range_shift;
-        HPDF_UINT16  *end_count;
-        HPDF_UINT16   reserved_pad;
-        HPDF_UINT16  *start_count;
-        HPDF_INT16   *id_delta;
-        HPDF_UINT16  *id_range_offset;
-        HPDF_UINT16  *glyph_id_array;
-        HPDF_UINT     glyph_id_array_count;
+        HpdfUInt16   format;
+        HpdfUInt16   length;
+        HpdfUInt16   language;
+        HpdfUInt16   seg_count_x2;
+        HpdfUInt16   search_range;
+        HpdfUInt16   entry_selector;
+        HpdfUInt16   range_shift;
+        HpdfUInt16  *end_count;
+        HpdfUInt16   reserved_pad;
+        HpdfUInt16  *start_count;
+        HpdfInt16   *id_delta;
+        HpdfUInt16  *id_range_offset;
+        HpdfUInt16  *glyph_id_array;
+        HpdfUInt     glyph_id_array_count;
 } HPDF_TTF_CmapRange;
 
 
-typedef struct _HPDF_TTF_GryphOffsets {
-        HPDF_UINT32   base_offset;
-        HPDF_UINT32  *offsets;
-        HPDF_BYTE    *flgs;   /* 0: unused, 1: used */
+typedef struct _HPDF_TTF_GryphOffsets 
+{
+        HpdfUInt32    base_offset;
+        HpdfUInt32   *offsets;
+        HpdfByte     *flgs;   /* 0: unused, 1: used */
 } HPDF_TTF_GryphOffsets;
 
 
 typedef struct _HPDF_TTF_LongHorMetric {
-        HPDF_UINT16  advance_width;
-        HPDF_INT16   lsb;
+        HpdfUInt16  advance_width;
+        HpdfInt16   lsb;
 } HPDF_TTF_LongHorMetric;
 
 
 typedef struct _HPDF_TTF_FontHeader {
-    HPDF_BYTE     version_number[4];
-    HPDF_UINT32   font_revision;
-    HPDF_UINT32   check_sum_adjustment;
-    HPDF_UINT32   magic_number;
-    HPDF_UINT16   flags;
-    HPDF_UINT16   units_per_em;
-    HPDF_BYTE     created[8];
-    HPDF_BYTE     modified[8];
-    HPDF_INT16    x_min;
-    HPDF_INT16    y_min;
-    HPDF_INT16    x_max;
-    HPDF_INT16    y_max;
-    HPDF_UINT16   mac_style;
-    HPDF_UINT16   lowest_rec_ppem;
-    HPDF_INT16    font_direction_hint;
-    HPDF_INT16    index_to_loc_format;
-    HPDF_INT16    glyph_data_format;
+    HpdfByte      version_number[4];
+    HpdfUInt32   font_revision;
+    HpdfUInt32   check_sum_adjustment;
+    HpdfUInt32   magic_number;
+    HpdfUInt16   flags;
+    HpdfUInt16   units_per_em;
+    HpdfByte      created[8];
+    HpdfByte      modified[8];
+    HpdfInt16    x_min;
+    HpdfInt16    y_min;
+    HpdfInt16    x_max;
+    HpdfInt16    y_max;
+    HpdfUInt16   mac_style;
+    HpdfUInt16   lowest_rec_ppem;
+    HpdfInt16    font_direction_hint;
+    HpdfInt16    index_to_loc_format;
+    HpdfInt16    glyph_data_format;
 } HPDF_TTF_FontHeader;
 
 
 typedef struct _HPDF_TTF_NameRecord {
-    HPDF_UINT16   platform_id;
-    HPDF_UINT16   encoding_id;
-    HPDF_UINT16   language_id;
-    HPDF_UINT16   name_id;
-    HPDF_UINT16   length;
-    HPDF_UINT16   offset;
+    HpdfUInt16   platform_id;
+    HpdfUInt16   encoding_id;
+    HpdfUInt16   language_id;
+    HpdfUInt16   name_id;
+    HpdfUInt16   length;
+    HpdfUInt16   offset;
 }  HPDF_TTF_NameRecord;
 
 
 typedef struct _HPDF_TTF_NamingTable {
-    HPDF_UINT16           format;
-    HPDF_UINT16           count;
-    HPDF_UINT16           string_offset;
+    HpdfUInt16           format;
+    HpdfUInt16           count;
+    HpdfUInt16           string_offset;
     HPDF_TTF_NameRecord  *name_records;
 }  HPDF_TTF_NamingTable;
 
@@ -289,29 +290,29 @@ typedef struct _HPDF_TTFontDefAttr_Rec   *HPDF_TTFontDefAttr;
 
 typedef struct _HPDF_TTFontDefAttr_Rec {
     char                base_font[HPDF_LIMIT_MAX_NAME_LEN + 1];
-    HPDF_BYTE                first_char;
-    HPDF_BYTE                last_char;
+    HpdfByte                 first_char;
+    HpdfByte                 last_char;
     char               *char_set;
     char                tag_name[HPDF_TTF_FONT_TAG_LEN + 1];
     char                tag_name2[(HPDF_TTF_FONT_TAG_LEN + 1) * 2];
     HPDF_TTF_FontHeader      header;
     HPDF_TTF_GryphOffsets    glyph_tbl;
-    HPDF_UINT16              num_glyphs;
+    HpdfUInt16              num_glyphs;
     HPDF_TTF_NamingTable     name_tbl;
     HPDF_TTF_LongHorMetric  *h_metric;
-    HPDF_UINT16              num_h_metric;
+    HpdfUInt16              num_h_metric;
     HPDF_TTF_OffsetTbl       offset_tbl;
     HPDF_TTF_CmapRange       cmap;
-    HPDF_UINT16              fs_type;
-    HPDF_BYTE                sfamilyclass[2];
-    HPDF_BYTE                panose[10];
-    HPDF_UINT32              code_page_range1;
-    HPDF_UINT32              code_page_range2;
+    HpdfUInt16              fs_type;
+    HpdfByte                 sfamilyclass[2];
+    HpdfByte                 panose[10];
+    HpdfUInt32              code_page_range1;
+    HpdfUInt32              code_page_range2;
 
-    HPDF_UINT                length1;
+    HpdfUInt                length1;
 
-    HPDF_BOOL                embedding;
-    HPDF_BOOL                is_cidfont;
+    HpdfBool                embedding;
+    HpdfBool                is_cidfont;
 
     HPDF_Stream              stream;
 } HPDF_TTFontDefAttr_Rec;
@@ -325,39 +326,39 @@ HPDF_TTFontDef_New (HPDF_MMgr   mmgr);
 HPDF_FontDef
 HPDF_TTFontDef_Load  (HPDF_MMgr     mmgr,
                       HPDF_Stream   stream,
-                      HPDF_BOOL     embedding);
+                      HpdfBool     embedding);
 
 
 HPDF_FontDef
 HPDF_TTFontDef_Load2  (HPDF_MMgr     mmgr,
                        HPDF_Stream   stream,
-                       HPDF_UINT     index,
-                       HPDF_BOOL     embedding);
+                       HpdfUInt     index,
+                       HpdfBool     embedding);
 
 
-HPDF_UINT16
+HpdfUInt16
 HPDF_TTFontDef_GetGlyphid  (HPDF_FontDef   fontdef,
-                            HPDF_UINT16    unicode);
+                            HpdfUInt16    unicode);
 
 
-HPDF_INT16
+HpdfInt16
 HPDF_TTFontDef_GetCharWidth  (HPDF_FontDef   fontdef,
-                              HPDF_UINT16    unicode);
+                              HpdfUInt16    unicode);
 
 
-HPDF_INT16
+HpdfInt16
 HPDF_TTFontDef_GetGidWidth  (HPDF_FontDef   fontdef,
-                             HPDF_UINT16    gid);
+                             HpdfUInt16    gid);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_TTFontDef_SaveFontData  (HPDF_FontDef   fontdef,
                               HPDF_Stream    stream);
 
 
 HPDF_Box
 HPDF_TTFontDef_GetCharBBox  (HPDF_FontDef   fontdef,
-                             HPDF_UINT16    unicode);
+                             HpdfUInt16    unicode);
 
 
 void
@@ -372,8 +373,8 @@ typedef struct _HPDF_CIDFontDefAttrRec   *HPDF_CIDFontDefAttr;
 
 typedef struct _HPDF_CIDFontDefAttrRec {
     HPDF_List     widths;
-    HPDF_INT16    DW;
-    HPDF_INT16    DW2[2];
+    HpdfInt16    DW;
+    HpdfInt16    DW2[2];
 } HPDF_CIDFontDefAttr_Rec;
 
 
@@ -383,21 +384,21 @@ HPDF_CIDFontDef_New  (HPDF_MMgr               mmgr,
                       HPDF_FontDef_InitFunc   init_fn);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_CIDFontDef_AddWidth  (HPDF_FontDef            fontdef,
                            const HPDF_CID_Width   *widths);
 
 
-HPDF_INT16
+HpdfInt16
 HPDF_CIDFontDef_GetCIDWidth  (HPDF_FontDef  fontdef,
-                              HPDF_UINT16   cid);
+                              HpdfUInt16   cid);
 
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_CIDFontDef_ChangeStyle   (HPDF_FontDef    fontdef,
-                               HPDF_BOOL       bold,
-                               HPDF_BOOL       italic);
+                               HpdfBool       bold,
+                               HpdfBool       italic);
 
 #ifdef __cplusplus
 }

@@ -25,12 +25,12 @@ void  __stdcall
 #else
 void
 #endif
-error_handler (HPDF_STATUS   error_no,
-               HPDF_STATUS   detail_no,
+error_handler (HpdfStatus   error_no,
+               HpdfStatus   detail_no,
                void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
@@ -38,16 +38,16 @@ int main (int argc, char **argv)
 {
     const char* SAMP_TXT = "The quick brown fox jumps over the lazy dog.";
 
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     char fname[256];
     HPDF_Page page;
     HPDF_Font title_font;
     HPDF_Font detail_font;
     const char *detail_font_name;
-    HPDF_BOOL embed;
-    HPDF_REAL page_height;
-    HPDF_REAL page_width;
-    HPDF_REAL pw;
+    HpdfBool embed;
+    HpdfReal page_height;
+    HpdfReal page_width;
+    HpdfReal pw;
 
     if (argc < 2) {
         printf("usage: ttfont_demo [path to font file] "

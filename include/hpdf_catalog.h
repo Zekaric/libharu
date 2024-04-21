@@ -35,7 +35,7 @@ HPDF_NameDict
 HPDF_Catalog_GetNames  (HPDF_Catalog  catalog);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetNames  (HPDF_Catalog  catalog,
                         HPDF_NameDict dict);
 
@@ -48,7 +48,7 @@ HPDF_PageLayout
 HPDF_Catalog_GetPageLayout  (HPDF_Catalog  catalog);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetPageLayout  (HPDF_Catalog      catalog,
                              HPDF_PageLayout   layout);
 
@@ -57,32 +57,32 @@ HPDF_PageMode
 HPDF_Catalog_GetPageMode  (HPDF_Catalog  catalog);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetPageMode  (HPDF_Catalog   catalog,
                            HPDF_PageMode  mode);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetOpenAction  (HPDF_Catalog       catalog,
                              HPDF_Destination   open_action);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_AddPageLabel  (HPDF_Catalog   catalog,
-                            HPDF_UINT      page_num,
+                            HpdfUInt      page_num,
                             HPDF_Dict      page_label);
 
 
-HPDF_UINT
+HpdfUInt
 HPDF_Catalog_GetViewerPreference  (HPDF_Catalog   catalog);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetViewerPreference  (HPDF_Catalog   catalog,
-                                   HPDF_UINT      value);
+                                   HpdfUInt      value);
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Catalog_Validate  (HPDF_Catalog  catalog);
 
 #ifdef __cplusplus

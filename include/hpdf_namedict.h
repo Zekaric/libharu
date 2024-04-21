@@ -33,12 +33,12 @@ HPDF_NameTree
 HPDF_NameDict_GetNameTree  (HPDF_NameDict     namedict,
                             HPDF_NameDictKey  key);
 
-HPDF_STATUS
+HpdfStatus
 HPDF_NameDict_SetNameTree  (HPDF_NameDict     namedict,
                             HPDF_NameDictKey  key,
                             HPDF_NameTree     tree);
 
-HPDF_BOOL
+HpdfBool
 HPDF_NameDict_Validate  (HPDF_NameDict  namedict);
 
 
@@ -48,12 +48,12 @@ HPDF_NameTree
 HPDF_NameTree_New  (HPDF_MMgr  mmgr,
                     HPDF_Xref  xref);
 
-HPDF_STATUS
+HpdfStatus
 HPDF_NameTree_Add  (HPDF_NameTree  tree,
                     HPDF_String    name,
                     void          *obj);
 
-HPDF_BOOL
+HpdfBool
 HPDF_NameTree_Validate  (HPDF_NameTree  tree);
 
 
@@ -71,7 +71,7 @@ HPDF_EmbeddedFile_NewW (HPDF_MMgr  mmgr,
                         const wchar_t *file);
 #endif
 
-HPDF_BOOL
+HpdfBool
 HPDF_EmbeddedFile_Validate  (HPDF_EmbeddedFile  emfile);
 
 

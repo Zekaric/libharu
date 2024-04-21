@@ -42,17 +42,17 @@ void
 HPDF_EncryptDict_OnFree  (HPDF_Dict  obj);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_EncryptDict_SetPassword  (HPDF_EncryptDict  dict,
-                               const char   *owner_passwd,
-                               const char   *user_passwd);
+                               char const  *owner_passwd,
+                               char const  *user_passwd);
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_EncryptDict_Validate  (HPDF_EncryptDict  dict);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_EncryptDict_Prepare  (HPDF_EncryptDict  dict,
                            HPDF_Dict         info,
                            HPDF_Xref         xref);

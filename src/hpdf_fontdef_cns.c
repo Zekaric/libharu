@@ -19,7 +19,7 @@
 #include "hpdf_utils.h"
 #include "hpdf.h"
 
-/*----------------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------------*/
 
 static const HPDF_CID_Width SIMSUN_W_ARRAY[] = {
     {668, 500},
@@ -287,188 +287,199 @@ static const HPDF_CID_Width SIMHEI_W_ARRAY[] = {
 /*----- SimHei Font ---------------------------------------------------------*/
 
 
-static HPDF_STATUS
-SimSun_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+SimSun_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret;
+   HpdfStatus ret;
 
-    HPDF_PTRACE ((" HPDF_FontDef_SimSun_Init\n"));
+   HPDF_PTRACE((" HPDF_FontDef_SimSun_Init\n"));
 
-    fontdef->ascent = 859;
-    fontdef->descent = -140;
-    fontdef->cap_height = 683;
-    fontdef->font_bbox = HPDF_ToBox(0, -140, 996, 855);
-    fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH +
-                HPDF_FONT_SERIF;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, SIMSUN_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
+   fontdef->ascent = 859;
+   fontdef->descent = -140;
+   fontdef->cap_height = 683;
+   fontdef->font_bbox = HPDF_ToBox(0, -140, 996, 855);
+   fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH +
+      HPDF_FONT_SERIF;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, SIMSUN_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
 
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-SimSun_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+SimSun_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = SimSun_Init (fontdef);
+   HpdfStatus ret = SimSun_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-static HPDF_STATUS
-SimSun_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+SimSun_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = SimSun_Init (fontdef);
+   HpdfStatus ret = SimSun_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
 }
 
-static HPDF_STATUS
-SimSun_BoldItalic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+SimSun_BoldItalic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = SimSun_Init (fontdef);
+   HpdfStatus ret = SimSun_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
-}
-
-
-static HPDF_STATUS
-SimHei_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret;
-
-    HPDF_PTRACE ((" HPDF_FontDef_SimHei_Init\n"));
-
-    fontdef->ascent = 859;
-    fontdef->descent = -140;
-    fontdef->cap_height = 769;
-    fontdef->font_bbox = HPDF_ToBox(-0, -140, 996, 855);
-    fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, SIMHEI_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
-
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
-
-    return HPDF_OK;
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
 }
 
 
-static HPDF_STATUS
-SimHei_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+SimHei_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = SimHei_Init (fontdef);
+   HpdfStatus ret;
 
-    if (ret != HPDF_OK)
-        return ret;
+   HPDF_PTRACE((" HPDF_FontDef_SimHei_Init\n"));
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   fontdef->ascent = 859;
+   fontdef->descent = -140;
+   fontdef->cap_height = 769;
+   fontdef->font_bbox = HPDF_ToBox(-0, -140, 996, 855);
+   fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, SIMHEI_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
+
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
+
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-SimHei_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+SimHei_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = SimHei_Init (fontdef);
+   HpdfStatus ret = SimHei_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
-}
-
-static HPDF_STATUS
-SimHei_BoldItalic_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret = SimHei_Init (fontdef);
-
-    if (ret != HPDF_OK)
-        return ret;
-
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_UseCNSFonts   (HPDF_Doc   pdf)
+static HpdfStatus
+SimHei_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_FontDef fontdef;
-    HPDF_STATUS ret;
+   HpdfStatus ret = SimHei_Init(fontdef);
 
-    if (!HPDF_HasDoc (pdf))
-        return HPDF_INVALID_DOCUMENT;
+   if (ret != HPDF_OK)
+      return ret;
 
-    /* SimSun */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "SimSun",
-                SimSun_Init);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
+}
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+static HpdfStatus
+SimHei_BoldItalic_Init(HPDF_FontDef   fontdef)
+{
+   HpdfStatus ret = SimHei_Init(fontdef);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "SimSun,Bold",
-                SimSun_Bold_Init);
+   if (ret != HPDF_OK)
+      return ret;
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
+}
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "SimSun,Italic",
-                SimSun_Italic_Init);
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+HPDF_EXPORT(HpdfStatus)
+   HPDF_UseCNSFonts(
+      HpdfDoc * const doc)
+{
+   HPDF_FontDef fontdef;
+   HpdfStatus ret;
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "SimSun,BoldItalic",
-                SimSun_BoldItalic_Init);
+   if (!HPDF_HasDoc(doc))
+   {
+      return HPDF_INVALID_DOCUMENT;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   /* SimSun */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "SimSun", SimSun_Init);
 
-    /* SimHei */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "SimHei",
-                SimHei_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "SimSun,Bold", SimSun_Bold_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "SimHei,Bold",
-                SimHei_Bold_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "SimSun,Italic", SimSun_Italic_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "SimHei,Italic",
-                SimHei_Italic_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "SimSun,BoldItalic", SimSun_BoldItalic_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "SimHei,BoldItalic",
-                SimHei_BoldItalic_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   /* SimHei */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "SimHei", SimHei_Init);
 
-    return HPDF_OK;
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "SimHei,Bold", SimHei_Bold_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "SimHei,Italic", SimHei_Italic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "SimHei,BoldItalic", SimHei_BoldItalic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   return HPDF_OK;
 }
 

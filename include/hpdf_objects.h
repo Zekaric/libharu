@@ -87,20 +87,20 @@ extern "C" {
  */
 
 typedef struct _HPDF_Obj_Header {
-    HPDF_UINT32  obj_id;
-    HPDF_UINT16  gen_no;
-    HPDF_UINT16  obj_class;
+    HpdfUInt32  obj_id;
+    HpdfUInt16  gen_no;
+    HpdfUInt16  obj_class;
 } HPDF_Obj_Header;
 
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Obj_WriteValue  (void          *obj,
                       HPDF_Stream   stream,
                       HPDF_Encrypt  e);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Obj_Write  (void          *obj,
                  HPDF_Stream   stream,
                  HPDF_Encrypt  e);
@@ -138,17 +138,17 @@ typedef struct _HPDF_Boolean_Rec  *HPDF_Boolean;
 
 typedef struct _HPDF_Boolean_Rec {
     HPDF_Obj_Header  header;
-    HPDF_BOOL        value;
+    HpdfBool        value;
 } HPDF_Boolean_Rec;
 
 
 
 HPDF_Boolean
 HPDF_Boolean_New  (HPDF_MMgr  mmgr,
-                   HPDF_BOOL  value);
+                   HpdfBool  value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Boolean_Write  (HPDF_Boolean  obj,
                      HPDF_Stream   stream);
 
@@ -160,22 +160,22 @@ typedef struct _HPDF_Number_Rec  *HPDF_Number;
 
 typedef struct _HPDF_Number_Rec {
     HPDF_Obj_Header  header;
-    HPDF_INT32       value;
+    HpdfInt32       value;
 } HPDF_Number_Rec;
 
 
 
 HPDF_Number
 HPDF_Number_New  (HPDF_MMgr   mmgr,
-                  HPDF_INT32  value);
+                  HpdfInt32  value);
 
 
 void
 HPDF_Number_SetValue  (HPDF_Number  obj,
-                       HPDF_INT32   value);
+                       HpdfInt32   value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Number_Write  (HPDF_Number  obj,
                     HPDF_Stream  stream);
 
@@ -187,25 +187,25 @@ typedef struct _HPDF_Real_Rec  *HPDF_Real;
 
 typedef struct _HPDF_Real_Rec {
     HPDF_Obj_Header  header;
-    HPDF_Error       error;
-    HPDF_REAL        value;
+    HpdfError       *error;
+    HpdfReal        value;
 } HPDF_Real_Rec;
 
 
 
 HPDF_Real
 HPDF_Real_New  (HPDF_MMgr  mmgr,
-                HPDF_REAL  value);
+                HpdfReal  value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Real_Write  (HPDF_Real    obj,
                   HPDF_Stream  stream);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Real_SetValue  (HPDF_Real  obj,
-                     HPDF_REAL  value);
+                     HpdfReal  value);
 
 
 /*---------------------------------------------------------------------------*/
@@ -215,7 +215,7 @@ typedef struct _HPDF_Name_Rec  *HPDF_Name;
 
 typedef struct _HPDF_Name_Rec {
     HPDF_Obj_Header  header;
-    HPDF_Error       error;
+    HpdfError       *error;
     char        value[HPDF_LIMIT_MAX_NAME_LEN + 1];
 } HPDF_Name_Rec;
 
@@ -223,15 +223,15 @@ typedef struct _HPDF_Name_Rec {
 
 HPDF_Name
 HPDF_Name_New  (HPDF_MMgr        mmgr,
-                const char  *value);
+                char const *value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Name_SetValue  (HPDF_Name        obj,
-                     const char  *value);
+                     char const *value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Name_Write  (HPDF_Name    obj,
                   HPDF_Stream  stream);
 
@@ -245,19 +245,19 @@ HPDF_Name_GetValue  (HPDF_Name  obj);
 typedef struct _HPDF_String_Rec  *HPDF_String;
 
 typedef struct _HPDF_String_Rec {
-    HPDF_Obj_Header  header;
-    HPDF_MMgr        mmgr;
-    HPDF_Error       error;
-    HPDF_Encoder     encoder;
-    HPDF_BYTE        *value;
-    HPDF_UINT        len;
+    HPDF_Obj_Header   header;
+    HPDF_MMgr         mmgr;
+    HpdfError        *error;
+    HPDF_Encoder      encoder;
+    HpdfByte         *value;
+    HpdfUInt          len;
 } HPDF_String_Rec;
 
 
 
 HPDF_String
 HPDF_String_New  (HPDF_MMgr        mmgr,
-                  const char  *value,
+                  char const *value,
                   HPDF_Encoder     encoder);
 
 #if defined(WIN32)
@@ -268,21 +268,21 @@ HPDF_String_NewW (HPDF_MMgr        mmgr,
 #endif
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_String_SetValue  (HPDF_String      obj,
-                       const char  *value);
+                       char const *value);
 
 
 void
 HPDF_String_Free  (HPDF_String  obj);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_String_Write  (HPDF_String  obj,
                     HPDF_Stream  stream,
                     HPDF_Encrypt e);
 
-HPDF_INT32
+HpdfInt32
 HPDF_String_Cmp  (HPDF_String s1,
                   HPDF_String s2);
 
@@ -295,26 +295,26 @@ typedef struct _HPDF_Binary_Rec  *HPDF_Binary;
 typedef struct _HPDF_Binary_Rec {
     HPDF_Obj_Header  header;
     HPDF_MMgr        mmgr;
-    HPDF_Error       error;
-    HPDF_BYTE        *value;
-    HPDF_UINT        len;
+    HpdfError       *error;
+    HpdfByte        *value;
+    HpdfUInt         len;
 } HPDF_Binary_Rec;
 
 
 
 HPDF_Binary
 HPDF_Binary_New  (HPDF_MMgr  mmgr,
-                  HPDF_BYTE  *value,
-                  HPDF_UINT  len);
+                  HpdfByte   * const value,
+                  HpdfUInt  len);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Binary_SetValue  (HPDF_Binary  obj,
-                       HPDF_BYTE    *value,
-                       HPDF_UINT    len);
+                       HpdfByte     * const value,
+                       HpdfUInt    len);
 
 
-HPDF_BYTE*
+HpdfByte *
 HPDF_Binary_GetValue  (HPDF_Binary  obj);
 
 
@@ -322,13 +322,13 @@ void
 HPDF_Binary_Free  (HPDF_Binary  obj);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Binary_Write  (HPDF_Binary  obj,
                     HPDF_Stream  stream,
                     HPDF_Encrypt e);
 
 
-HPDF_UINT
+HpdfUInt
 HPDF_Binary_GetLen  (HPDF_Binary  obj);
 
 
@@ -340,7 +340,7 @@ typedef struct _HPDF_Array_Rec  *HPDF_Array;
 typedef struct _HPDF_Array_Rec {
     HPDF_Obj_Header  header;
     HPDF_MMgr        mmgr;
-    HPDF_Error       error;
+    HpdfError       *error;
     HPDF_List        list;
 } HPDF_Array_Rec;
 
@@ -358,18 +358,18 @@ void
 HPDF_Array_Free  (HPDF_Array  array);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_Write  (HPDF_Array   array,
                    HPDF_Stream  stream,
                    HPDF_Encrypt e);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_Add  (HPDF_Array  array,
                  void        *obj);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_Insert  (HPDF_Array  array,
                     void        *target,
                     void        *obj);
@@ -377,31 +377,31 @@ HPDF_Array_Insert  (HPDF_Array  array,
 
 void*
 HPDF_Array_GetItem  (HPDF_Array   array,
-                     HPDF_UINT    index,
-                     HPDF_UINT16  obj_class);
+                     HpdfUInt    index,
+                     HpdfUInt16  obj_class);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_AddNumber  (HPDF_Array  array,
-                       HPDF_INT32  value);
+                       HpdfInt32  value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_AddReal  (HPDF_Array  array,
-                     HPDF_REAL   value);
+                     HpdfReal   value);
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_AddNull  (HPDF_Array       array);
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_AddName  (HPDF_Array       array,
-                     const char  *value);
+                     char const *value);
 
 void
 HPDF_Array_Clear  (HPDF_Array  array);
 
 
-HPDF_UINT
+HpdfUInt
 HPDF_Array_Items (HPDF_Array  array);
 
 
@@ -415,27 +415,27 @@ typedef struct _HPDF_Dict_Rec  *HPDF_Dict;
 typedef void
 (*HPDF_Dict_FreeFunc)  (HPDF_Dict  obj);
 
-typedef HPDF_STATUS
+typedef HpdfStatus
 (*HPDF_Dict_BeforeWriteFunc)  (HPDF_Dict  obj);
 
-typedef HPDF_STATUS
+typedef HpdfStatus
 (*HPDF_Dict_AfterWriteFunc)  (HPDF_Dict  obj);
 
-typedef HPDF_STATUS
+typedef HpdfStatus
 (*HPDF_Dict_OnWriteFunc)  (HPDF_Dict    obj,
                            HPDF_Stream  stream);
 
 typedef struct _HPDF_Dict_Rec {
     HPDF_Obj_Header            header;
     HPDF_MMgr                  mmgr;
-    HPDF_Error                 error;
+    HpdfError                 *error;
     HPDF_List                  list;
     HPDF_Dict_BeforeWriteFunc  before_write_fn;
     HPDF_Dict_OnWriteFunc      write_fn;
     HPDF_Dict_AfterWriteFunc   after_write_fn;
     HPDF_Dict_FreeFunc         free_fn;
     HPDF_Stream                stream;
-    HPDF_UINT                  filter;
+    HpdfUInt                  filter;
     HPDF_Dict                  filterParams;
     void                       *attr;
 } HPDF_Dict_Rec;
@@ -462,7 +462,7 @@ void
 HPDF_Dict_Free  (HPDF_Dict  dict);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Dict_Write  (HPDF_Dict     dict,
                   HPDF_Stream   stream,
                   HPDF_Encrypt  e);
@@ -473,45 +473,45 @@ HPDF_Dict_GetKeyByObj (HPDF_Dict   dict,
                        void        *obj);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Dict_Add  (HPDF_Dict     dict,
-                const char   *key,
+                char const  *key,
                 void         *obj);
 
 
 void*
 HPDF_Dict_GetItem  (HPDF_Dict      dict,
-                    const char    *key,
-                    HPDF_UINT16    obj_class);
+                    char const   *key,
+                    HpdfUInt16    obj_class);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Dict_AddName (HPDF_Dict     dict,
-                   const char   *key,
-                   const char   *value);
+                   char const  *key,
+                   char const  *value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Dict_AddNumber  (HPDF_Dict     dict,
-                      const char   *key,
-                      HPDF_INT32    value);
+                      char const  *key,
+                      HpdfInt32    value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Dict_AddReal  (HPDF_Dict     dict,
-                    const char   *key,
-                    HPDF_REAL     value);
+                    char const  *key,
+                    HpdfReal     value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Dict_AddBoolean  (HPDF_Dict     dict,
-                       const char   *key,
-                       HPDF_BOOL     value);
+                       char const  *key,
+                       HpdfBool     value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Dict_RemoveElement  (HPDF_Dict        dict,
-                          const char  *key);
+                          char const *key);
 
 
 /*---------------------------------------------------------------------------*/
@@ -540,18 +540,18 @@ typedef struct _HPDF_XrefEntry_Rec  *HPDF_XrefEntry;
 
 typedef struct _HPDF_XrefEntry_Rec {
       char    entry_typ;
-      HPDF_UINT    byte_offset;
-      HPDF_UINT16  gen_no;
+      HpdfUInt    byte_offset;
+      HpdfUInt16  gen_no;
       void*        obj;
 } HPDF_XrefEntry_Rec;
 
 
 typedef struct _HPDF_Xref_Rec {
       HPDF_MMgr    mmgr;
-      HPDF_Error   error;
-      HPDF_UINT32  start_offset;
+      HpdfError   *error;
+      HpdfUInt32  start_offset;
       HPDF_List    entries;
-      HPDF_UINT    addr;
+      HpdfUInt    addr;
       HPDF_Xref    prev;
       HPDF_Dict    trailer;
 } HPDF_Xref_Rec;
@@ -559,24 +559,24 @@ typedef struct _HPDF_Xref_Rec {
 
 HPDF_Xref
 HPDF_Xref_New  (HPDF_MMgr    mmgr,
-                HPDF_UINT32  offset);
+                HpdfUInt32  offset);
 
 
 void
 HPDF_Xref_Free  (HPDF_Xref  xref);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Xref_Add  (HPDF_Xref  xref,
                 void       *obj);
 
 
 HPDF_XrefEntry
 HPDF_Xref_GetEntry  (HPDF_Xref  xref,
-                     HPDF_UINT  index);
+                     HpdfUInt  index);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Xref_WriteToStream  (HPDF_Xref     xref,
                           HPDF_Stream   stream,
                           HPDF_Encrypt  e);
@@ -584,7 +584,7 @@ HPDF_Xref_WriteToStream  (HPDF_Xref     xref,
 
 HPDF_XrefEntry
 HPDF_Xref_GetEntryByObjectId  (HPDF_Xref  xref,
-                               HPDF_UINT  obj_id);
+                               HpdfUInt  obj_id);
 
 
 
@@ -616,29 +616,29 @@ typedef struct _HPDF_Direct_Rec  *HPDF_Direct;
 typedef struct _HPDF_Direct_Rec {
     HPDF_Obj_Header  header;
     HPDF_MMgr        mmgr;
-    HPDF_Error       error;
-    HPDF_BYTE        *value;
-    HPDF_UINT        len;
+    HpdfError       *error;
+    HpdfByte        *value;
+    HpdfUInt         len;
 } HPDF_Direct_Rec;
 
 
 
 HPDF_Direct
 HPDF_Direct_New  (HPDF_MMgr  mmgr,
-                  HPDF_BYTE  *value,
-                  HPDF_UINT  len);
+                  HpdfByte   * const value,
+                  HpdfUInt  len);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Direct_SetValue  (HPDF_Direct  obj,
-                       HPDF_BYTE    *value,
-                       HPDF_UINT    len);
+                       HpdfByte     * const value,
+                       HpdfUInt    len);
 
 void
 HPDF_Direct_Free  (HPDF_Direct  obj);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Direct_Write  (HPDF_Direct  obj,
                     HPDF_Stream  stream);
 

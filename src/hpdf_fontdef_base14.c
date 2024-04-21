@@ -4267,13 +4267,13 @@ static const HPDF_CharData CHAR_DATA_SYMBOL[190] = {
 
 
 typedef struct _HPDF_Base14FontDefData {
-    const char      *font_name;
+    char const     *font_name;
     const HPDF_CharData  *widths_table;
-    HPDF_BOOL             is_font_specific;
-    HPDF_INT16            ascent;
-    HPDF_INT16            descent;
-    HPDF_UINT16           x_height;
-    HPDF_UINT16           cap_height;
+    HpdfBool             is_font_specific;
+    HpdfInt16            ascent;
+    HpdfInt16            descent;
+    HpdfUInt16           x_height;
+    HpdfUInt16           cap_height;
     HPDF_Box              bbox;
 } HPDF_Base14FontDefData;
 
@@ -4435,20 +4435,23 @@ static const HPDF_Base14FontDefData  HPDF_BUILTIN_FONTS[] = {
 /*---------------------------------------------------------------------------*/
 
 const HPDF_Base14FontDefData*
-HPDF_Base14FontDef_FindBuiltinData  (const char  *font_name);
+HPDF_Base14FontDef_FindBuiltinData  (char const *font_name);
 
 
 /*---------------------------------------------------------------------------*/
 /*----- PDF_Base14FontDef ---------------------------------------------------*/
 
 const HPDF_Base14FontDefData*
-HPDF_Base14FontDef_FindBuiltinData  (const char  *font_name)
+HPDF_Base14FontDef_FindBuiltinData  (char const *font_name)
 {
-    HPDF_UINT i = 0;
+    HpdfUInt i = 0;
 
-    while (HPDF_BUILTIN_FONTS[i].font_name) {
-        if (HPDF_StrCmp (HPDF_BUILTIN_FONTS[i].font_name, font_name) == 0)
+    while (HPDF_BUILTIN_FONTS[i].font_name) 
+    {
+        if (HpdfStrIsEqual(HPDF_BUILTIN_FONTS[i].font_name, font_name))
+        {
             break;
+        }
 
         i++;
     }
@@ -4458,10 +4461,10 @@ HPDF_Base14FontDef_FindBuiltinData  (const char  *font_name)
 
 HPDF_FontDef
 HPDF_Base14FontDef_New  (HPDF_MMgr        mmgr,
-                         const char  *font_name)
+                         char const *font_name)
 {
     HPDF_FontDef                   fontdef;
-    HPDF_STATUS                    ret;
+    HpdfStatus                    ret;
     const HPDF_Base14FontDefData   *data;
     char                      *eptr;
     HPDF_Type1FontDefAttr          attr;

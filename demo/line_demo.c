@@ -25,12 +25,12 @@ void  __stdcall
 #else
 void
 #endif
-error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
+error_handler  (HpdfStatus   error_no,
+                HpdfStatus   detail_no,
                 void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
@@ -38,7 +38,7 @@ void
 draw_line  (HPDF_Page    page,
             float        x,
             float        y,
-            const char  *label)
+            char const *label)
 {
     HPDF_Page_BeginText (page);
     HPDF_Page_MoveTextPos (page, x, y - 10);
@@ -54,7 +54,7 @@ void
 draw_line2  (HPDF_Page    page,
              float       x,
              float       y,
-             const char  *label)
+             char const *label)
 {
     HPDF_Page_BeginText (page);
     HPDF_Page_MoveTextPos (page, x, y);
@@ -70,7 +70,7 @@ void
 draw_rect (HPDF_Page     page,
            double        x,
            double        y,
-           const char   *label)
+           char const  *label)
 {
     HPDF_Page_BeginText (page);
     HPDF_Page_MoveTextPos (page, x, y - 10);
@@ -84,14 +84,14 @@ int main (int argc, char **argv)
 {
     const char* page_title = "Line Example";
 
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     HPDF_Font font;
     HPDF_Page page;
     char fname[256];
 
-    const HPDF_UINT16 DASH_MODE1[] = {3};
-    const HPDF_UINT16 DASH_MODE2[] = {3, 7};
-    const HPDF_UINT16 DASH_MODE3[] = {8, 7, 2, 7};
+    const HpdfUInt16 DASH_MODE1[] = {3};
+    const HpdfUInt16 DASH_MODE2[] = {3, 7};
+    const HpdfUInt16 DASH_MODE3[] = {8, 7, 2, 7};
 
     double x;
     double y;

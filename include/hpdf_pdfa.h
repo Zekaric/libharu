@@ -27,15 +27,10 @@
 extern "C" {
 #endif
 
-HPDF_STATUS
-HPDF_PDFA_AppendOutputIntents(HPDF_Doc pdf, const char *iccname, HPDF_Dict iccdict);
+HpdfStatus HPDF_PDFA_AppendOutputIntents(HpdfDoc       * const doc, const char *iccname, HPDF_Dict iccdict);
+HpdfStatus HPDF_PDFA_GenerateID(         HpdfDoc const * const doc);
+HpdfStatus HPDF_PDFA_SetPDFAConformance( HpdfDoc       * const doc, HPDF_PDFAType pdfatype);
 
-HPDF_STATUS
-HPDF_PDFA_SetPDFAConformance (HPDF_Doc pdf,
-			      HPDF_PDFAType pdfatype);
-			      
-HPDF_STATUS
-HPDF_PDFA_GenerateID(HPDF_Doc);
 #ifdef __cplusplus
 }
 #endif

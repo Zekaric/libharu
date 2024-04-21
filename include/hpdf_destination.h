@@ -33,7 +33,7 @@ HPDF_Destination_New  (HPDF_MMgr   mmgr,
                        HPDF_Xref   xref);
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Destination_Validate (HPDF_Destination  dst);
 
 #ifdef __cplusplus

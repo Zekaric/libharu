@@ -52,8 +52,8 @@ HPDF_Obj_ForceFree  (HPDF_MMgr    mmgr,
 
     HPDF_PTRACE((" HPDF_Obj_ForceFree obj=0x%08X obj_id=0x%08X "
                     "obj_class=0x%08X\n",
-                    (HPDF_UINT)obj, (HPDF_UINT)(header->obj_id),
-                    (HPDF_UINT)(header->obj_class)));
+                    (HpdfUInt)obj, (HpdfUInt)(header->obj_id),
+                    (HpdfUInt)(header->obj_class)));
 
     switch (header->obj_class & HPDF_OCLASS_ANY) {
         case HPDF_OCLASS_STRING:
@@ -76,7 +76,7 @@ HPDF_Obj_ForceFree  (HPDF_MMgr    mmgr,
     }
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Obj_Write  (void          *obj,
                  HPDF_Stream   stream,
                  HPDF_Encrypt  e)
@@ -86,7 +86,7 @@ HPDF_Obj_Write  (void          *obj,
     HPDF_PTRACE((" HPDF_Obj_Write\n"));
 
     if (header->obj_id & HPDF_OTYPE_HIDDEN) {
-         HPDF_PTRACE(("#HPDF_Obj_Write obj=0x%08X skipped\n", (HPDF_UINT)obj));
+         HPDF_PTRACE(("#HPDF_Obj_Write obj=0x%08X skipped\n", (HpdfUInt)obj));
          return HPDF_OK;
     }
 
@@ -109,20 +109,20 @@ HPDF_Obj_Write  (void          *obj,
     return HPDF_Obj_WriteValue(obj, stream, e);
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Obj_WriteValue  (void          *obj,
                       HPDF_Stream   stream,
                       HPDF_Encrypt  e)
 {
     HPDF_Obj_Header *header;
-    HPDF_STATUS ret;
+    HpdfStatus ret;
 
     HPDF_PTRACE((" HPDF_Obj_WriteValue\n"));
 
     header = (HPDF_Obj_Header *)obj;
 
     HPDF_PTRACE((" HPDF_Obj_WriteValue obj=0x%08X obj_class=0x%04X\n",
-            (HPDF_UINT)obj, (HPDF_UINT)header->obj_class));
+            (HpdfUInt)obj, (HpdfUInt)header->obj_class));
 
     switch (header->obj_class & HPDF_OCLASS_ANY) {
         case HPDF_OCLASS_NAME:

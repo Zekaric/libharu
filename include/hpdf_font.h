@@ -45,20 +45,20 @@ typedef HPDF_Dict HPDF_Font;
 
 typedef HPDF_TextWidth
 (*HPDF_Font_TextWidths_Func)  (HPDF_Font        font,
-                             const HPDF_BYTE  *text,
-                             HPDF_UINT        len);
+                             HpdfByte const * const text,
+                             HpdfUInt        len);
 
 
-typedef HPDF_UINT
+typedef HpdfUInt
 (*HPDF_Font_MeasureText_Func)  (HPDF_Font        font,
-                              const HPDF_BYTE  *text,
-                              HPDF_UINT        len,
-                              HPDF_REAL        width,
-                              HPDF_REAL        fontsize,
-                              HPDF_REAL        charspace,
-                              HPDF_REAL        wordspace,
-                              HPDF_BOOL        wordwrap,
-                              HPDF_REAL        *real_width);
+                              HpdfByte const * const text,
+                              HpdfUInt        len,
+                              HpdfReal        width,
+                              HpdfReal        fontsize,
+                              HpdfReal        charspace,
+                              HpdfReal        wordspace,
+                              HpdfBool        wordwrap,
+                              HpdfReal        *real_width);
 
 
 typedef struct _HPDF_FontAttr_Rec  *HPDF_FontAttr;
@@ -75,8 +75,8 @@ typedef struct _HPDF_FontAttr_Rec {
      * each characters are cashed in 'widths'.
      * when HPDF_ENCODER_TYPE_DOUBLE_BYTE the width is calculate each time.
      */
-    HPDF_INT16*                 widths;
-    HPDF_BYTE*                  used;
+    HpdfInt16                 *widths;
+    HpdfByte                  *used;
 
     HPDF_Xref                   xref;
     HPDF_Font                   descendant_font;
@@ -104,7 +104,7 @@ HPDF_Type0Font_New  (HPDF_MMgr        mmgr,
                      HPDF_Xref        xref);
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Font_Validate  (HPDF_Font font);
 
 #ifdef __cplusplus

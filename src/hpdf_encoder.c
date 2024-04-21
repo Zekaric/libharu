@@ -21,14 +21,14 @@
 #include "hpdf.h"
 
 typedef struct _HPDF_UnicodeGryphPair {
-    HPDF_UNICODE     unicode;
-    const char  *gryph_name;
+    HpdfUnicode     unicode;
+    char const *gryph_name;
 } HPDF_UnicodeGryphPair;
 
 #define HPDF_BASIC_ENCODER_FIRST_CHAR  32
 #define HPDF_BASIC_ENCODER_LAST_CHAR   255
 
-static const HPDF_UnicodeGryphPair HPDF_UNICODE_GRYPH_NAME_MAP[] = {
+static const HPDF_UnicodeGryphPair HpdfUnicode_GRYPH_NAME_MAP[] = {
     {0x0000, char_NOTDEF},
     {0x0020, "space"},
     {0x0021, "exclam"},
@@ -1084,7 +1084,7 @@ static const HPDF_UnicodeGryphPair HPDF_UNICODE_GRYPH_NAME_MAP[] = {
     {0xFFFF, NULL}
 };
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_STANDARD[] = {
+static const HpdfUnicode HpdfUnicode_MAP_STANDARD[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x2019,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1115,7 +1115,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_STANDARD[] = {
     0x0142, 0x00F8, 0x0153, 0x00DF, 0x0000, 0x0000, 0x0000, 0x0000
 };
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_WIN_ANSI[] = {
+static const HpdfUnicode HpdfUnicode_MAP_WIN_ANSI[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1146,7 +1146,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_WIN_ANSI[] = {
     0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x00FD, 0x00FE, 0x00FF
 };
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_MAC_ROMAN[] = {
+static const HpdfUnicode HpdfUnicode_MAP_MAC_ROMAN[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1177,7 +1177,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_MAC_ROMAN[] = {
     0x00AF, 0x02D8, 0x02D9, 0x02DA, 0x00B8, 0x02DD, 0x02DB, 0x02C7
 };
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_FONT_SPECIFIC[] = {
+static const HpdfUnicode HpdfUnicode_MAP_FONT_SPECIFIC[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1214,7 +1214,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_FONT_SPECIFIC[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-2 Encoding -------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_2[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_2[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1248,7 +1248,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_2[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-3 Encoding -------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_3[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_3[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1282,7 +1282,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_3[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-4 Encoding -------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_4[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_4[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1316,7 +1316,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_4[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-5 Encoding -------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_5[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_5[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1350,7 +1350,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_5[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-6 Encoding -------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_6[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_6[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1384,7 +1384,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_6[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-7 Encoding -------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_7[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_7[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1418,7 +1418,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_7[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-8 Encoding -------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_8[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_8[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1452,7 +1452,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_8[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-9 Encoding -------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_9[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_9[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1486,7 +1486,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_9[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-10 Encoding ------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_10[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_10[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1520,7 +1520,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_10[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-11 Encoding ------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_11[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_11[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1554,7 +1554,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_11[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-13 Encoding ------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_13[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_13[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1588,7 +1588,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_13[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-14 Encoding ------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_14[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_14[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1622,7 +1622,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_14[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-15 Encoding ------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_15[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_15[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1656,7 +1656,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_15[] = {
 /*---------------------------------------------------------------------------*/
 /*------ ISO8859-16 Encoding ------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_16[] = {
+static const HpdfUnicode HpdfUnicode_MAP_ISO8859_16[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1694,7 +1694,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_ISO8859_16[] = {
 /*---------------------------------------------------------------------------*/
 /*------ CP1250 Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_CP1250[] = {
+static const HpdfUnicode HpdfUnicode_MAP_CP1250[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1728,7 +1728,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_CP1250[] = {
 /*---------------------------------------------------------------------------*/
 /*------ CP1251 Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_CP1251[] = {
+static const HpdfUnicode HpdfUnicode_MAP_CP1251[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1762,7 +1762,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_CP1251[] = {
 /*---------------------------------------------------------------------------*/
 /*------ CP1252 Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_CP1252[] = {
+static const HpdfUnicode HpdfUnicode_MAP_CP1252[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1796,7 +1796,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_CP1252[] = {
 /*---------------------------------------------------------------------------*/
 /*------ CP1253 Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE HPDF_UNICODE_MAP_CP1253[] = {
+static const HpdfUnicode HpdfUnicode_MAP_CP1253[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1830,7 +1830,7 @@ static const HPDF_UNICODE HPDF_UNICODE_MAP_CP1253[] = {
 /*---------------------------------------------------------------------------*/
 /*------ CP1254 Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1254[] = {
+static const HpdfUnicode  HpdfUnicode_MAP_CP1254[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1864,7 +1864,7 @@ static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1254[] = {
 /*---------------------------------------------------------------------------*/
 /*------ CP1255 Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1255[] = {
+static const HpdfUnicode  HpdfUnicode_MAP_CP1255[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1898,7 +1898,7 @@ static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1255[] = {
 /*---------------------------------------------------------------------------*/
 /*------ CP1256 Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1256[] = {
+static const HpdfUnicode  HpdfUnicode_MAP_CP1256[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1932,7 +1932,7 @@ static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1256[] = {
 /*---------------------------------------------------------------------------*/
 /*------ CP1257 Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1257[] = {
+static const HpdfUnicode  HpdfUnicode_MAP_CP1257[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -1966,7 +1966,7 @@ static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1257[] = {
 /*---------------------------------------------------------------------------*/
 /*------ CP1258 Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1258[] = {
+static const HpdfUnicode  HpdfUnicode_MAP_CP1258[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -2000,7 +2000,7 @@ static const HPDF_UNICODE  HPDF_UNICODE_MAP_CP1258[] = {
 /*---------------------------------------------------------------------------*/
 /*------ KOI8-R Encoding ----------------------------------------------------*/
 
-static const HPDF_UNICODE  HPDF_UNICODE_MAP_KOI8_R[] = {
+static const HpdfUnicode  HpdfUnicode_MAP_KOI8_R[] = {
     0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
     0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
@@ -2032,9 +2032,9 @@ static const HPDF_UNICODE  HPDF_UNICODE_MAP_KOI8_R[] = {
 };
 
 typedef struct _HPDF_BuiltinEncodingData {
-    const char     *encoding_name;
+    char const    *encoding_name;
     HPDF_BaseEncodings  base_encoding;
-    const HPDF_UNICODE  *ovewrride_map;
+    const HpdfUnicode  *ovewrride_map;
 } HPDF_BuiltinEncodingData;
 
 
@@ -2059,122 +2059,122 @@ static const HPDF_BuiltinEncodingData  HPDF_BUILTIN_ENCODINGS[] = {
     {
         HPDF_ENCODING_ISO8859_2,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_2
+        HpdfUnicode_MAP_ISO8859_2
     },
     {
         HPDF_ENCODING_ISO8859_3,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_3
+        HpdfUnicode_MAP_ISO8859_3
     },
     {
         HPDF_ENCODING_ISO8859_4,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_4
+        HpdfUnicode_MAP_ISO8859_4
     },
     {
         HPDF_ENCODING_ISO8859_5,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_5
+        HpdfUnicode_MAP_ISO8859_5
     },
     {
         HPDF_ENCODING_ISO8859_6,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_6
+        HpdfUnicode_MAP_ISO8859_6
     },
     {
         HPDF_ENCODING_ISO8859_7,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_7
+        HpdfUnicode_MAP_ISO8859_7
     },
     {
         HPDF_ENCODING_ISO8859_8,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_8
+        HpdfUnicode_MAP_ISO8859_8
     },
     {
         HPDF_ENCODING_ISO8859_9,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_9
+        HpdfUnicode_MAP_ISO8859_9
     },
     {
         HPDF_ENCODING_ISO8859_10,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_10
+        HpdfUnicode_MAP_ISO8859_10
     },
     {
         HPDF_ENCODING_ISO8859_11,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_11
+        HpdfUnicode_MAP_ISO8859_11
     },
     {
         HPDF_ENCODING_ISO8859_13,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_13
+        HpdfUnicode_MAP_ISO8859_13
     },
     {
         HPDF_ENCODING_ISO8859_14,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_14
+        HpdfUnicode_MAP_ISO8859_14
     },
     {
         HPDF_ENCODING_ISO8859_15,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_15
+        HpdfUnicode_MAP_ISO8859_15
     },
     {
         HPDF_ENCODING_ISO8859_16,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_ISO8859_16
+        HpdfUnicode_MAP_ISO8859_16
     },
     {
         HPDF_ENCODING_CP1250,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_CP1250
+        HpdfUnicode_MAP_CP1250
     },
     {
         HPDF_ENCODING_CP1251,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_CP1251
+        HpdfUnicode_MAP_CP1251
     },
     {
         HPDF_ENCODING_CP1252,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_CP1252
+        HpdfUnicode_MAP_CP1252
     },
     {
         HPDF_ENCODING_CP1253,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_CP1253
+        HpdfUnicode_MAP_CP1253
     },
     {
         HPDF_ENCODING_CP1254,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_CP1254
+        HpdfUnicode_MAP_CP1254
     },
     {
         HPDF_ENCODING_CP1255,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_CP1255
+        HpdfUnicode_MAP_CP1255
     },
     {
         HPDF_ENCODING_CP1256,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_CP1256
+        HpdfUnicode_MAP_CP1256
     },
     {
         HPDF_ENCODING_CP1257,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_CP1257
+        HpdfUnicode_MAP_CP1257
     },
     {
         HPDF_ENCODING_CP1258,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_CP1258
+        HpdfUnicode_MAP_CP1258
     },
     {
         HPDF_ENCODING_KOI8_R,
         HPDF_BASE_ENCODING_WIN_ANSI,
-        HPDF_UNICODE_MAP_KOI8_R
+        HpdfUnicode_MAP_KOI8_R
     },
     {
         NULL,
@@ -2187,24 +2187,24 @@ static const HPDF_BuiltinEncodingData  HPDF_BUILTIN_ENCODINGS[] = {
 /*---------------------------------------------------------------------------*/
 
 const HPDF_BuiltinEncodingData*
-HPDF_BasicEncoder_FindBuiltinData  (const char  *encoding_name);
+HPDF_BasicEncoder_FindBuiltinData  (char const *encoding_name);
 
 
 void
 HPDF_BasicEncoder_CopyMap  (HPDF_Encoder        encoder,
-                            const HPDF_UNICODE  *map);
+                            const HpdfUnicode  *map);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_BasicEncoder_OverrideMap  (HPDF_Encoder        encoder,
-                                const HPDF_UNICODE  *map);
+                                const HpdfUnicode  *map);
 
 
 /*-- HPDF_Encoder ---------------------------------------*/
 
 HPDF_Encoder
 HPDF_BasicEncoder_New  (HPDF_MMgr        mmgr,
-                        const char  *encoding_name)
+                        char const *encoding_name)
 {
     HPDF_Encoder encoder;
     HPDF_BasicEncoderAttr encoder_attr;
@@ -2259,23 +2259,23 @@ HPDF_BasicEncoder_New  (HPDF_MMgr        mmgr,
         case HPDF_BASE_ENCODING_STANDARD:
             HPDF_StrCpy (encoder_attr->base_encoding,
                      HPDF_ENCODING_STANDARD,  eptr);
-            HPDF_BasicEncoder_CopyMap (encoder, HPDF_UNICODE_MAP_STANDARD);
+            HPDF_BasicEncoder_CopyMap (encoder, HpdfUnicode_MAP_STANDARD);
             break;
         case HPDF_BASE_ENCODING_WIN_ANSI:
             HPDF_StrCpy (encoder_attr->base_encoding,
                      HPDF_ENCODING_WIN_ANSI,  eptr);
-            HPDF_BasicEncoder_CopyMap (encoder, HPDF_UNICODE_MAP_WIN_ANSI);
+            HPDF_BasicEncoder_CopyMap (encoder, HpdfUnicode_MAP_WIN_ANSI);
             break;
         case HPDF_BASE_ENCODING_MAC_ROMAN:
             HPDF_StrCpy (encoder_attr->base_encoding,
                      HPDF_ENCODING_MAC_ROMAN,  eptr);
-            HPDF_BasicEncoder_CopyMap (encoder, HPDF_UNICODE_MAP_MAC_ROMAN);
+            HPDF_BasicEncoder_CopyMap (encoder, HpdfUnicode_MAP_MAC_ROMAN);
             break;
         default:
             HPDF_StrCpy (encoder_attr->base_encoding,
                      HPDF_ENCODING_FONT_SPECIFIC,  eptr);
             HPDF_BasicEncoder_CopyMap (encoder,
-                    HPDF_UNICODE_MAP_FONT_SPECIFIC);
+                    HpdfUnicode_MAP_FONT_SPECIFIC);
     }
 
     if (data->ovewrride_map)
@@ -2288,16 +2288,18 @@ HPDF_BasicEncoder_New  (HPDF_MMgr        mmgr,
 
 
 const HPDF_BuiltinEncodingData*
-HPDF_BasicEncoder_FindBuiltinData  (const char  *encoding_name)
+HPDF_BasicEncoder_FindBuiltinData  (char const *encoding_name)
 {
-    HPDF_UINT i = 0;
+    HpdfUInt i = 0;
 
     HPDF_PTRACE((" HPDF_BasicEncoder_FindBuiltinData\n"));
 
-    while (HPDF_BUILTIN_ENCODINGS[i].encoding_name) {
-        if (HPDF_StrCmp (HPDF_BUILTIN_ENCODINGS[i].encoding_name,
-                encoding_name) == 0)
+    while (HPDF_BUILTIN_ENCODINGS[i].encoding_name) 
+    {
+        if (HpdfStrIsEqual(HPDF_BUILTIN_ENCODINGS[i].encoding_name, encoding_name))
+        {
             break;
+        }
 
         i++;
     }
@@ -2306,9 +2308,9 @@ HPDF_BasicEncoder_FindBuiltinData  (const char  *encoding_name)
 }
 
 
-HPDF_UNICODE
+HpdfUnicode
 HPDF_BasicEncoder_ToUnicode (HPDF_Encoder     encoder,
-                             HPDF_UINT16      code)
+                             HpdfUInt16      code)
 {
     HPDF_BasicEncoderAttr attr = (HPDF_BasicEncoderAttr)encoder->attr;
 
@@ -2319,9 +2321,9 @@ HPDF_BasicEncoder_ToUnicode (HPDF_Encoder     encoder,
 }
 
 
-HPDF_UNICODE
+HpdfUnicode
 HPDF_Encoder_ToUnicode  (HPDF_Encoder     encoder,
-                         HPDF_UINT16      code)
+                         HpdfUInt16      code)
 {
     return encoder->to_unicode_fn (encoder, code);
 }
@@ -2329,10 +2331,10 @@ HPDF_Encoder_ToUnicode  (HPDF_Encoder     encoder,
 
 void
 HPDF_BasicEncoder_CopyMap  (HPDF_Encoder        encoder,
-                            const HPDF_UNICODE  *map)
+                            const HpdfUnicode  *map)
 {
-    HPDF_UINT i;
-    HPDF_UNICODE* dst = ((HPDF_BasicEncoderAttr)encoder->attr)->unicode_map +
+    HpdfUInt i;
+    HpdfUnicode* dst = ((HPDF_BasicEncoderAttr)encoder->attr)->unicode_map +
         HPDF_BASIC_ENCODER_FIRST_CHAR;
 
     HPDF_PTRACE((" HPDF_BasicEncoder_CopyMap\n"));
@@ -2342,14 +2344,14 @@ HPDF_BasicEncoder_CopyMap  (HPDF_Encoder        encoder,
         *dst++ = *map++;
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_BasicEncoder_OverrideMap  (HPDF_Encoder        encoder,
-                                const HPDF_UNICODE  *map)
+                                const HpdfUnicode  *map)
 {
-    HPDF_UINT i;
+    HpdfUInt i;
     HPDF_BasicEncoderAttr data = (HPDF_BasicEncoderAttr)encoder->attr;
-    HPDF_UNICODE* dst;
-    HPDF_BYTE* flgs;
+    HpdfUnicode* dst;
+    HpdfByte* flgs;
 
     HPDF_PTRACE ((" HPDF_BasicEncoder_OverrideMap\n"));
 
@@ -2389,9 +2391,9 @@ HPDF_Encoder_Free  (HPDF_Encoder  encoder)
 
 
 const char*
-HPDF_UnicodeToGryphName  (HPDF_UNICODE  unicode)
+HPDF_UnicodeToGryphName  (HpdfUnicode  unicode)
 {
-    const HPDF_UnicodeGryphPair* map = HPDF_UNICODE_GRYPH_NAME_MAP;
+    const HPDF_UnicodeGryphPair* map = HpdfUnicode_GRYPH_NAME_MAP;
 
     HPDF_PTRACE ((" HPDF_UnicodeToGryphName\n"));
 
@@ -2401,19 +2403,22 @@ HPDF_UnicodeToGryphName  (HPDF_UNICODE  unicode)
         map++;
     }
 
-    return HPDF_UNICODE_GRYPH_NAME_MAP[0].gryph_name;
+    return HpdfUnicode_GRYPH_NAME_MAP[0].gryph_name;
 }
 
-HPDF_UNICODE
-HPDF_GryphNameToUnicode  (const char  *gryph_name)
+HpdfUnicode
+HPDF_GryphNameToUnicode  (char const *gryph_name)
 {
-    const HPDF_UnicodeGryphPair* map = HPDF_UNICODE_GRYPH_NAME_MAP;
+    const HPDF_UnicodeGryphPair* map = HpdfUnicode_GRYPH_NAME_MAP;
 
     HPDF_PTRACE ((" HPDF_GryphNameToUnicode\n"));
 
-    while (map->unicode != 0xFFFF) {
-        if (HPDF_StrCmp (gryph_name, map->gryph_name) == 0)
+    while (map->unicode != 0xFFFF) 
+    {
+        if (HpdfStrIsEqual(gryph_name, map->gryph_name))
+        {
             return map->unicode;
+        }
         map++;
     }
 
@@ -2429,20 +2434,21 @@ HPDF_BasicEncoder_Free (HPDF_Encoder  encoder)
     encoder->attr = NULL;
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_BasicEncoder_Write  (HPDF_Encoder  encoder,
                           HPDF_Stream   out)
 {
-    HPDF_STATUS ret;
+    HpdfStatus ret;
     HPDF_BasicEncoderAttr attr = (HPDF_BasicEncoderAttr)encoder->attr;
 
     HPDF_PTRACE ((" HPDF_BasicEncoder_Write\n"));
 
-    /*  if HPDF_ENCODING_FONT_SPECIFIC is selected, no Encoding object will be "
-     *  written.
-     */
-    if (HPDF_StrCmp (attr->base_encoding, HPDF_ENCODING_FONT_SPECIFIC) == 0)
+    /* if HPDF_ENCODING_FONT_SPECIFIC is selected, no Encoding object will be "
+    ** written. */
+    if (HpdfStrIsEqual(attr->base_encoding, HPDF_ENCODING_FONT_SPECIFIC))
+    {
         return HPDF_OK;
+    }
 
     /* if encoder has differences-data, encoding object is written as
        dictionary-object, otherwise it is written as name-object. */
@@ -2469,7 +2475,7 @@ HPDF_BasicEncoder_Write  (HPDF_Encoder  encoder,
 
     /* write differences data */
     if (attr->has_differences == HPDF_TRUE) {
-        HPDF_INT i;
+        HpdfInt i;
 
         ret = HPDF_Stream_WriteStr (out, "/Differences [");
         if (ret != HPDF_OK)
@@ -2503,7 +2509,7 @@ HPDF_BasicEncoder_Write  (HPDF_Encoder  encoder,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Encoder_Validate  (HPDF_Encoder  encoder)
 {
     HPDF_PTRACE ((" HPDF_Encoder_Validate\n"));
@@ -2552,12 +2558,12 @@ HPDF_CMapEncoder_New  (HPDF_MMgr                mmgr,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_CMapEncoder_InitAttr  (HPDF_Encoder  encoder)
 {
     HPDF_CMapEncoderAttr encoder_attr;
-    HPDF_UINT i;
-    HPDF_UINT j;
+    HpdfUInt i;
+    HpdfUInt j;
 
     HPDF_PTRACE ((" HPDF_CMapEncoder_InitAttr\n"));
 
@@ -2602,24 +2608,24 @@ HPDF_CMapEncoder_InitAttr  (HPDF_Encoder  encoder)
 }
 
 
-HPDF_UNICODE
+HpdfUnicode
 HPDF_CMapEncoder_ToUnicode  (HPDF_Encoder  encoder,
-                             HPDF_UINT16   code)
+                             HpdfUInt16   code)
 {
-    HPDF_BYTE l = (HPDF_BYTE)code;
-    HPDF_BYTE h = (HPDF_BYTE)(code >> 8);
+    HpdfByte l = (HpdfByte)code;
+    HpdfByte h = (HpdfByte)(code >> 8);
     HPDF_CMapEncoderAttr attr = (HPDF_CMapEncoderAttr)encoder->attr;
 
     return attr->unicode_map[l][h];
 }
 
 
-HPDF_UINT16
+HpdfUInt16
 HPDF_CMapEncoder_ToCID  (HPDF_Encoder  encoder,
-                         HPDF_UINT16   code)
+                         HpdfUInt16   code)
 {
-    HPDF_BYTE l = (HPDF_BYTE)code;
-    HPDF_BYTE h = (HPDF_BYTE)(code >> 8);
+    HpdfByte l = (HpdfByte)code;
+    HpdfByte h = (HpdfByte)(code >> 8);
 
     HPDF_CMapEncoderAttr attr = (HPDF_CMapEncoderAttr)encoder->attr;
 
@@ -2630,7 +2636,7 @@ void
 HPDF_CMapEncoder_Free  (HPDF_Encoder  encoder)
 {
     HPDF_CMapEncoderAttr attr;
-    HPDF_UINT i;
+    HpdfUInt i;
     HPDF_CidRange_Rec *data;
 
     HPDF_PTRACE ((" HPDF_CMapEncoder_Free\n"));
@@ -2672,11 +2678,11 @@ HPDF_CMapEncoder_Free  (HPDF_Encoder  encoder)
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_CMapEncoder_Write  (HPDF_Encoder  encoder,
                          HPDF_Stream   out)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_UNUSED (out);
     HPDF_UNUSED (encoder);
 
@@ -2687,8 +2693,8 @@ HPDF_CMapEncoder_Write  (HPDF_Encoder  encoder,
 void
 HPDF_Encoder_SetParseText  (HPDF_Encoder        encoder,
                             HPDF_ParseText_Rec  *state,
-                            const HPDF_BYTE     *text,
-                            HPDF_UINT           len)
+                            HpdfByte     const *const text,
+                            HpdfUInt           len)
 {
     HPDF_PTRACE ((" HPDF_CMapEncoder_SetParseText\n"));
     HPDF_UNUSED (encoder);
@@ -2742,7 +2748,7 @@ HPDF_Encoder_ByteType  (HPDF_Encoder        encoder,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_CMapEncoder_AddCMap  (HPDF_Encoder             encoder,
                            const HPDF_CidRange_Rec  *range)
 {
@@ -2752,25 +2758,25 @@ HPDF_CMapEncoder_AddCMap  (HPDF_Encoder             encoder,
 
     /* Copy specified pdf_cid_range array to fRangeArray. */
     while (range->from != 0xffff || range->to != 0xffff) {
-	HPDF_CidRange_Rec *prange;
-	HPDF_STATUS ret;
+    HPDF_CidRange_Rec *prange;
+    HpdfStatus ret;
 
-	/*
-	 * Only if we have the default to_unicode_fn
-	 */
-	if (encoder->to_unicode_fn == HPDF_CMapEncoder_ToUnicode) {
-	    HPDF_UINT16 code = range->from;
-	    HPDF_UINT16 cid = range->cid;
+    /*
+     * Only if we have the default to_unicode_fn
+     */
+    if (encoder->to_unicode_fn == HPDF_CMapEncoder_ToUnicode) {
+        HpdfUInt16 code = range->from;
+        HpdfUInt16 cid = range->cid;
 
-	    while (code <= range->to) {
-		HPDF_BYTE l = (HPDF_BYTE) (code & 0xFF);
-		HPDF_BYTE h = code >> 8;
+        while (code <= range->to) {
+        HpdfByte l = (HpdfByte) (code & 0xFF);
+        HpdfByte h = code >> 8;
 
-		attr->cid_map[l][h] = cid;
-		code++;
-		cid++;
-	    }
-	}
+        attr->cid_map[l][h] = cid;
+        code++;
+        cid++;
+        }
+    }
 
         prange = HPDF_GetMem (encoder->mmgr, sizeof(HPDF_CidRange_Rec));
         if (!prange)
@@ -2792,13 +2798,13 @@ HPDF_CMapEncoder_AddCMap  (HPDF_Encoder             encoder,
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 AddCidRainge  (HPDF_MMgr            mmgr,
                HPDF_CidRange_Rec    range,
                HPDF_List            target)
 {
     HPDF_CidRange_Rec *prange;
-    HPDF_STATUS ret;
+    HpdfStatus ret;
 
     prange = HPDF_GetMem (mmgr, sizeof(HPDF_CidRange_Rec));
     if (!prange)
@@ -2818,7 +2824,7 @@ AddCidRainge  (HPDF_MMgr            mmgr,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_CMapEncoder_AddNotDefRange  (HPDF_Encoder        encoder,
                                   HPDF_CidRange_Rec   range)
 {
@@ -2830,7 +2836,7 @@ HPDF_CMapEncoder_AddNotDefRange  (HPDF_Encoder        encoder,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_CMapEncoder_AddCodeSpaceRange  (HPDF_Encoder        encoder,
                                      HPDF_CidRange_Rec   range)
 {
@@ -2852,20 +2858,20 @@ HPDF_CMapEncoder_SetUnicodeArray  (HPDF_Encoder                 encoder,
 
     if (array != NULL)
         while (array->unicode != 0xffff) {
-            HPDF_BYTE l = (HPDF_BYTE)array->code;
-            HPDF_BYTE h = (HPDF_BYTE)(array->code >> 8);
+            HpdfByte l = (HpdfByte)array->code;
+            HpdfByte h = (HpdfByte)(array->code >> 8);
             attr->unicode_map[l][h] = array->unicode;
             array++;
         }
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_CMapEncoder_AddJWWLineHead  (HPDF_Encoder        encoder,
-                                  const HPDF_UINT16  *code)
+                                  const HpdfUInt16  *code)
 {
     HPDF_CMapEncoderAttr attr = (HPDF_CMapEncoderAttr)encoder->attr;
-    HPDF_UINT i, j;
+    HpdfUInt i, j;
 
     HPDF_PTRACE ((" HPDF_CMapEncoder_AddJWWLineHead\n"));
 
@@ -2894,12 +2900,12 @@ HPDF_CMapEncoder_AddJWWLineHead  (HPDF_Encoder        encoder,
 }
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Encoder_CheckJWWLineHead  (HPDF_Encoder        encoder,
-                                const HPDF_UINT16   code)
+                                const HpdfUInt16   code)
 {
     HPDF_CMapEncoderAttr attr;
-    HPDF_UINT j;
+    HpdfUInt j;
 
     HPDF_PTRACE ((" HPDF_Encoder_CheckJWWLineHead\n"));
 
@@ -2926,9 +2932,9 @@ HPDF_Encoder_CheckJWWLineHead  (HPDF_Encoder        encoder,
 
 
 
-HPDF_EXPORT(HPDF_UNICODE)
+HPDF_EXPORT(HpdfUnicode)
 HPDF_Encoder_GetUnicode  (HPDF_Encoder   encoder,
-                          HPDF_UINT16    code)
+                          HpdfUInt16    code)
 {
     HPDF_PTRACE ((" HPDF_Encoder_GetUnicode\n"));
 
@@ -2941,8 +2947,8 @@ HPDF_Encoder_GetUnicode  (HPDF_Encoder   encoder,
 
 HPDF_EXPORT(HPDF_ByteType)
 HPDF_Encoder_GetByteType  (HPDF_Encoder       encoder,
-                           const char   *text,
-                           HPDF_UINT          index)
+                           char const  *text,
+                           HpdfUInt          index)
 {
     HPDF_ParseText_Rec  parse_state;
     HPDF_ByteType btype;
@@ -2955,7 +2961,7 @@ HPDF_Encoder_GetByteType  (HPDF_Encoder       encoder,
     if (encoder->type != HPDF_ENCODER_TYPE_DOUBLE_BYTE)
         return HPDF_BYTE_TYPE_SINGLE;
 
-    HPDF_Encoder_SetParseText (encoder, &parse_state, (HPDF_BYTE *)text, index + 1);
+    HPDF_Encoder_SetParseText (encoder, &parse_state, (HpdfByte *) text, index + 1);
 
     for (;;) {
         btype = HPDF_CMapEncoder_ByteType (encoder, &parse_state);

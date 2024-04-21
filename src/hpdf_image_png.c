@@ -25,7 +25,7 @@
 
 static void
 PngErrorFunc  (png_structp       png_ptr,
-               const char  *msg);
+               char const *msg);
 
 
 static void
@@ -33,48 +33,48 @@ PngReadFunc  (png_structp   png_ptr,
               png_bytep     data,
               png_uint_32   length)
 {
-    HPDF_UINT len = length;
+    HpdfUInt len = length;
     HPDF_Stream stream = (HPDF_Stream)png_get_io_ptr (png_ptr);
 
     HPDF_Stream_Read (stream, data, &len);
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 LoadPngData  (HPDF_Dict     image,
               HPDF_Xref     xref,
               HPDF_Stream   png_data,
-              HPDF_BOOL     delayed_loading);
+              HpdfBool     delayed_loading);
 
 
 static void
 PngErrorFunc  (png_structp       png_ptr,
-               const char  *msg);
+               char const *msg);
 
 
-static HPDF_STATUS
+static HpdfStatus
 ReadPngData_Interlaced  (HPDF_Dict    image,
                          png_structp  png_ptr,
                          png_infop    info_ptr);
 
 
-static HPDF_STATUS
+static HpdfStatus
 ReadPngData  (HPDF_Dict    image,
               png_structp  png_ptr,
               png_infop    info_ptr);
 
 
-static HPDF_STATUS
+static HpdfStatus
 CreatePallet (HPDF_Dict    image,
               png_structp  png_ptr,
               png_infop    info_ptr);
 
 
-static HPDF_STATUS
+static HpdfStatus
 PngBeforeWrite  (HPDF_Dict obj);
 
 
-static HPDF_STATUS
+static HpdfStatus
 PngAfterWrite  (HPDF_Dict obj);
 
 
@@ -82,12 +82,12 @@ PngAfterWrite  (HPDF_Dict obj);
 
 static void
 PngErrorFunc  (png_structp       png_ptr,
-               const char  *msg)
+               char const *msg)
 {
     char error_number[16];
-    HPDF_UINT i;
-    HPDF_STATUS detail_no;
-    HPDF_Error error;
+    HpdfUInt i;
+    HpdfStatus detail_no;
+    HpdfError *error;
 
     /* pick out error-number from error message */
     HPDF_MemSet (error_number, 0, 16);
@@ -98,13 +98,13 @@ PngErrorFunc  (png_structp       png_ptr,
              break;
      }
 
-     error = (HPDF_Error)png_get_error_ptr (png_ptr);
-     detail_no = (HPDF_STATUS)HPDF_AToI (error_number);
+     error     = (HpdfError *) png_get_error_ptr (png_ptr);
+     detail_no = (HpdfStatus)HPDF_AToI (error_number);
      HPDF_SetError (error, HPDF_LIBPNG_ERROR, detail_no);
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 ReadPngData_Interlaced  (HPDF_Dict    image,
                          png_structp  png_ptr,
                          png_infop    info_ptr)
@@ -115,10 +115,10 @@ ReadPngData_Interlaced  (HPDF_Dict    image,
                 height * sizeof (png_bytep));
 
     if (row_pointers) {
-        HPDF_UINT i;
+        HpdfUInt i;
 
         HPDF_MemSet (row_pointers, 0, height * sizeof (png_bytep));
-        for (i = 0; i < (HPDF_UINT)height; i++) {
+        for (i = 0; i < (HpdfUInt)height; i++) {
             row_pointers[i] = HPDF_GetMem (image->mmgr, len);
 
             if (image->error->error_no != HPDF_OK)
@@ -128,7 +128,7 @@ ReadPngData_Interlaced  (HPDF_Dict    image,
         if (image->error->error_no == HPDF_OK) {
             png_read_image(png_ptr, row_pointers);
             if (image->error->error_no == HPDF_OK) {       /* add this line */
-                for (i = 0; i < (HPDF_UINT)height; i++) {
+                for (i = 0; i < (HpdfUInt)height; i++) {
                     if (HPDF_Stream_Write (image->stream, row_pointers[i], len) !=
                             HPDF_OK)
                         break;
@@ -137,7 +137,7 @@ ReadPngData_Interlaced  (HPDF_Dict    image,
         }
 
         /* clean up */
-        for (i = 0; i < (HPDF_UINT)height; i++) {
+        for (i = 0; i < (HpdfUInt)height; i++) {
             HPDF_FreeMem (image->mmgr, row_pointers[i]);
         }
 
@@ -147,7 +147,7 @@ ReadPngData_Interlaced  (HPDF_Dict    image,
     return image->error->error_no;
 }
 
-static HPDF_STATUS
+static HpdfStatus
 ReadPngData  (HPDF_Dict    image,
               png_structp  png_ptr,
               png_infop    info_ptr)
@@ -157,9 +157,9 @@ ReadPngData  (HPDF_Dict    image,
     png_bytep buf_ptr = HPDF_GetMem (image->mmgr, len);
 
     if (buf_ptr) {
-        HPDF_UINT i;
+        HpdfUInt i;
 
-        for (i = 0; i < (HPDF_UINT)height; i++) {
+        for (i = 0; i < (HpdfUInt)height; i++) {
             png_read_rows(png_ptr, (png_byte**)&buf_ptr, NULL, 1);
             if (image->error->error_no != HPDF_OK)
                 break;
@@ -174,7 +174,7 @@ ReadPngData  (HPDF_Dict    image,
     return image->error->error_no;
 }
 
-static HPDF_STATUS
+static HpdfStatus
 ReadTransparentPaletteData  (HPDF_Dict    image,
                              png_structp  png_ptr,
                              png_infop    info_ptr,
@@ -182,8 +182,8 @@ ReadTransparentPaletteData  (HPDF_Dict    image,
                              png_bytep    trans,
                              int          num_trans)
 {
-	HPDF_STATUS ret = HPDF_OK;
-	HPDF_UINT i, j;
+	HpdfStatus ret = HPDF_OK;
+	HpdfUInt i, j;
 	png_bytep *row_ptr;
 	png_uint_32 height = png_get_image_height(png_ptr, info_ptr);
 	png_uint_32 width = png_get_image_width(png_ptr, info_ptr);
@@ -194,7 +194,7 @@ ReadTransparentPaletteData  (HPDF_Dict    image,
 	} else {
 		png_uint_32 len = png_get_rowbytes(png_ptr, info_ptr);
 
-		for (i = 0; i < (HPDF_UINT)height; i++) {
+		for (i = 0; i < (HpdfUInt)height; i++) {
 			row_ptr[i] = HPDF_GetMem(image->mmgr, len);
 			if (!row_ptr[i]) {
 				for (; i > 0; i--) {
@@ -224,7 +224,7 @@ ReadTransparentPaletteData  (HPDF_Dict    image,
 	}
 
 Error:
-	for (i = 0; i < (HPDF_UINT)height; i++) {
+	for (i = 0; i < (HpdfUInt)height; i++) {
 		HPDF_FreeMem (image->mmgr, row_ptr[i]);
 	}
 
@@ -232,15 +232,15 @@ Error:
 	return ret;
 }
 
-static HPDF_STATUS
+static HpdfStatus
 ReadTransparentPngData  (HPDF_Dict    image,
                          png_structp  png_ptr,
                          png_infop    info_ptr,
                          png_bytep    smask_data)
 {
-	HPDF_STATUS ret = HPDF_OK;
-	HPDF_INT row_len;
-	HPDF_UINT i, j;
+	HpdfStatus ret = HPDF_OK;
+	HpdfInt row_len;
+	HpdfUInt i, j;
 	png_bytep *row_ptr, row;
 	png_byte color_type;
 	png_uint_32 height = png_get_image_height(png_ptr, info_ptr);
@@ -258,7 +258,7 @@ ReadTransparentPngData  (HPDF_Dict    image,
 	} else {
 		png_uint_32 len = png_get_rowbytes(png_ptr, info_ptr);
 
-		for (i = 0; i < (HPDF_UINT)height; i++) {
+		for (i = 0; i < (HpdfUInt)height; i++) {
 			row_ptr[i] = HPDF_GetMem(image->mmgr, len);
 			if (!row_ptr[i]) {
 				for (; i > 0; i--) {
@@ -313,7 +313,7 @@ ReadTransparentPngData  (HPDF_Dict    image,
 	}
 
 Error:
-	for (i = 0; i < (HPDF_UINT)height; i++) {
+	for (i = 0; i < (HpdfUInt)height; i++) {
 		HPDF_FreeMem (image->mmgr, row_ptr[i]);
 	}
 
@@ -321,16 +321,16 @@ Error:
 	return ret;
 }
 
-static HPDF_STATUS
+static HpdfStatus
 CreatePallet (HPDF_Dict    image,
               png_structp  png_ptr,
               png_infop    info_ptr)
 {
-    HPDF_INT num_pl = 0;
+    HpdfInt num_pl = 0;
     png_color *src_pl = NULL;
-    HPDF_BYTE *ppallet;
-    HPDF_BYTE *p;
-    HPDF_UINT i;
+    HpdfByte *ppallet;
+    HpdfByte *p;
+    HpdfUInt i;
     HPDF_Array array;
 
     /* png_get_PLTE does not call PngErrorFunc even if it failed.
@@ -380,12 +380,12 @@ HPDF_Image
 HPDF_Image_LoadPngImage  (HPDF_MMgr        mmgr,
                           HPDF_Stream      png_data,
                           HPDF_Xref        xref,
-                          HPDF_BOOL        delayed_loading)
+                          HpdfBool        delayed_loading)
 {
-    HPDF_STATUS ret;
+    HpdfStatus ret;
     HPDF_Dict image;
     png_byte header[HPDF_PNG_BYTES_TO_CHECK];
-    HPDF_UINT len = HPDF_PNG_BYTES_TO_CHECK;
+    HpdfUInt len = HPDF_PNG_BYTES_TO_CHECK;
 
     HPDF_PTRACE ((" HPDF_Image_LoadPngImage\n"));
 
@@ -414,14 +414,14 @@ HPDF_Image_LoadPngImage  (HPDF_MMgr        mmgr,
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 LoadPngData  (HPDF_Dict     image,
               HPDF_Xref     xref,
               HPDF_Stream   png_data,
-              HPDF_BOOL     delayed_loading)
+              HpdfBool     delayed_loading)
 
 {
-	HPDF_STATUS ret = HPDF_OK;
+	HpdfStatus ret = HPDF_OK;
 	png_uint_32 width, height;
 	int bit_depth, color_type;
 	png_structp png_ptr = NULL;
@@ -489,10 +489,10 @@ LoadPngData  (HPDF_Dict     image,
 		smask->header.obj_class |= HPDF_OSUBCLASS_XOBJECT;
 		ret = HPDF_Dict_AddName (smask, "Type", "XObject");
 		ret += HPDF_Dict_AddName (smask, "Subtype", "Image");
-		ret += HPDF_Dict_AddNumber (smask, "Width", (HPDF_UINT)width);
-		ret += HPDF_Dict_AddNumber (smask, "Height", (HPDF_UINT)height);
+		ret += HPDF_Dict_AddNumber (smask, "Width", (HpdfUInt)width);
+		ret += HPDF_Dict_AddNumber (smask, "Height", (HpdfUInt)height);
 		ret += HPDF_Dict_AddName (smask, "ColorSpace", "DeviceGray");
-		ret += HPDF_Dict_AddNumber (smask, "BitsPerComponent", (HPDF_UINT)bit_depth);
+		ret += HPDF_Dict_AddNumber (smask, "BitsPerComponent", (HpdfUInt)bit_depth);
 
 		if (ret != HPDF_OK) {
 			HPDF_Dict_Free(smask);
@@ -524,9 +524,9 @@ LoadPngData  (HPDF_Dict     image,
 
 
 		ret += CreatePallet(image, png_ptr, info_ptr);
-		ret += HPDF_Dict_AddNumber (image, "Width", (HPDF_UINT)width);
-		ret += HPDF_Dict_AddNumber (image, "Height", (HPDF_UINT)height);
-		ret += HPDF_Dict_AddNumber (image, "BitsPerComponent",	(HPDF_UINT)bit_depth);
+		ret += HPDF_Dict_AddNumber (image, "Width", (HpdfUInt)width);
+		ret += HPDF_Dict_AddNumber (image, "Height", (HpdfUInt)height);
+		ret += HPDF_Dict_AddNumber (image, "BitsPerComponent",	(HpdfUInt)bit_depth);
 		ret += HPDF_Dict_Add (image, "SMask", smask);
 
 		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
@@ -552,10 +552,10 @@ no_transparent_color_in_palette:
 		
 		ret = HPDF_Dict_AddName (smask, "Type", "XObject");
 		ret += HPDF_Dict_AddName (smask, "Subtype", "Image");
-		ret += HPDF_Dict_AddNumber (smask, "Width", (HPDF_UINT)width);
-		ret += HPDF_Dict_AddNumber (smask, "Height", (HPDF_UINT)height);
+		ret += HPDF_Dict_AddNumber (smask, "Width", (HpdfUInt)width);
+		ret += HPDF_Dict_AddNumber (smask, "Height", (HpdfUInt)height);
 		ret += HPDF_Dict_AddName (smask, "ColorSpace", "DeviceGray");
-		ret += HPDF_Dict_AddNumber (smask, "BitsPerComponent", (HPDF_UINT)bit_depth);
+		ret += HPDF_Dict_AddNumber (smask, "BitsPerComponent", (HpdfUInt)bit_depth);
 
 		if (ret != HPDF_OK) {
 			HPDF_Dict_Free(smask);
@@ -590,9 +590,9 @@ no_transparent_color_in_palette:
 		} else {
 			ret += HPDF_Dict_AddName (image, "ColorSpace", "DeviceRGB");
 		}
-		ret += HPDF_Dict_AddNumber (image, "Width", (HPDF_UINT)width);
-		ret += HPDF_Dict_AddNumber (image, "Height", (HPDF_UINT)height);
-		ret += HPDF_Dict_AddNumber (image, "BitsPerComponent",	(HPDF_UINT)bit_depth);
+		ret += HPDF_Dict_AddNumber (image, "Width", (HpdfUInt)width);
+		ret += HPDF_Dict_AddNumber (image, "Height", (HpdfUInt)height);
+		ret += HPDF_Dict_AddNumber (image, "BitsPerComponent",	(HpdfUInt)bit_depth);
 		ret += HPDF_Dict_Add (image, "SMask", smask);
 
 		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
@@ -630,16 +630,16 @@ no_transparent_color_in_palette:
 	}
 
 	/* setting the info of the image. */
-	if (HPDF_Dict_AddNumber (image, "Width", (HPDF_UINT)width)
+	if (HPDF_Dict_AddNumber (image, "Width", (HpdfUInt)width)
 			!= HPDF_OK)
 		goto Exit;
 
-	if (HPDF_Dict_AddNumber (image, "Height", (HPDF_UINT)height)
+	if (HPDF_Dict_AddNumber (image, "Height", (HpdfUInt)height)
 			!= HPDF_OK)
 		goto Exit;
 
 	if (HPDF_Dict_AddNumber (image, "BitsPerComponent",
-				(HPDF_UINT)bit_depth) != HPDF_OK)
+				(HpdfUInt)bit_depth) != HPDF_OK)
 		goto Exit;
 
 	/* clean up */
@@ -657,12 +657,12 @@ Exit:
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 PngBeforeWrite  (HPDF_Dict obj)
 {
-    HPDF_STATUS ret;
+    HpdfStatus ret;
     png_byte header[HPDF_PNG_BYTES_TO_CHECK];
-    HPDF_UINT len = HPDF_PNG_BYTES_TO_CHECK;
+    HpdfUInt len = HPDF_PNG_BYTES_TO_CHECK;
     HPDF_Stream png_data;
     HPDF_String s;
 
@@ -697,7 +697,7 @@ PngBeforeWrite  (HPDF_Dict obj)
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 PngAfterWrite  (HPDF_Dict obj)
 {
    HPDF_PTRACE ((" PngAfterWrite\n"));

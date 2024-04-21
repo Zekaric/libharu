@@ -77,45 +77,45 @@ HPDF_EncryptDict_CreateID  (HPDF_EncryptDict  dict,
     HPDF_UNUSED (info);
 
 #ifndef LIBHPDF_DEBUG
-    HPDF_MD5Update(&ctx, (HPDF_BYTE *)&t, sizeof(t));
+    HPDF_MD5Update(&ctx, (HpdfByte *) &t, sizeof(t));
 
     /* create File Identifier from elements of Into dictionary. */
     if (info) {
         const char *s;
-        HPDF_UINT len;
+        HpdfUInt len;
 
         /* Author */
         s = HPDF_Info_GetInfoAttr (info, HPDF_INFO_AUTHOR);
         if ((len = HPDF_StrLen (s, -1)) > 0)
-            HPDF_MD5Update(&ctx, (const HPDF_BYTE *)s, len);
+            HPDF_MD5Update(&ctx, (HpdfByte const *) s, len);
 
         /* Creator */
         s = HPDF_Info_GetInfoAttr (info, HPDF_INFO_CREATOR);
         if ((len = HPDF_StrLen (s, -1)) > 0)
-            HPDF_MD5Update(&ctx, (const HPDF_BYTE *)s, len);
+            HPDF_MD5Update(&ctx, (HpdfByte const *) s, len);
 
         /* Producer */
         s = HPDF_Info_GetInfoAttr (info, HPDF_INFO_PRODUCER);
         if ((len = HPDF_StrLen (s, -1)) > 0)
-            HPDF_MD5Update(&ctx, (const HPDF_BYTE *)s, len);
+            HPDF_MD5Update(&ctx, (HpdfByte const *) s, len);
 
         /* Title */
         s = HPDF_Info_GetInfoAttr (info, HPDF_INFO_TITLE);
         if ((len = HPDF_StrLen (s, -1)) > 0)
-            HPDF_MD5Update(&ctx, (const HPDF_BYTE *)s, len);
+            HPDF_MD5Update(&ctx, (HpdfByte const *) s, len);
 
         /* Subject */
         s = HPDF_Info_GetInfoAttr (info, HPDF_INFO_SUBJECT);
         if ((len = HPDF_StrLen (s, -1)) > 0)
-            HPDF_MD5Update(&ctx, (const HPDF_BYTE *)s, len);
+            HPDF_MD5Update(&ctx, (HpdfByte const *) s, len);
 
         /* Keywords */
         s = HPDF_Info_GetInfoAttr (info, HPDF_INFO_KEYWORDS);
         if ((len = HPDF_StrLen (s, -1)) > 0)
-            HPDF_MD5Update(&ctx, (const HPDF_BYTE *)s, len);
+            HPDF_MD5Update(&ctx, (HpdfByte const *) s, len);
 
-        HPDF_MD5Update(&ctx, (const HPDF_BYTE *)&(xref->entries->count),
-                sizeof(HPDF_UINT32));
+        HPDF_MD5Update(&ctx, (HpdfByte const *) &(xref->entries->count),
+                sizeof(HpdfUInt32));
 
     }
 #endif
@@ -123,12 +123,12 @@ HPDF_EncryptDict_CreateID  (HPDF_EncryptDict  dict,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_EncryptDict_Prepare  (HPDF_EncryptDict  dict,
                            HPDF_Dict         info,
                            HPDF_Xref         xref)
 {
-    HPDF_STATUS ret;
+    HpdfStatus ret;
     HPDF_Encrypt attr = (HPDF_Encrypt)dict->attr;
     HPDF_Binary user_key;
     HPDF_Binary owner_key;
@@ -186,10 +186,10 @@ HPDF_EncryptDict_OnFree  (HPDF_Dict  obj)
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_EncryptDict_SetPassword  (HPDF_EncryptDict  dict,
-                               const char   *owner_passwd,
-                               const char   *user_passwd)
+                               char const  *owner_passwd,
+                               char const  *user_passwd)
 {
     HPDF_Encrypt attr = (HPDF_Encrypt)dict->attr;
 
@@ -199,8 +199,10 @@ HPDF_EncryptDict_SetPassword  (HPDF_EncryptDict  dict,
         return HPDF_SetError(dict->error, HPDF_ENCRYPT_INVALID_PASSWORD, 0);
 
     if (owner_passwd && user_passwd &&
-            HPDF_StrCmp (owner_passwd, user_passwd) == 0)
+        HpdfStrIsEqual(owner_passwd, user_passwd))
+    {
         return HPDF_SetError(dict->error, HPDF_ENCRYPT_INVALID_PASSWORD, 0);
+    }
 
     HPDF_PadOrTrancatePasswd (owner_passwd, attr->owner_passwd);
     HPDF_PadOrTrancatePasswd (user_passwd, attr->user_passwd);
@@ -209,7 +211,7 @@ HPDF_EncryptDict_SetPassword  (HPDF_EncryptDict  dict,
 }
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_EncryptDict_Validate  (HPDF_EncryptDict  dict)
 {
     HPDF_Obj_Header *header = (HPDF_Obj_Header *)dict;

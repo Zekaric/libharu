@@ -22,7 +22,7 @@
 
 HPDF_Name
 HPDF_Name_New  (HPDF_MMgr        mmgr,
-                const char  *value)
+                char const *value)
 {
     HPDF_Name obj;
 
@@ -42,7 +42,7 @@ HPDF_Name_New  (HPDF_MMgr        mmgr,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Name_Write  (HPDF_Name    obj,
                   HPDF_Stream  stream)
 {
@@ -50,9 +50,9 @@ HPDF_Name_Write  (HPDF_Name    obj,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Name_SetValue  (HPDF_Name        obj,
-                     const char  *value)
+                     char const *value)
 {
     if (!value || value[0] == 0)
         return HPDF_SetError (obj->error, HPDF_NAME_INVALID_VALUE, 0);

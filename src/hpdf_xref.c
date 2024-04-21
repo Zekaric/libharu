@@ -19,14 +19,14 @@
 #include "hpdf_utils.h"
 #include "hpdf_objects.h"
 
-static HPDF_STATUS
+static HpdfStatus
 WriteTrailer  (HPDF_Xref     xref,
                HPDF_Stream   stream);
 
 
 HPDF_Xref
 HPDF_Xref_New  (HPDF_MMgr     mmgr,
-                HPDF_UINT32   offset)
+                HpdfUInt32   offset)
 {
     HPDF_Xref xref;
     HPDF_XrefEntry new_entry;
@@ -84,7 +84,7 @@ Fail:
 void
 HPDF_Xref_Free  (HPDF_Xref  xref)
 {
-    HPDF_UINT i;
+    HpdfUInt i;
     HPDF_XrefEntry entry;
     HPDF_Xref tmp_xref;
 
@@ -117,7 +117,7 @@ HPDF_Xref_Free  (HPDF_Xref  xref)
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Xref_Add  (HPDF_Xref  xref,
                 void       *obj)
 {
@@ -176,7 +176,7 @@ Fail:
 
 HPDF_XrefEntry
 HPDF_Xref_GetEntry  (HPDF_Xref  xref,
-                     HPDF_UINT  index)
+                     HpdfUInt  index)
 {
     HPDF_PTRACE((" HPDF_Xref_GetEntry\n"));
 
@@ -186,14 +186,14 @@ HPDF_Xref_GetEntry  (HPDF_Xref  xref,
 
 HPDF_XrefEntry
 HPDF_Xref_GetEntryByObjectId  (HPDF_Xref  xref,
-                               HPDF_UINT  obj_id)
+                               HpdfUInt  obj_id)
 {
     HPDF_Xref tmp_xref = xref;
 
     HPDF_PTRACE((" HPDF_Xref_GetEntryByObjectId\n"));
 
     while (tmp_xref) {
-        HPDF_UINT i;
+        HpdfUInt i;
 
         if (tmp_xref->entries->count + tmp_xref->start_offset > obj_id) {
             HPDF_SetError (xref->error, HPDF_INVALID_OBJ_ID, 0);
@@ -217,17 +217,17 @@ HPDF_Xref_GetEntryByObjectId  (HPDF_Xref  xref,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Xref_WriteToStream  (HPDF_Xref    xref,
                           HPDF_Stream  stream,
                           HPDF_Encrypt e)
 {
-    HPDF_STATUS ret;
-    HPDF_UINT i;
+    HpdfStatus ret;
+    HpdfUInt i;
     char buf[HPDF_SHORT_BUF_SIZ];
     char* pbuf;
     char* eptr = buf + HPDF_SHORT_BUF_SIZ - 1;
-    HPDF_UINT str_idx;
+    HpdfUInt str_idx;
     HPDF_Xref tmp_xref = xref;
 
     /* write each objects of xref to the specified stream */
@@ -243,8 +243,8 @@ HPDF_Xref_WriteToStream  (HPDF_Xref    xref,
         for (i = str_idx; i < tmp_xref->entries->count; i++) {
             HPDF_XrefEntry  entry =
                         (HPDF_XrefEntry)HPDF_List_ItemAt (tmp_xref->entries, i);
-            HPDF_UINT obj_id = tmp_xref->start_offset + i;
-            HPDF_UINT16 gen_no = entry->gen_no;
+            HpdfUInt obj_id = tmp_xref->start_offset + i;
+            HpdfUInt16 gen_no = entry->gen_no;
 
             entry->byte_offset = stream->size;
 
@@ -313,12 +313,12 @@ HPDF_Xref_WriteToStream  (HPDF_Xref    xref,
     return ret;
 }
 
-static HPDF_STATUS
+static HpdfStatus
 WriteTrailer  (HPDF_Xref     xref,
                HPDF_Stream   stream)
 {
-    HPDF_UINT max_obj_id;
-    HPDF_STATUS ret;
+    HpdfUInt max_obj_id;
+    HpdfStatus ret;
 
     if (!xref)
         return HPDF_INVALID_OBJECT;

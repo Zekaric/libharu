@@ -26,18 +26,18 @@ void  __stdcall
 #else
 void
 #endif
-error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
+error_handler  (HpdfStatus   error_no,
+                HpdfStatus   detail_no,
                 void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
 
 void
-draw_circles (HPDF_Page page, const char *description, HPDF_REAL x, HPDF_REAL y)
+draw_circles (HPDF_Page page, const char *description, HpdfReal x, HpdfReal y)
 {
     HPDF_Page_SetLineWidth (page, 1.0f);
     HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
@@ -61,13 +61,13 @@ draw_circles (HPDF_Page page, const char *description, HPDF_REAL x, HPDF_REAL y)
 int
 main (int argc, char **argv)
 {
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     HPDF_Page page;
     char fname[256];
     HPDF_Font hfont;
     HPDF_ExtGState gstate;
-    const HPDF_REAL PAGE_WIDTH = 600;
-    const HPDF_REAL PAGE_HEIGHT = 900;
+    const HpdfReal PAGE_WIDTH = 600;
+    const HpdfReal PAGE_HEIGHT = 900;
 
     strcpy (fname, argv[0]);
     strcat (fname, ".pdf");

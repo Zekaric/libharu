@@ -19,11 +19,11 @@
 #include "hpdf_utils.h"
 #include "hpdf_font.h"
 
-static HPDF_STATUS
+static HpdfStatus
 OnWrite  (HPDF_Dict    obj,
           HPDF_Stream  stream);
 
-static HPDF_STATUS
+static HpdfStatus
 BeforeWrite  (HPDF_Dict   obj);
 
 
@@ -31,30 +31,30 @@ static void
 OnFree  (HPDF_Dict  obj);
 
 
-static HPDF_INT
+static HpdfInt
 CharWidth (HPDF_Font  font,
-           HPDF_BYTE  code);
+           HpdfByte  code);
 
 static HPDF_TextWidth
 TextWidth  (HPDF_Font         font,
-            const HPDF_BYTE  *text,
-            HPDF_UINT         len);
+            HpdfByte  const *const text,
+            HpdfUInt         len);
 
 
-static HPDF_STATUS
+static HpdfStatus
 CreateDescriptor  (HPDF_Font  font);
 
 
-static HPDF_UINT
+static HpdfUInt
 MeasureText  (HPDF_Font          font,
-              const HPDF_BYTE   *text,
-              HPDF_UINT          len,
-              HPDF_REAL          width,
-              HPDF_REAL          font_size,
-              HPDF_REAL          char_space,
-              HPDF_REAL          word_space,
-              HPDF_BOOL          wordwrap,
-              HPDF_REAL         *real_width);
+              HpdfByte   const *const text,
+              HpdfUInt          len,
+              HpdfReal          width,
+              HpdfReal          font_size,
+              HpdfReal          char_space,
+              HpdfReal          word_space,
+              HpdfBool          wordwrap,
+              HpdfReal         *real_width);
 
 
 HPDF_Font
@@ -67,7 +67,7 @@ HPDF_TTFont_New  (HPDF_MMgr        mmgr,
     HPDF_FontAttr attr;
     HPDF_TTFontDefAttr fontdef_attr;
     HPDF_BasicEncoderAttr encoder_attr;
-    HPDF_STATUS ret = 0;
+    HpdfStatus ret = 0;
 
     HPDF_PTRACE ((" HPDF_TTFont_New\n"));
 
@@ -117,21 +117,21 @@ HPDF_TTFont_New  (HPDF_MMgr        mmgr,
      * initialized at 0, and set when the corresponding character was used
      * for the first time.
      */
-    attr->widths = HPDF_GetMem (mmgr, sizeof(HPDF_INT16) * 256);
+    attr->widths = HPDF_GetMem (mmgr, sizeof(HpdfInt16) * 256);
     if (!attr->widths) {
         HPDF_Dict_Free (font);
         return NULL;
     }
 
-    HPDF_MemSet (attr->widths, 0, sizeof(HPDF_INT16) * 256);
+    HPDF_MemSet (attr->widths, 0, sizeof(HpdfInt16) * 256);
 
-    attr->used = HPDF_GetMem (mmgr, sizeof(HPDF_BYTE) * 256);
+    attr->used = HPDF_GetMem (mmgr, sizeof(HpdfByte) * 256);
     if (!attr->used) {
         HPDF_Dict_Free (font);
         return NULL;
     }
 
-    HPDF_MemSet (attr->used, 0, sizeof(HPDF_BYTE) * 256);
+    HPDF_MemSet (attr->used, 0, sizeof(HpdfByte) * 256);
 
     fontdef_attr = (HPDF_TTFontDefAttr)fontdef->attr;
 
@@ -159,7 +159,7 @@ HPDF_TTFont_New  (HPDF_MMgr        mmgr,
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 CreateDescriptor  (HPDF_Font  font)
 {
     HPDF_FontAttr font_attr = (HPDF_FontAttr)font->attr;
@@ -170,7 +170,7 @@ CreateDescriptor  (HPDF_Font  font)
 
     if (!font_attr->fontdef->descriptor) {
         HPDF_Dict descriptor = HPDF_Dict_New (font->mmgr);
-        HPDF_STATUS ret = 0;
+        HpdfStatus ret = 0;
         HPDF_Array array;
 
         if (!descriptor)
@@ -230,14 +230,14 @@ CreateDescriptor  (HPDF_Font  font)
 }
 
 
-static HPDF_INT
+static HpdfInt
 CharWidth (HPDF_Font  font,
-           HPDF_BYTE  code)
+           HpdfByte  code)
 {
     HPDF_FontAttr attr = (HPDF_FontAttr)font->attr;
 
     if (attr->used[code] == 0) {
-        HPDF_UNICODE unicode = HPDF_Encoder_ToUnicode (attr->encoder, code);
+        HpdfUnicode unicode = HPDF_Encoder_ToUnicode (attr->encoder, code);
 
         attr->used[code] = 1;
         attr->widths[code] = HPDF_TTFontDef_GetCharWidth(attr->fontdef,
@@ -250,13 +250,13 @@ CharWidth (HPDF_Font  font,
 
 static HPDF_TextWidth
 TextWidth  (HPDF_Font         font,
-            const HPDF_BYTE  *text,
-            HPDF_UINT         len)
+            HpdfByte  const *const text,
+            HpdfUInt         len)
 {
     HPDF_FontAttr attr = (HPDF_FontAttr)font->attr;
     HPDF_TextWidth ret = {0, 0, 0, 0};
-    HPDF_UINT i;
-    HPDF_BYTE b = 0;
+    HpdfUInt i;
+    HpdfByte b = 0;
 
     HPDF_PTRACE ((" HPDF_TTFont_TextWidth\n"));
 
@@ -284,41 +284,41 @@ TextWidth  (HPDF_Font         font,
 }
 
 
-static HPDF_UINT
+static HpdfUInt
 MeasureText (HPDF_Font          font,
-             const HPDF_BYTE   *text,
-             HPDF_UINT          len,
-             HPDF_REAL          width,
-             HPDF_REAL          font_size,
-             HPDF_REAL          char_space,
-             HPDF_REAL          word_space,
-             HPDF_BOOL          wordwrap,
-             HPDF_REAL         *real_width)
+             HpdfByte   const *const text,
+             HpdfUInt          len,
+             HpdfReal          width,
+             HpdfReal          font_size,
+             HpdfReal          char_space,
+             HpdfReal          word_space,
+             HpdfBool          wordwrap,
+             HpdfReal         *real_width)
 {
-    HPDF_DOUBLE w = 0;
-    HPDF_UINT tmp_len = 0;
-    HPDF_UINT i;
+    HpdfDouble w = 0;
+    HpdfUInt tmp_len = 0;
+    HpdfUInt i;
 
     HPDF_PTRACE ((" HPDF_TTFont_MeasureText\n"));
 
     for (i = 0; i < len; i++) {
-        HPDF_BYTE b = text[i];
+        HpdfByte b = text[i];
 
         if (HPDF_IS_WHITE_SPACE(b)) {
             tmp_len = i + 1;
 
             if (real_width)
-                *real_width = (HPDF_REAL)w;
+                *real_width = (HpdfReal)w;
 
             w += word_space;
         } else if (!wordwrap) {
             tmp_len = i;
 
             if (real_width)
-                *real_width = (HPDF_REAL)w;
+                *real_width = (HpdfReal)w;
         }
 
-        w += (HPDF_DOUBLE)CharWidth (font, b) * font_size / 1000;
+        w += (HpdfDouble)CharWidth (font, b) * font_size / 1000;
 
         /* 2006.08.04 break when it encountered  line feed */
         if (w > width || b == 0x0A)
@@ -330,20 +330,20 @@ MeasureText (HPDF_Font          font,
 
     /* all of text can be put in the specified width */
     if (real_width)
-        *real_width = (HPDF_REAL)w;
+        *real_width = (HpdfReal)w;
     return len;
 }
 
 
-static HPDF_STATUS
+static HpdfStatus
 OnWrite  (HPDF_Dict    obj,
           HPDF_Stream  stream)
 {
     HPDF_FontAttr attr = (HPDF_FontAttr)obj->attr;
     HPDF_BasicEncoderAttr encoder_attr =
                     (HPDF_BasicEncoderAttr)attr->encoder->attr;
-    HPDF_UINT i;
-    HPDF_STATUS ret;
+    HpdfUInt i;
+    HpdfStatus ret;
     char buf[128];
     char *pbuf = buf;
     char *eptr = buf + 127;
@@ -379,7 +379,7 @@ OnWrite  (HPDF_Dict    obj,
     return attr->encoder->write_fn (attr->encoder, stream);
 }
 
-static HPDF_STATUS
+static HpdfStatus
 BeforeWrite  (HPDF_Dict   obj)
 {
     HPDF_PTRACE ((" HPDF_TTFont_BeforeWrite\n"));

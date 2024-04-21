@@ -29,7 +29,7 @@ HPDF_ExtGState_New  (HPDF_MMgr   mmgr,
                      HPDF_Xref   xref);
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_ExtGState_Validate  (HPDF_ExtGState  ext_gstate);
 
 

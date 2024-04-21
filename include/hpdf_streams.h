@@ -52,25 +52,25 @@ typedef enum _HPDF_WhenceMode {
 
 typedef struct _HPDF_Stream_Rec  *HPDF_Stream;
 
-typedef HPDF_STATUS
+typedef HpdfStatus
 (*HPDF_Stream_Write_Func)  (HPDF_Stream      stream,
-                            const HPDF_BYTE  *ptr,
-                            HPDF_UINT        siz);
+                            HpdfByte   const * const ptr,
+                            HpdfUInt        siz);
 
 
-typedef HPDF_STATUS
+typedef HpdfStatus
 (*HPDF_Stream_Read_Func)  (HPDF_Stream  stream,
-                           HPDF_BYTE    *ptr,
-                           HPDF_UINT    *siz);
+                           HpdfByte     * const ptr,
+                           HpdfUInt    *siz);
 
 
-typedef HPDF_STATUS
+typedef HpdfStatus
 (*HPDF_Stream_Seek_Func)  (HPDF_Stream      stream,
-                           HPDF_INT         pos,
+                           HpdfInt         pos,
                            HPDF_WhenceMode  mode);
 
 
-typedef HPDF_INT32
+typedef HpdfInt32
 (*HPDF_Stream_Tell_Func)  (HPDF_Stream      stream);
 
 
@@ -78,30 +78,31 @@ typedef void
 (*HPDF_Stream_Free_Func)  (HPDF_Stream  stream);
 
 
-typedef HPDF_UINT32
+typedef HpdfUInt32
 (*HPDF_Stream_Size_Func)  (HPDF_Stream  stream);
 
 
 typedef struct _HPDF_MemStreamAttr_Rec  *HPDF_MemStreamAttr;
 
 
-typedef struct _HPDF_MemStreamAttr_Rec {
-    HPDF_List  buf;
-    HPDF_UINT  buf_siz;
-    HPDF_UINT  w_pos;
-    HPDF_BYTE  *w_ptr;
-    HPDF_UINT  r_ptr_idx;
-    HPDF_UINT  r_pos;
-    HPDF_BYTE  *r_ptr;
+typedef struct _HPDF_MemStreamAttr_Rec 
+{
+    HPDF_List   buf;
+    HpdfUInt    buf_siz;
+    HpdfUInt    w_pos;
+    HpdfByte   *w_ptr;
+    HpdfUInt    r_ptr_idx;
+    HpdfUInt    r_pos;
+    HpdfByte   *r_ptr;
 } HPDF_MemStreamAttr_Rec;
 
 
 typedef struct _HPDF_Stream_Rec {
-    HPDF_UINT32               sig_bytes;
+    HpdfUInt32               sig_bytes;
     HPDF_StreamType           type;
     HPDF_MMgr                 mmgr;
-    HPDF_Error                error;
-    HPDF_UINT                 size;
+    HpdfError                *error;
+    HpdfUInt                 size;
     HPDF_Stream_Write_Func    write_fn;
     HPDF_Stream_Read_Func     read_fn;
     HPDF_Stream_Seek_Func     seek_fn;
@@ -115,47 +116,47 @@ typedef struct _HPDF_Stream_Rec {
 
 HPDF_Stream
 HPDF_MemStream_New  (HPDF_MMgr  mmgr,
-                     HPDF_UINT  buf_siz);
+                     HpdfUInt  buf_siz);
 
 
-HPDF_BYTE*
+HpdfByte *
 HPDF_MemStream_GetBufPtr  (HPDF_Stream  stream,
-                           HPDF_UINT    index,
-                           HPDF_UINT    *length);
+                           HpdfUInt    index,
+                           HpdfUInt    *length);
 
 
-HPDF_UINT
+HpdfUInt
 HPDF_MemStream_GetBufSize  (HPDF_Stream  stream);
 
 
-HPDF_UINT
+HpdfUInt
 HPDF_MemStream_GetBufCount  (HPDF_Stream  stream);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_MemStream_Rewrite  (HPDF_Stream  stream,
-                         HPDF_BYTE    *buf,
-                         HPDF_UINT    size);
+                         HpdfByte     *const buf,
+                         HpdfUInt    size);
 
 
 void
 HPDF_MemStream_FreeData  (HPDF_Stream  stream);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteToStream  (HPDF_Stream   src,
                             HPDF_Stream   dst,
-                            HPDF_UINT     filter,
+                            HpdfUInt     filter,
                             HPDF_Encrypt  e);
 
 
 HPDF_Stream
 HPDF_FileReader_New  (HPDF_MMgr    mmgr,
-                      const char  *fname);
+                      char const *fname);
 
 HPDF_Stream
 HPDF_FileWriter_New  (HPDF_MMgr    mmgr,
-                      const char  *fname);
+                      char const *fname);
 
 #if defined(WIN32)
 HPDF_Stream
@@ -187,98 +188,98 @@ void
 HPDF_Stream_Free  (HPDF_Stream  stream);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteChar  (HPDF_Stream  stream,
                         char    value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteStr  (HPDF_Stream      stream,
-                       const char  *value);
+                       char const *value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteUChar  (HPDF_Stream  stream,
-                         HPDF_BYTE    value);
+                         HpdfByte     value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteInt  (HPDF_Stream  stream,
-                       HPDF_INT     value);
+                       HpdfInt     value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteUInt  (HPDF_Stream  stream,
-                        HPDF_UINT    value);
+                        HpdfUInt    value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteReal  (HPDF_Stream  stream,
-                        HPDF_REAL    value);
+                        HpdfReal    value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_Write  (HPDF_Stream      stream,
-                    const HPDF_BYTE  *ptr,
-                    HPDF_UINT        size);
+                    HpdfByte   const * const ptr,
+                    HpdfUInt        size);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_Read  (HPDF_Stream  stream,
-                   HPDF_BYTE    *ptr,
-                   HPDF_UINT    *size);
+                   HpdfByte     *const ptr,
+                   HpdfUInt    *size);
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_ReadLn  (HPDF_Stream  stream,
                      char    *s,
-                     HPDF_UINT    *size);
+                     HpdfUInt    *size);
 
 
-HPDF_INT32
+HpdfInt32
 HPDF_Stream_Tell  (HPDF_Stream  stream);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_Seek  (HPDF_Stream      stream,
-                   HPDF_INT         pos,
+                   HpdfInt         pos,
                    HPDF_WhenceMode  mode);
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Stream_EOF  (HPDF_Stream  stream);
 
 
-HPDF_UINT32
+HpdfUInt32
 HPDF_Stream_Size  (HPDF_Stream  stream);
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_Flush  (HPDF_Stream  stream);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteEscapeName  (HPDF_Stream      stream,
-                              const char  *value);
+                              char const *value);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteEscapeText2  (HPDF_Stream    stream,
-                               const char    *text,
-                               HPDF_UINT      len);
+                               char const   *text,
+                               HpdfUInt      len);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteEscapeText  (HPDF_Stream      stream,
-                              const char  *text);
+                              char const *text);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_WriteBinary  (HPDF_Stream      stream,
-                          const HPDF_BYTE  *data,
-                          HPDF_UINT        len,
+                          HpdfByte   const *const data,
+                          HpdfUInt        len,
                           HPDF_Encrypt     e);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Stream_Validate  (HPDF_Stream  stream);
 
 

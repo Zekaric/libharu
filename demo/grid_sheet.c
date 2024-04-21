@@ -27,12 +27,12 @@ void __stdcall
 #else
 void
 #endif
-error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
+error_handler  (HpdfStatus   error_no,
+                HpdfStatus   detail_no,
                 void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
@@ -40,13 +40,13 @@ error_handler  (HPDF_STATUS   error_no,
 #endif /* STAND_ALONE */
 
 void
-print_grid  (HPDF_Doc     pdf,
+print_grid  (HpdfDoc *pdf,
              HPDF_Page    page)
 {
-    HPDF_REAL height = HPDF_Page_GetHeight (page);
-    HPDF_REAL width = HPDF_Page_GetWidth (page);
+    HpdfReal height = HPDF_Page_GetHeight (page);
+    HpdfReal width = HPDF_Page_GetWidth (page);
     HPDF_Font font = HPDF_GetFont (pdf, "Helvetica", NULL);
-    HPDF_UINT x, y;
+    HpdfUInt x, y;
 
     HPDF_Page_SetFontAndSize (page, font, 5);
     HPDF_Page_SetGrayFill (page, 0.5);
@@ -166,7 +166,7 @@ print_grid  (HPDF_Doc     pdf,
 int
 main (int argc, char **argv)
 {
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     HPDF_Page page;
     char fname[256];
 

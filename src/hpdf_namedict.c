@@ -57,7 +57,7 @@ HPDF_NameDict_GetNameTree  (HPDF_NameDict     namedict,
     return HPDF_Dict_GetItem (namedict, HPDF_NAMEDICT_KEYS[key], HPDF_OCLASS_DICT);
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_NameDict_SetNameTree  (HPDF_NameDict     namedict,
                             HPDF_NameDictKey  key,
                             HPDF_NameTree     ntree)
@@ -65,7 +65,7 @@ HPDF_NameDict_SetNameTree  (HPDF_NameDict     namedict,
     return HPDF_Dict_Add (namedict, HPDF_NAMEDICT_KEYS[key], ntree);
 }
 
-HPDF_BOOL
+HpdfBool
 HPDF_NameDict_Validate  (HPDF_NameDict  namedict)
 {
     if (!namedict)
@@ -87,7 +87,7 @@ HPDF_NameTree
 HPDF_NameTree_New  (HPDF_MMgr  mmgr,
                     HPDF_Xref  xref)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_NameTree ntree;
     HPDF_Array items;
 
@@ -113,13 +113,13 @@ HPDF_NameTree_New  (HPDF_MMgr  mmgr,
     return ntree;
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_NameTree_Add  (HPDF_NameTree  tree,
                     HPDF_String    name,
                     void          *obj)
 {
     HPDF_Array items;
-    HPDF_INT32 i, icount;
+    HpdfInt32 i, icount;
 
     if (!tree || !name)
         return HPDF_INVALID_PARAMETER;
@@ -150,7 +150,7 @@ HPDF_NameTree_Add  (HPDF_NameTree  tree,
     return HPDF_OK;
 }
 
-HPDF_BOOL
+HpdfBool
 HPDF_NameTree_Validate  (HPDF_NameTree  nametree)
 {
     if (!nametree)
@@ -173,7 +173,7 @@ HPDF_EmbeddedFile_New  (HPDF_MMgr  mmgr,
                         HPDF_Xref  xref,
                         const char *file)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Dict ef;               /* the dictionary for the embedded file: /Type /EF */
     HPDF_String name;           /* the name of the file: /F (name) */
     HPDF_Dict eff;              /* ef has an /EF <<blah>> key - this is it */
@@ -222,7 +222,7 @@ HPDF_EmbeddedFile_NewW (HPDF_MMgr      mmgr,
                         HPDF_Xref      xref,
                         const wchar_t *file)
 {
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
     HPDF_Dict ef;               /* the dictionary for the embedded file: /Type /EF */
     HPDF_String name;           /* the name of the file: /F (name) */
     HPDF_Dict eff;              /* ef has an /EF <<blah>> key - this is it */
@@ -266,7 +266,7 @@ HPDF_EmbeddedFile_NewW (HPDF_MMgr      mmgr,
 #endif
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_EmbeddedFile_Validate  (HPDF_EmbeddedFile  emfile)
 {
     HPDF_UNUSED (emfile);

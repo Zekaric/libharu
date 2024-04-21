@@ -5,8 +5,8 @@
 
 HPDF_Direct
 HPDF_Direct_New  (HPDF_MMgr  mmgr,
-                  HPDF_BYTE  *value,
-                  HPDF_UINT  len)
+                  HpdfByte  *const value,
+                  HpdfUInt  len)
 {
     HPDF_Direct obj;
 
@@ -29,7 +29,7 @@ HPDF_Direct_New  (HPDF_MMgr  mmgr,
     return obj;
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Direct_Write  (HPDF_Direct   obj,
                     HPDF_Stream   stream)
 {
@@ -37,10 +37,10 @@ HPDF_Direct_Write  (HPDF_Direct   obj,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Direct_SetValue  (HPDF_Direct  obj,
-                       HPDF_BYTE    *value,
-                       HPDF_UINT    len)
+                       HpdfByte    *const value,
+                       HpdfUInt    len)
 {
     if (len > HPDF_LIMIT_MAX_STRING_LEN)
         return HPDF_SetError (obj->error, HPDF_BINARY_LENGTH_ERR, 0);

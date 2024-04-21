@@ -47,7 +47,7 @@ HPDF_Catalog_New  (HPDF_MMgr  mmgr,
                    HPDF_Xref  xref)
 {
     HPDF_Catalog catalog;
-    HPDF_STATUS ret = 0;
+    HpdfStatus ret = 0;
 
     catalog = HPDF_Dict_New (mmgr);
     if (!catalog)
@@ -95,7 +95,7 @@ HPDF_Catalog_GetNames  (HPDF_Catalog catalog)
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetNames  (HPDF_Catalog catalog,
                         HPDF_NameDict dict)
 {
@@ -107,16 +107,19 @@ HPDF_PageLayout
 HPDF_Catalog_GetPageLayout  (HPDF_Catalog  catalog)
 {
     HPDF_Name layout;
-    HPDF_UINT i = 0;
+    HpdfUInt i = 0;
 
     layout = (HPDF_Name)HPDF_Dict_GetItem (catalog, "PageLayout",
             HPDF_OCLASS_NAME);
     if (!layout)
         return HPDF_PAGE_LAYOUT_EOF;
 
-    while (HPDF_PAGE_LAYOUT_NAMES[i]) {
-        if (HPDF_StrCmp (layout->value, HPDF_PAGE_LAYOUT_NAMES[i]) == 0)
+    while (HPDF_PAGE_LAYOUT_NAMES[i]) 
+    {
+        if (HpdfStrIsEqual(layout->value, HPDF_PAGE_LAYOUT_NAMES[i]))
+        {
             return (HPDF_PageLayout)i;
+        }
         i++;
     }
 
@@ -124,12 +127,12 @@ HPDF_Catalog_GetPageLayout  (HPDF_Catalog  catalog)
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetPageLayout  (HPDF_Catalog      catalog,
                              HPDF_PageLayout   layout)
 {
     return HPDF_Dict_AddName (catalog, "PageLayout",
-                    HPDF_PAGE_LAYOUT_NAMES[(HPDF_INT)layout]);
+                    HPDF_PAGE_LAYOUT_NAMES[(HpdfInt)layout]);
 }
 
 
@@ -139,15 +142,18 @@ HPDF_PageMode
 HPDF_Catalog_GetPageMode  (HPDF_Catalog  catalog)
 {
     HPDF_Name mode;
-    HPDF_UINT i = 0;
+    HpdfUInt i = 0;
 
     mode = (HPDF_Name)HPDF_Dict_GetItem (catalog, "PageMode", HPDF_OCLASS_NAME);
     if (!mode)
         return HPDF_PAGE_MODE_USE_NONE;
 
-    while (HPDF_PAGE_MODE_NAMES[i]) {
-        if (HPDF_StrCmp (mode->value, HPDF_PAGE_MODE_NAMES[i]) == 0)
+    while (HPDF_PAGE_MODE_NAMES[i]) 
+    {
+        if (HpdfStrIsEqual(mode->value, HPDF_PAGE_MODE_NAMES[i]))
+        {
             return (HPDF_PageMode)i;
+        }
         i++;
     }
 
@@ -155,16 +161,16 @@ HPDF_Catalog_GetPageMode  (HPDF_Catalog  catalog)
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetPageMode  (HPDF_Catalog   catalog,
                            HPDF_PageMode  mode)
 {
     return HPDF_Dict_AddName (catalog, "PageMode",
-                    HPDF_PAGE_MODE_NAMES[(HPDF_INT)mode]);
+                    HPDF_PAGE_MODE_NAMES[(HpdfInt)mode]);
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetOpenAction  (HPDF_Catalog       catalog,
                              HPDF_Destination   open_action)
 {
@@ -177,7 +183,7 @@ HPDF_Catalog_SetOpenAction  (HPDF_Catalog       catalog,
 }
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Catalog_Validate  (HPDF_Catalog   catalog)
 {
     if (!catalog)
@@ -193,12 +199,12 @@ HPDF_Catalog_Validate  (HPDF_Catalog   catalog)
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_AddPageLabel  (HPDF_Catalog   catalog,
-                            HPDF_UINT      page_num,
+                            HpdfUInt      page_num,
                             HPDF_Dict      page_label)
 {
-    HPDF_STATUS ret;
+    HpdfStatus ret;
     HPDF_Array nums;
     HPDF_Dict labels = HPDF_Dict_GetItem (catalog, "PageLabels",
         HPDF_OCLASS_DICT);
@@ -233,11 +239,11 @@ HPDF_Catalog_AddPageLabel  (HPDF_Catalog   catalog,
     return HPDF_Array_Add (nums, page_label);
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Catalog_SetViewerPreference  (HPDF_Catalog   catalog,
-                                   HPDF_UINT      value)
+                                   HpdfUInt      value)
 {
-    HPDF_STATUS ret;
+    HpdfStatus ret;
     HPDF_Dict preferences;
 
     HPDF_PTRACE ((" HPDF_Catalog_SetViewerPreference\n"));
@@ -330,11 +336,11 @@ HPDF_Catalog_SetViewerPreference  (HPDF_Catalog   catalog,
     return HPDF_OK;
 }
 
-HPDF_UINT
+HpdfUInt
 HPDF_Catalog_GetViewerPreference  (HPDF_Catalog   catalog)
 {
     HPDF_Dict preferences;
-    HPDF_UINT value = 0;
+    HpdfUInt value = 0;
     HPDF_Boolean obj;
 
     HPDF_PTRACE ((" HPDF_Catalog_GetViewerPreference\n"));

@@ -25,12 +25,12 @@ void  __stdcall
 #else
 void
 #endif
-error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
+error_handler  (HpdfStatus   error_no,
+                HpdfStatus   detail_no,
                 void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
@@ -58,17 +58,17 @@ print_page  (HPDF_Page page, HPDF_Font font, int page_num)
 
 int main(int argc, char **argv)
 {
-    HPDF_Doc  pdf;
-    HPDF_Font font;
-    HPDF_Page index_page;
-    HPDF_Page page[9];
-    HPDF_Destination dst;
-    char fname[256];
-    HPDF_Rect rect;
-    HPDF_Point tp;
-    HPDF_Annotation annot;
-    HPDF_UINT i;
-    const char *uri = "http://libharu.org";
+    HpdfDoc          *pdf;
+    HPDF_Font         font;
+    HPDF_Page         index_page;
+    HPDF_Page         page[9];
+    HPDF_Destination  dst;
+    char              fname[256];
+    HpdfRect          rect;
+    HpdfPoint         tp;
+    HPDF_Annotation   annot;
+    HpdfUInt          i;
+    char const      *uri = "http://libharu.org";
 
     strcpy (fname, argv[0]);
     strcat (fname, ".pdf");

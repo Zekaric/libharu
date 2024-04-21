@@ -34,16 +34,16 @@ HPDF_Pages_New  (HPDF_MMgr   mmgr,
                  HPDF_Xref   xref);
 
 
-HPDF_BOOL
+HpdfBool
 HPDF_Pages_Validate  (HPDF_Pages  pages);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Pages_AddKids  (HPDF_Pages  parent,
                       HPDF_Dict   kid);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Page_InsertBefore  (HPDF_Page   page,
                          HPDF_Page   target);
 
@@ -57,23 +57,23 @@ typedef struct _HPDF_PageAttr_Rec {
     HPDF_Dict          ext_gstates;
     HPDF_Dict          shadings;
     HPDF_GState        gstate;
-    HPDF_Point         str_pos;
-    HPDF_Point         cur_pos;
-    HPDF_Point         text_pos;
+    HpdfPoint          str_pos;
+    HpdfPoint          cur_pos;
+    HpdfPoint          text_pos;
     HPDF_TransMatrix   text_matrix;
-    HPDF_UINT16        gmode;
+    HpdfUInt16         gmode;
     HPDF_Dict          contents;
     HPDF_Stream        stream;
     HPDF_Xref          xref;
-    HPDF_UINT          compression_mode;
-	HPDF_PDFVer       *ver; 
+    HpdfUInt           compression_mode;
+    HPDF_PDFVer       *ver; 
 } HPDF_PageAttr_Rec;
 
 
 /*----------------------------------------------------------------------------*/
 /*----- HPDF_Page ------------------------------------------------------------*/
 
-HPDF_BOOL
+HpdfBool
 HPDF_Page_Validate  (HPDF_Page  page);
 
 
@@ -84,8 +84,8 @@ HPDF_Page_New  (HPDF_MMgr   mmgr,
 
 void*
 HPDF_Page_GetInheritableItem  (HPDF_Page      page,
-                               const char    *key,
-                               HPDF_UINT16    obj_class);
+                               char const   *key,
+                               HpdfUInt16    obj_class);
 
 
 const char*
@@ -111,21 +111,21 @@ HPDF_Box
 HPDF_Page_GetMediaBox  (HPDF_Page    page);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Page_SetBoxValue (HPDF_Page     page,
-                       const char   *name,
-                       HPDF_UINT     index,
-                       HPDF_REAL     value);
+                       char const  *name,
+                       HpdfUInt     index,
+                       HpdfReal     value);
 
 
 void
 HPDF_Page_SetFilter  (HPDF_Page    page,
-                      HPDF_UINT    filter);
+                      HpdfUInt    filter);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Page_CheckState  (HPDF_Page  page,
-                       HPDF_UINT  mode);
+                       HpdfUInt  mode);
 
 
 #ifdef __cplusplus

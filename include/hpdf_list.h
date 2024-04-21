@@ -29,50 +29,50 @@ typedef struct _HPDF_List_Rec  *HPDF_List;
 
 typedef struct _HPDF_List_Rec {
       HPDF_MMgr       mmgr;
-      HPDF_Error      error;
-      HPDF_UINT       block_siz;
-      HPDF_UINT       items_per_block;
-      HPDF_UINT       count;
+      HpdfError      *error;
+      HpdfUInt       block_siz;
+      HpdfUInt       items_per_block;
+      HpdfUInt       count;
       void            **obj;
 } HPDF_List_Rec;
 
 
 HPDF_List
 HPDF_List_New  (HPDF_MMgr  mmgr,
-                HPDF_UINT  items_per_block);
+                HpdfUInt  items_per_block);
 
 
 void
 HPDF_List_Free  (HPDF_List  list);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_List_Add  (HPDF_List  list,
                 void       *item);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_List_Insert  (HPDF_List  list,
                    void       *target,
                    void       *item);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_List_Remove  (HPDF_List  list,
                    void       *item);
 
 
 void*
 HPDF_List_RemoveByIndex  (HPDF_List  list,
-                          HPDF_UINT  index);
+                          HpdfUInt  index);
 
 
 void*
 HPDF_List_ItemAt  (HPDF_List  list,
-                   HPDF_UINT  index);
+                   HpdfUInt  index);
 
 
-HPDF_INT32
+HpdfInt32
 HPDF_List_Find  (HPDF_List  list,
                  void       *item);
 

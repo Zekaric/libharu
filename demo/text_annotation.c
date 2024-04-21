@@ -25,33 +25,33 @@ void  __stdcall
 #else
 void
 #endif
-error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
+error_handler  (HpdfStatus   error_no,
+                HpdfStatus   detail_no,
                 void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
 
 int main(int argc, char **argv)
 {
-    HPDF_Rect rect1 = {50, 350, 150, 400};
-    HPDF_Rect rect2 = {210, 350, 350, 400};
-    HPDF_Rect rect3 = {50, 250, 150, 300};
-    HPDF_Rect rect4 = {210, 250, 350, 300};
-    HPDF_Rect rect5 = {50, 150, 150, 200};
-    HPDF_Rect rect6 = {210, 150, 350, 200};
-    HPDF_Rect rect7 = {50, 50, 150, 100};
-    HPDF_Rect rect8 = {210, 50, 350, 100};
+    HpdfRect          rect1 = {50, 350, 150, 400};
+    HpdfRect          rect2 = {210, 350, 350, 400};
+    HpdfRect          rect3 = {50, 250, 150, 300};
+    HpdfRect          rect4 = {210, 250, 350, 300};
+    HpdfRect          rect5 = {50, 150, 150, 200};
+    HpdfRect          rect6 = {210, 150, 350, 200};
+    HpdfRect          rect7 = {50, 50, 150, 100};
+    HpdfRect          rect8 = {210, 50, 350, 100};
 
-    HPDF_Doc  pdf;
-    char fname[256];
-    HPDF_Page page;
-    HPDF_Font font;
-    HPDF_Encoder encoding;
-    HPDF_Annotation annot;
+    HpdfDoc          *pdf;
+    char              fname[256];
+    HPDF_Page         page;
+    HPDF_Font         font;
+    HPDF_Encoder      encoding;
+    HPDF_Annotation   annot;
 
     strcpy (fname, argv[0]);
     strcat (fname, ".pdf");

@@ -48,7 +48,7 @@ HPDF_Box_Array_New  (HPDF_MMgr  mmgr,
                      HPDF_Box   box)
 {
     HPDF_Array  obj;
-    HPDF_STATUS ret = HPDF_OK;
+    HpdfStatus ret = HPDF_OK;
 
     HPDF_PTRACE((" HPDF_Box_Array_New\n"));
 
@@ -88,13 +88,13 @@ HPDF_Array_Free  (HPDF_Array  array)
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_Write  (HPDF_Array    array,
                    HPDF_Stream   stream,
                    HPDF_Encrypt  e)
 {
-    HPDF_UINT i;
-    HPDF_STATUS ret;
+    HpdfUInt i;
+    HpdfStatus ret;
 
     HPDF_PTRACE((" HPDF_Array_Write\n"));
 
@@ -120,9 +120,9 @@ HPDF_Array_Write  (HPDF_Array    array,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_AddNumber  (HPDF_Array  array,
-                       HPDF_INT32  value)
+                       HpdfInt32  value)
 {
     HPDF_Number n = HPDF_Number_New (array->mmgr, value);
 
@@ -135,9 +135,9 @@ HPDF_Array_AddNumber  (HPDF_Array  array,
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_AddReal  (HPDF_Array  array,
-                     HPDF_REAL   value)
+                     HpdfReal   value)
 {
     HPDF_Real r = HPDF_Real_New (array->mmgr, value);
 
@@ -149,7 +149,7 @@ HPDF_Array_AddReal  (HPDF_Array  array,
         return HPDF_Array_Add (array, r);
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_AddNull  (HPDF_Array  array)
 {
     HPDF_Null n = HPDF_Null_New (array->mmgr);
@@ -162,9 +162,9 @@ HPDF_Array_AddNull  (HPDF_Array  array)
         return HPDF_Array_Add (array, n);
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_AddName  (HPDF_Array       array,
-                     const char  *value)
+                     char const *value)
 {
     HPDF_Name n = HPDF_Name_New (array->mmgr, value);
 
@@ -176,12 +176,12 @@ HPDF_Array_AddName  (HPDF_Array       array,
         return HPDF_Array_Add (array, n);
 }
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_Add  (HPDF_Array  array,
                  void        *obj)
 {
     HPDF_Obj_Header *header;
-    HPDF_STATUS ret;
+    HpdfStatus ret;
 
     HPDF_PTRACE((" HPDF_Array_Add\n"));
 
@@ -226,21 +226,21 @@ HPDF_Array_Add  (HPDF_Array  array,
 }
 
 
-HPDF_UINT
+HpdfUInt
 HPDF_Array_Items  (HPDF_Array array)
 {
     return array->list->count;
 }
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Array_Insert  (HPDF_Array  array,
                     void        *target,
                     void        *obj)
 {
     HPDF_Obj_Header *header;
-    HPDF_STATUS ret;
-    HPDF_UINT i;
+    HpdfStatus ret;
+    HpdfUInt i;
 
     HPDF_PTRACE((" HPDF_Array_Insert\n"));
 
@@ -255,7 +255,7 @@ HPDF_Array_Insert  (HPDF_Array  array,
 
     if (header->obj_id & HPDF_OTYPE_DIRECT) {
         HPDF_PTRACE((" HPDF_Array_Add this object cannot owned by array "
-                "obj=0x%08X\n", (HPDF_UINT)array));
+                "obj=0x%08X\n", (HpdfUInt)array));
 
         return HPDF_SetError (array->error, HPDF_INVALID_OBJECT, 0);
     }
@@ -312,8 +312,8 @@ HPDF_Array_Insert  (HPDF_Array  array,
 
 void*
 HPDF_Array_GetItem  (HPDF_Array   array,
-                     HPDF_UINT    index,
-                     HPDF_UINT16  obj_class)
+                     HpdfUInt    index,
+                     HpdfUInt16  obj_class)
 {
     void *obj;
     HPDF_Obj_Header *header;
@@ -346,7 +346,7 @@ HPDF_Array_GetItem  (HPDF_Array   array,
 void
 HPDF_Array_Clear  (HPDF_Array  array)
 {
-    HPDF_UINT i;
+    HpdfUInt i;
 
     HPDF_PTRACE((" HPDF_Array_Clear\n"));
 

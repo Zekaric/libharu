@@ -29,23 +29,23 @@ void  __stdcall
 #else
 void
 #endif
-error_handler  (HPDF_STATUS   error_no,
-                HPDF_STATUS   detail_no,
+error_handler  (HpdfStatus   error_no,
+                HpdfStatus   detail_no,
                 void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
 
 void
-draw_page  (HPDF_Doc       pdf,
+draw_page  (HpdfDoc const * const pdf,
             HPDF_Page      page,
             HPDF_Font      title_font,
             HPDF_Font      font,
-            HPDF_BYTE      h_byte,
-            HPDF_BYTE      l_byte)
+            HpdfByte       h_byte,
+            HpdfByte       l_byte)
 {
     const int PAGE_WIDTH = 420;
     const int CELL_HEIGHT = 20;
@@ -163,9 +163,9 @@ main  (int      argc,
     unsigned int i, j;
     unsigned int min_l, max_l, min_h, max_h;
     char fname[256];
-    HPDF_UINT16 flg[256];
+    HpdfUInt16 flg[256];
 
-    HPDF_Doc pdf;
+    HpdfDoc *pdf;
     HPDF_Encoder encoder;
     HPDF_Font font;
     HPDF_Outline root;
@@ -225,8 +225,8 @@ main  (int      argc,
         for (j = 20; j <= 255; j++) {
             unsigned char buf[3];
             HPDF_ByteType btype;
-            HPDF_UINT16 code = i * 256 + j;
-            HPDF_UNICODE unicode;
+            HpdfUInt16 code = i * 256 + j;
+            HpdfUnicode unicode;
 
             buf[0] = i;
             buf[1] = j;
@@ -281,7 +281,7 @@ main  (int      argc,
             dst = HPDF_Page_CreateDestination (page);
             HPDF_Outline_SetDestination(outline, dst);
 
-            draw_page (pdf, page, title_font, font, (HPDF_BYTE)i, (HPDF_BYTE)min_l);
+            draw_page(pdf, page, title_font, font, (HpdfByte) i, (HpdfByte) min_l);
 
 #ifdef __WIN32__
             _snprintf (buf, 256, "%s (%s) 0x%04X-0x%04X", argv[1], argv[2],

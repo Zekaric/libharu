@@ -25,25 +25,25 @@ void  __stdcall
 #else
 void
 #endif
-error_handler (HPDF_STATUS   error_no,
-               HPDF_STATUS   detail_no,
+error_handler (HpdfStatus   error_no,
+               HpdfStatus   detail_no,
                void         *user_data)
 {
-    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
-                (HPDF_UINT)detail_no);
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HpdfUInt)error_no,
+                (HpdfUInt)detail_no);
     longjmp(env, 1);
 }
 
 int main (int argc, char **argv)
 {
-    HPDF_Doc  pdf;
+    HpdfDoc *pdf;
     char fname[256];
     HPDF_Page page;
     HPDF_Font title_font;
     HPDF_Font detail_font;
-    HPDF_UINT page_height;
-    HPDF_UINT page_width;
-    HPDF_REAL pw;
+    HpdfUInt page_height;
+    HpdfUInt page_width;
+    HpdfReal pw;
     char SAMP_TXT[2048];
     const char *detail_font_name;
     FILE *f;

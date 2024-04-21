@@ -26,10 +26,10 @@ extern "C" {
 #endif
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Info_SetInfoAttr (HPDF_Dict        info,
                        HPDF_InfoType    type,
-                       const char  *value,
+                       char const *value,
                        HPDF_Encoder     encoder);
 
 
@@ -38,7 +38,7 @@ HPDF_Info_GetInfoAttr (HPDF_Dict      info,
                        HPDF_InfoType  type);
 
 
-HPDF_STATUS
+HpdfStatus
 HPDF_Info_SetInfoDateAttr (HPDF_Dict      info,
                            HPDF_InfoType  type,
                            HPDF_Date      value);

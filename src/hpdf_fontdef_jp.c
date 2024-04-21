@@ -19,7 +19,7 @@
 #include "hpdf_utils.h"
 #include "hpdf.h"
 
-/*----------------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------------*/
 
 static const HPDF_CID_Width MS_Gothic_W_ARRAY[] = {
     {1, 500},
@@ -1548,360 +1548,379 @@ static const HPDF_CID_Width MS_PMincho_W_ARRAY[] = {
 /*----- Mincho Font ---------------------------------------------------------*/
 
 
-static HPDF_STATUS
-MS_Gothic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_Gothic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret;
+   HpdfStatus ret;
 
-    HPDF_PTRACE ((" HPDF_FontDef_MS_Gothic_Init\n"));
+   HPDF_PTRACE((" HPDF_FontDef_MS_Gothic_Init\n"));
 
-    fontdef->ascent = 859;
-    fontdef->descent = -140;
-    fontdef->cap_height = 769;
-    fontdef->font_bbox = HPDF_ToBox(-0, -136, 1000, 859);
-    fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, MS_Gothic_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
+   fontdef->ascent = 859;
+   fontdef->descent = -140;
+   fontdef->cap_height = 769;
+   fontdef->font_bbox = HPDF_ToBox(-0, -136, 1000, 859);
+   fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, MS_Gothic_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
 
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-MS_Gothic_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_Gothic_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MS_Gothic_Init (fontdef);
+   HpdfStatus ret = MS_Gothic_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-static HPDF_STATUS
-MS_Gothic_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_Gothic_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MS_Gothic_Init (fontdef);
+   HpdfStatus ret = MS_Gothic_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
 }
 
-static HPDF_STATUS
-MS_Gothic_BoldItalic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_Gothic_BoldItalic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MS_Gothic_Init (fontdef);
+   HpdfStatus ret = MS_Gothic_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
-}
-
-
-static HPDF_STATUS
-MS_PGothic_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret;
-
-    HPDF_PTRACE ((" HPDF_FontDef_MS_PGothic_Init\n"));
-
-    fontdef->ascent = 859;
-    fontdef->descent = -140;
-    fontdef->cap_height = 679;
-    fontdef->font_bbox = HPDF_ToBox(-121, -136, 996, 859);
-    fontdef->flags = HPDF_FONT_SYMBOLIC;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, MS_PGothic_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
-
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
-
-    return HPDF_OK;
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
 }
 
 
-static HPDF_STATUS
-MS_PGothic_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_PGothic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MS_PGothic_Init (fontdef);
+   HpdfStatus ret;
 
-    if (ret != HPDF_OK)
-        return ret;
+   HPDF_PTRACE((" HPDF_FontDef_MS_PGothic_Init\n"));
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   fontdef->ascent = 859;
+   fontdef->descent = -140;
+   fontdef->cap_height = 679;
+   fontdef->font_bbox = HPDF_ToBox(-121, -136, 996, 859);
+   fontdef->flags = HPDF_FONT_SYMBOLIC;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, MS_PGothic_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
+
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
+
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-MS_PGothic_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_PGothic_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MS_PGothic_Init (fontdef);
+   HpdfStatus ret = MS_PGothic_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
-}
-
-static HPDF_STATUS
-MS_PGothic_BoldItalic_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret = MS_PGothic_Init (fontdef);
-
-    if (ret != HPDF_OK)
-        return ret;
-
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-static HPDF_STATUS
-MS_Mincho_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_PGothic_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret;
+   HpdfStatus ret = MS_PGothic_Init(fontdef);
 
-    HPDF_PTRACE ((" HPDF_FontDef_MS_Mincho_Init\n"));
+   if (ret != HPDF_OK)
+      return ret;
 
-    fontdef->ascent = 859;
-    fontdef->descent = -140;
-    fontdef->cap_height = 769;
-    fontdef->font_bbox = HPDF_ToBox(-0, -136, 1000, 859);
-    fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH +
-                HPDF_FONT_SERIF;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, MS_Mincho_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
+}
 
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
+static HpdfStatus
+MS_PGothic_BoldItalic_Init(HPDF_FontDef   fontdef)
+{
+   HpdfStatus ret = MS_PGothic_Init(fontdef);
 
-    return HPDF_OK;
+   if (ret != HPDF_OK)
+      return ret;
+
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
 }
 
 
-static HPDF_STATUS
-MS_Mincho_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_Mincho_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MS_Mincho_Init (fontdef);
+   HpdfStatus ret;
 
-    if (ret != HPDF_OK)
-        return ret;
+   HPDF_PTRACE((" HPDF_FontDef_MS_Mincho_Init\n"));
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   fontdef->ascent = 859;
+   fontdef->descent = -140;
+   fontdef->cap_height = 769;
+   fontdef->font_bbox = HPDF_ToBox(-0, -136, 1000, 859);
+   fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH +
+      HPDF_FONT_SERIF;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, MS_Mincho_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
+
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
+
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-MS_Mincho_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_Mincho_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MS_Mincho_Init (fontdef);
+   HpdfStatus ret = MS_Mincho_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
-}
-
-static HPDF_STATUS
-MS_Mincho_BoldItalic_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret = MS_Mincho_Init (fontdef);
-
-    if (ret != HPDF_OK)
-        return ret;
-
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-static HPDF_STATUS
-MS_PMincho_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_Mincho_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret;
+   HpdfStatus ret = MS_Mincho_Init(fontdef);
 
-    HPDF_PTRACE ((" HPDF_FontDef_MS_PMincho_Init\n"));
+   if (ret != HPDF_OK)
+      return ret;
 
-    fontdef->ascent = 859;
-    fontdef->descent = -140;
-    fontdef->cap_height = 679;
-    fontdef->font_bbox = HPDF_ToBox(-82, -136, 996, 859);
-    fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_SERIF;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, MS_PMincho_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
+}
 
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
+static HpdfStatus
+MS_Mincho_BoldItalic_Init(HPDF_FontDef   fontdef)
+{
+   HpdfStatus ret = MS_Mincho_Init(fontdef);
 
-    return HPDF_OK;
+   if (ret != HPDF_OK)
+      return ret;
+
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
 }
 
 
-static HPDF_STATUS
-MS_PMincho_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_PMincho_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MS_PMincho_Init (fontdef);
+   HpdfStatus ret;
 
-    if (ret != HPDF_OK)
-        return ret;
+   HPDF_PTRACE((" HPDF_FontDef_MS_PMincho_Init\n"));
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   fontdef->ascent = 859;
+   fontdef->descent = -140;
+   fontdef->cap_height = 679;
+   fontdef->font_bbox = HPDF_ToBox(-82, -136, 996, 859);
+   fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_SERIF;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, MS_PMincho_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
+
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
+
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-MS_PMincho_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MS_PMincho_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MS_PMincho_Init (fontdef);
+   HpdfStatus ret = MS_PMincho_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
-}
-
-static HPDF_STATUS
-MS_PMincho_BoldItalic_Init  (HPDF_FontDef   fontdef)
-{
-    HPDF_STATUS ret = MS_PMincho_Init (fontdef);
-
-    if (ret != HPDF_OK)
-        return ret;
-
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_UseJPFonts   (HPDF_Doc   pdf)
+static HpdfStatus
+MS_PMincho_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_FontDef fontdef;
-    HPDF_STATUS ret;
+   HpdfStatus ret = MS_PMincho_Init(fontdef);
 
-    if (!HPDF_Doc_Validate (pdf))
-        return HPDF_INVALID_DOCUMENT;
+   if (ret != HPDF_OK)
+      return ret;
 
-    /* MS-Gothic */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-Gothic",
-                MS_Gothic_Init);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
+}
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+static HpdfStatus
+MS_PMincho_BoldItalic_Init(HPDF_FontDef   fontdef)
+{
+   HpdfStatus ret = MS_PMincho_Init(fontdef);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-Gothic,Bold",
-                MS_Gothic_Bold_Init);
+   if (ret != HPDF_OK)
+      return ret;
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
+}
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-Gothic,Italic",
-                MS_Gothic_Italic_Init);
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+HPDF_EXPORT(HpdfStatus)
+   HPDF_UseJPFonts(
+      HpdfDoc * const doc)
+{
+   HPDF_FontDef fontdef;
+   HpdfStatus ret;
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-Gothic,BoldItalic",
-                MS_Gothic_BoldItalic_Init);
+   if (!HPDF_Doc_Validate(doc))
+   {
+      return HPDF_INVALID_DOCUMENT;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   /* MS-Gothic */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-Gothic", MS_Gothic_Init);
 
-    /* MS-PGothic */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-PGothic",
-                MS_PGothic_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-Gothic,Bold", MS_Gothic_Bold_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-PGothic,Bold",
-                MS_PGothic_Bold_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-Gothic,Italic", MS_Gothic_Italic_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-PGothic,Italic",
-                MS_PGothic_Italic_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-Gothic,BoldItalic", MS_Gothic_BoldItalic_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-PGothic,BoldItalic",
-                MS_PGothic_BoldItalic_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   /* MS-PGothic */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-PGothic", MS_PGothic_Init);
 
-    /* MS-Mincho */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-Mincho",
-                MS_Mincho_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-PGothic,Bold", MS_PGothic_Bold_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-Mincho,Bold",
-                MS_Mincho_Bold_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-PGothic,Italic", MS_PGothic_Italic_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-Mincho,Italic",
-                MS_Mincho_Italic_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-PGothic,BoldItalic", MS_PGothic_BoldItalic_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-Mincho,BoldItalic",
-                MS_Mincho_BoldItalic_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   /* MS-Mincho */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-Mincho", MS_Mincho_Init);
 
-    /* MS-PMincho */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-PMincho",
-                MS_PMincho_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-Mincho,Bold", MS_Mincho_Bold_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-PMincho,Bold",
-                MS_PMincho_Bold_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-Mincho,Italic", MS_Mincho_Italic_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-PMincho,Italic",
-                MS_PMincho_Italic_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-Mincho,BoldItalic", MS_Mincho_BoldItalic_Init);
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MS-PMincho,BoldItalic",
-                MS_PMincho_BoldItalic_Init);
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   /* MS-PMincho */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-PMincho", MS_PMincho_Init);
 
-    return HPDF_OK;
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-PMincho,Bold", MS_PMincho_Bold_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-PMincho,Italic", MS_PMincho_Italic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MS-PMincho,BoldItalic", MS_PMincho_BoldItalic_Init);
+
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
+
+   return HPDF_OK;
 }
 

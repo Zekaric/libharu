@@ -19,7 +19,7 @@
 #include "hpdf_utils.h"
 #include "hpdf.h"
 
-/*----------------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------------*/
 
 static const HPDF_CID_Width MING_LIU_W_ARRAY[] = {
     {668, 500},
@@ -152,102 +152,108 @@ static const HPDF_CID_Width MING_LIU_W_ARRAY[] = {
 };
 
 
-static HPDF_STATUS
-MingLiU_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MingLiU_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret;
+   HpdfStatus ret;
 
-    HPDF_PTRACE ((" HPDF_FontDef_MingLiU_Init\n"));
+   HPDF_PTRACE((" HPDF_FontDef_MingLiU_Init\n"));
 
-    fontdef->ascent = 800;
-    fontdef->descent = -199;
-    fontdef->cap_height = 769;
-    fontdef->font_bbox = HPDF_ToBox(0, -199, 1000, 800);
-    fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH +
-                HPDF_FONT_SERIF;
-    fontdef->italic_angle = 0;
-    fontdef->stemv = 78;
-    if ((ret = HPDF_CIDFontDef_AddWidth (fontdef, MING_LIU_W_ARRAY)) !=
-                HPDF_OK) {
-        return ret;
-    }
+   fontdef->ascent = 800;
+   fontdef->descent = -199;
+   fontdef->cap_height = 769;
+   fontdef->font_bbox = HPDF_ToBox(0, -199, 1000, 800);
+   fontdef->flags = HPDF_FONT_SYMBOLIC + HPDF_FONT_FIXED_WIDTH +
+      HPDF_FONT_SERIF;
+   fontdef->italic_angle = 0;
+   fontdef->stemv = 78;
+   if ((ret = HPDF_CIDFontDef_AddWidth(fontdef, MING_LIU_W_ARRAY)) !=
+      HPDF_OK) {
+      return ret;
+   }
 
-    fontdef->type = HPDF_FONTDEF_TYPE_CID;
-    fontdef->valid = HPDF_TRUE;
+   fontdef->type = HPDF_FONTDEF_TYPE_CID;
+   fontdef->valid = HPDF_TRUE;
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
-static HPDF_STATUS
-MingLiU_Bold_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MingLiU_Bold_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MingLiU_Init (fontdef);
+   HpdfStatus ret = MingLiU_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_FALSE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_FALSE);
 }
 
 
-static HPDF_STATUS
-MingLiU_Italic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MingLiU_Italic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MingLiU_Init (fontdef);
+   HpdfStatus ret = MingLiU_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_FALSE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_FALSE, HPDF_TRUE);
 }
 
-static HPDF_STATUS
-MingLiU_BoldItalic_Init  (HPDF_FontDef   fontdef)
+static HpdfStatus
+MingLiU_BoldItalic_Init(HPDF_FontDef   fontdef)
 {
-    HPDF_STATUS ret = MingLiU_Init (fontdef);
+   HpdfStatus ret = MingLiU_Init(fontdef);
 
-    if (ret != HPDF_OK)
-        return ret;
+   if (ret != HPDF_OK)
+      return ret;
 
-    return HPDF_CIDFontDef_ChangeStyle (fontdef, HPDF_TRUE, HPDF_TRUE);
+   return HPDF_CIDFontDef_ChangeStyle(fontdef, HPDF_TRUE, HPDF_TRUE);
 }
 
 
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_UseCNTFonts   (HPDF_Doc   pdf)
+HPDF_EXPORT(HpdfStatus)
+   HPDF_UseCNTFonts(
+      HpdfDoc * const doc)
 {
-    HPDF_FontDef fontdef;
-    HPDF_STATUS ret;
+   HPDF_FontDef fontdef;
+   HpdfStatus ret;
 
-    if (!HPDF_HasDoc (pdf))
-        return HPDF_INVALID_DOCUMENT;
+   if (!HPDF_HasDoc(doc))
+   {
+      return HPDF_INVALID_DOCUMENT;
+   }
 
-    /* MingLiU */
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MingLiU",
-                MingLiU_Init);
+   /* MingLiU */
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MingLiU", MingLiU_Init);
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MingLiU,Bold",
-                MingLiU_Bold_Init);
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MingLiU,Bold", MingLiU_Bold_Init);
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MingLiU,Italic",
-                MingLiU_Italic_Init);
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MingLiU,Italic", MingLiU_Italic_Init);
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    fontdef = HPDF_CIDFontDef_New (pdf->mmgr,  "MingLiU,BoldItalic",
-                MingLiU_BoldItalic_Init);
+   fontdef = HPDF_CIDFontDef_New(doc->mmgr, "MingLiU,BoldItalic", MingLiU_BoldItalic_Init);
 
-    if ((ret = HPDF_Doc_RegisterFontDef (pdf, fontdef)) != HPDF_OK)
-        return ret;
+   if ((ret = HPDF_Doc_RegisterFontDef(doc, fontdef)) != HPDF_OK)
+   {
+      return ret;
+   }
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
-

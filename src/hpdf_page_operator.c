@@ -201,7 +201,7 @@ HPDF_Page_SetDash(HPDF_Page        page,
       return HPDF_RaiseError(page->error, HPDF_INVALID_PARAMETER,
          (HpdfStatus) phase);
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
    *pbuf++ = '[';
 
    for (i = 0; i < num_param; i++) {
@@ -422,7 +422,7 @@ HPDF_Page_Concat(HPDF_Page         page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, a, eptr);
    *pbuf++ = ' ';
@@ -478,7 +478,7 @@ HPDF_Page_MoveTo(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x, eptr);
    *pbuf++ = ' ';
@@ -515,7 +515,7 @@ HPDF_Page_LineTo(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x, eptr);
    *pbuf++ = ' ';
@@ -554,7 +554,7 @@ HPDF_Page_CurveTo(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x1, eptr);
    *pbuf++ = ' ';
@@ -599,7 +599,7 @@ HPDF_Page_CurveTo2(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x2, eptr);
    *pbuf++ = ' ';
@@ -640,7 +640,7 @@ HPDF_Page_CurveTo3(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x1, eptr);
    *pbuf++ = ' ';
@@ -704,7 +704,7 @@ HPDF_Page_Rectangle(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x, eptr);
    *pbuf++ = ' ';
@@ -1201,7 +1201,7 @@ HPDF_Page_SetFontAndSize(HPDF_Page  page,
    if (HPDF_Stream_WriteEscapeName(attr->stream, local_name) != HPDF_OK)
       return HPDF_CheckError(page->error);
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
    *pbuf++ = ' ';
    pbuf = HPDF_FToA(pbuf, size, eptr);
    HPDF_StrCpy(pbuf, " Tf\012", eptr);
@@ -1304,7 +1304,7 @@ HPDF_Page_MoveTextPos(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x, eptr);
    *pbuf++ = ' ';
@@ -1341,7 +1341,7 @@ HPDF_Page_MoveTextPos2(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x, eptr);
    *pbuf++ = ' ';
@@ -1386,7 +1386,7 @@ HPDF_Page_SetTextMatrix(HPDF_Page         page,
    if ((a == 0 || d == 0) && (b == 0 || c == 0))
       return HPDF_RaiseError(page->error, HPDF_INVALID_PARAMETER, 0);
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, a, eptr);
    *pbuf++ = ' ';
@@ -1574,7 +1574,7 @@ HPDF_Page_ShowTextNextLineEx(HPDF_Page    page,
    if (text == NULL || text[0] == 0)
       return HPDF_Page_MoveToNextLine(page);
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
    pbuf = HPDF_FToA(pbuf, word_space, eptr);
    *pbuf++ = ' ';
    pbuf = HPDF_FToA(pbuf, char_space, eptr);
@@ -1710,7 +1710,7 @@ HPDF_Page_SetRGBFill(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, r, eptr);
    *pbuf++ = ' ';
@@ -1754,7 +1754,7 @@ HPDF_Page_SetRGBStroke(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, r, eptr);
    *pbuf++ = ' ';
@@ -1799,7 +1799,7 @@ HPDF_Page_SetCMYKFill(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, c, eptr);
    *pbuf++ = ' ';
@@ -1847,7 +1847,7 @@ HPDF_Page_SetCMYKStroke(HPDF_Page  page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, c, eptr);
    *pbuf++ = ' ';
@@ -2040,7 +2040,7 @@ HPDF_Page_Circle(HPDF_Page     page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x - ray, eptr);
    *pbuf++ = ' ';
@@ -2173,7 +2173,7 @@ HPDF_Page_Ellipse(HPDF_Page   page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    pbuf = HPDF_FToA(pbuf, x - xray, eptr);
    *pbuf++ = ' ';
@@ -2279,7 +2279,7 @@ InternalArc(HPDF_Page    page,
 
    attr = (HPDF_PageAttr) page->attr;
 
-   HPDF_MemSet(buf, 0, HPDF_TMP_BUF_SIZ);
+   HpdfMemClear(buf, HPDF_TMP_BUF_SIZ);
 
    delta_angle = (90 - (HpdfDouble) (ang1 + ang2) / 2) / 180 * PIE;
    new_angle = (HpdfDouble) (ang2 - ang1) / 2 / 180 * PIE;
@@ -2589,7 +2589,7 @@ HPDF_Page_TextRect(HPDF_Page            page,
          }
          else {
             HpdfReal x_adjust;
-            HPDF_ParseText_Rec state;
+            HpdfParseText state;
             HpdfUInt i = 0;
             HpdfUInt num_char = 0;
             HPDF_Encoder encoder = ((HPDF_FontAttr) attr->gstate->font->attr)->encoder;
@@ -2865,7 +2865,7 @@ HPDF_Page_New_Content_Stream(HPDF_Page page,
       HPDF_GMODE_TEXT_OBJECT);
    HPDF_PageAttr attr;
    HpdfUInt filter;
-   HPDF_Array contents_array;
+   HpdfArray *contents_array;
 
    HPDF_PTRACE((" HPDF_Page_New_Content_Stream\n"));
 
@@ -2873,7 +2873,7 @@ HPDF_Page_New_Content_Stream(HPDF_Page page,
    filter = attr->contents->filter;
 
    /* check if there is already an array of contents */
-   contents_array = (HPDF_Array) HPDF_Dict_GetItem(page, "Contents", HPDF_OCLASS_ARRAY);
+   contents_array = (HpdfArray *) HPDF_Dict_GetItem(page, "Contents", HPDF_OCLASS_ARRAY);
    if (!contents_array) {
       HPDF_Error_Reset(page->error);
       /* no contents_array already -- create one
@@ -2917,13 +2917,14 @@ HPDF_Page_Insert_Shared_Content_Stream(HPDF_Page page,
 
    HpdfStatus ret = HPDF_Page_CheckState(page, HPDF_GMODE_PAGE_DESCRIPTION |
       HPDF_GMODE_TEXT_OBJECT);
-   HPDF_Array contents_array;
+   HpdfArray *contents_array;
 
    HPDF_PTRACE((" HPDF_Page_Insert_Shared_Content_Stream\n"));
 
    /* check if there is already an array of contents */
-   contents_array = (HPDF_Array) HPDF_Dict_GetItem(page, "Contents", HPDF_OCLASS_ARRAY);
-   if (!contents_array) {
+   contents_array = (HpdfArray *) HPDF_Dict_GetItem(page, "Contents", HPDF_OCLASS_ARRAY);
+   if (!contents_array) 
+   {
       HPDF_PageAttr attr;
       HPDF_Error_Reset(page->error);
       /* no contents_array already -- create one

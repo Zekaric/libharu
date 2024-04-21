@@ -25,55 +25,26 @@ extern "C" {
 #endif
 
 
-HPDF_NameDict
-HPDF_NameDict_New  (HPDF_MMgr  mmgr,
-                    HPDF_Xref  xref);
-
-HPDF_NameTree
-HPDF_NameDict_GetNameTree  (HPDF_NameDict     namedict,
-                            HPDF_NameDictKey  key);
-
-HpdfStatus
-HPDF_NameDict_SetNameTree  (HPDF_NameDict     namedict,
-                            HPDF_NameDictKey  key,
-                            HPDF_NameTree     tree);
-
-HpdfBool
-HPDF_NameDict_Validate  (HPDF_NameDict  namedict);
-
+HPDF_NameDict HPDF_NameDict_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref);
+HPDF_NameTree HPDF_NameDict_GetNameTree  (HPDF_NameDict     namedict, HPDF_NameDictKey  key); 
+HpdfStatus HPDF_NameDict_SetNameTree  (HPDF_NameDict     namedict, HPDF_NameDictKey  key, HPDF_NameTree     tree);
+HpdfBool HPDF_NameDict_Validate  (HPDF_NameDict  namedict);
 
 /*------- NameTree -------*/
 
-HPDF_NameTree
-HPDF_NameTree_New  (HPDF_MMgr  mmgr,
-                    HPDF_Xref  xref);
-
-HpdfStatus
-HPDF_NameTree_Add  (HPDF_NameTree  tree,
-                    HPDF_String    name,
-                    void          *obj);
-
-HpdfBool
-HPDF_NameTree_Validate  (HPDF_NameTree  tree);
-
+HPDF_NameTree HPDF_NameTree_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref);
+HpdfStatus HPDF_NameTree_Add  (HPDF_NameTree  tree, HPDF_String    name, void          *obj);
+HpdfBool HPDF_NameTree_Validate  (HPDF_NameTree  tree);
 
 /*------- EmbeddedFile -------*/
 
-HPDF_EmbeddedFile
-HPDF_EmbeddedFile_New  (HPDF_MMgr  mmgr,
-                        HPDF_Xref  xref,
-                        const char *file);
+HPDF_EmbeddedFile HPDF_EmbeddedFile_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref, const char *file);
 
 #if defined(WIN32)
-HPDF_EmbeddedFile
-HPDF_EmbeddedFile_NewW (HPDF_MMgr  mmgr,
-                        HPDF_Xref  xref,
-                        const wchar_t *file);
+HPDF_EmbeddedFile HPDF_EmbeddedFile_NewW (HpdfMemMgr * const mmgr, HPDF_Xref  xref, const wchar_t *file);
 #endif
 
-HpdfBool
-HPDF_EmbeddedFile_Validate  (HPDF_EmbeddedFile  emfile);
-
+HpdfBool HPDF_EmbeddedFile_Validate  (HPDF_EmbeddedFile  emfile);
 
 #ifdef __cplusplus
 }

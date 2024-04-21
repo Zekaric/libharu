@@ -267,7 +267,7 @@ main  (int      argc,
             HPDF_Page page = HPDF_AddPage (pdf);
             HPDF_Font title_font = HPDF_GetFont (pdf, "Helvetica", NULL);
             HPDF_Outline outline;
-            HPDF_Destination dst;
+            HpdfDestination *dst;
 #ifdef __WIN32__
             _snprintf (buf, 256, "0x%04X-0x%04X",
                     (unsigned int)(i * 256 + min_l),

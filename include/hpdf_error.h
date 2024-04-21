@@ -154,14 +154,15 @@ extern "C" {
 /*---------------------------------------------------------------------------*/
 /*----- HPDF_Error ----------------------------------------------------------*/
 
-typedef struct  _HPDF_Error_Rec  HpdfError;
+typedef struct _HPDF_Error HpdfError;
 
-typedef struct  _HPDF_Error_Rec {
-    HpdfStatus             error_no;
-    HpdfStatus             detail_no;
-    HPDF_Error_Handler      error_fn;
-    void                    *user_data;
-} HPDF_Error_Rec;
+struct _HPDF_Error 
+{
+   HpdfStatus            error_no;
+   HpdfStatus            detail_no;
+   HPDF_Error_Handler    error_fn;
+   void                 *user_data;
+};
 
 /*  HPDF_Error_init
 **

@@ -28,7 +28,7 @@ static HPDF_Image    LoadPngImageFromStream(HpdfDoc * const doc, HPDF_Stream ima
 HPDF_EXPORT(HPDF_Image)
    HPDF_LoadPngImageFromMem(
       HpdfDoc const * const doc,
-      HpdfByte    const *const buffer,
+      HpdfByte    const * const buffer,
       HpdfUInt     size)
 {
    HPDF_Stream imagedata;

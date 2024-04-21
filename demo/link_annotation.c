@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     HPDF_Font         font;
     HPDF_Page         index_page;
     HPDF_Page         page[9];
-    HPDF_Destination  dst;
+    HpdfDestination *dst;
     char              fname[256];
     HpdfRect          rect;
     HpdfPoint         tp;

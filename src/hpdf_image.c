@@ -42,7 +42,7 @@ LoadJpegHeader(HPDF_Image   image,
    const char *color_space_name;
    HpdfUInt len;
    HpdfStatus ret;
-   HPDF_Array array;
+   HpdfArray *array;
 
    HPDF_PTRACE((" HPDF_Image_LoadJpegHeader\n"));
 
@@ -169,9 +169,10 @@ LoadJpegHeader(HPDF_Image   image,
 }
 
 HPDF_Image
-HPDF_Image_LoadJpegImage(HPDF_MMgr        mmgr,
-   HPDF_Stream      jpeg_data,
-   HPDF_Xref        xref)
+   HPDF_Image_LoadJpegImage(
+      HpdfMemMgr * const mmgr,
+      HPDF_Stream      jpeg_data,
+      HPDF_Xref        xref)
 {
    HPDF_Dict image;
    HpdfStatus ret = HPDF_OK;
@@ -224,10 +225,11 @@ HPDF_Image_LoadJpegImage(HPDF_MMgr        mmgr,
 }
 
 HPDF_Image
-HPDF_Image_LoadJpegImageFromMem(HPDF_MMgr    mmgr,
-   HpdfByte   const *const buf,
-   HpdfUInt    size,
-   HPDF_Xref    xref)
+   HPDF_Image_LoadJpegImageFromMem(
+      HpdfMemMgr * const mmgr,
+      HpdfByte   const * const buf,
+      HpdfUInt    size,
+      HPDF_Xref    xref)
 {
    HPDF_Stream jpeg_data;
    HPDF_Image image;
@@ -255,12 +257,13 @@ HPDF_Image_LoadJpegImageFromMem(HPDF_MMgr    mmgr,
 
 
 HPDF_Image
-HPDF_Image_LoadRawImage(HPDF_MMgr          mmgr,
-   HPDF_Stream        raw_data,
-   HPDF_Xref          xref,
-   HpdfUInt          width,
-   HpdfUInt          height,
-   HPDF_ColorSpace    color_space)
+   HPDF_Image_LoadRawImage(
+      HpdfMemMgr * const mmgr,
+      HPDF_Stream        raw_data,
+      HPDF_Xref          xref,
+      HpdfUInt          width,
+      HpdfUInt          height,
+      HPDF_ColorSpace    color_space)
 {
    HPDF_Dict image;
    HpdfStatus ret = HPDF_OK;
@@ -323,13 +326,14 @@ HPDF_Image_LoadRawImage(HPDF_MMgr          mmgr,
 
 
 HPDF_Image
-HPDF_Image_LoadRawImageFromMem(HPDF_MMgr          mmgr,
-   HpdfByte   const *const buf,
-   HPDF_Xref          xref,
-   HpdfUInt          width,
-   HpdfUInt          height,
-   HPDF_ColorSpace    color_space,
-   HpdfUInt          bits_per_component)
+   HPDF_Image_LoadRawImageFromMem(
+      HpdfMemMgr * const mmgr,
+      HpdfByte   const * const buf,
+      HPDF_Xref          xref,
+      HpdfUInt          width,
+      HpdfUInt          height,
+      HPDF_ColorSpace    color_space,
+      HpdfUInt          bits_per_component)
 {
    HPDF_Dict image;
    HpdfStatus ret = HPDF_OK;
@@ -509,8 +513,9 @@ HPDF_Image_GetColorSpace(HPDF_Image  image)
 
    n = HPDF_Dict_GetItem(image, "ColorSpace", HPDF_OCLASS_NAME);
 
-   if (!n) {
-      HPDF_Array a;
+   if (!n) 
+   {
+      HpdfArray *a;
 
       HPDF_Error_Reset(image->error);
 
@@ -594,7 +599,7 @@ HPDF_Image_SetColorMask(HPDF_Image   image,
    HpdfUInt    bmin,
    HpdfUInt    bmax)
 {
-   HPDF_Array array;
+   HpdfArray *array;
    const char *name;
    HpdfStatus ret = HPDF_OK;
 
@@ -663,8 +668,9 @@ HPDF_Image_AddSMask(HPDF_Image  image,
 }
 
 HpdfStatus
-HPDF_Image_SetColorSpace(HPDF_Image   image,
-   HPDF_Array   colorspace)
+   HPDF_Image_SetColorSpace(
+      HPDF_Image   image,
+      HpdfArray * const colorspace)
 {
    if (!HPDF_Image_Validate(image))
       return HPDF_INVALID_IMAGE;

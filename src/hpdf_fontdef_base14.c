@@ -336,7 +336,7 @@ static const HPDF_CharData CHAR_DATA_COURIER[316] = {
     {-1, 0x012B, 600},
     {-1, 0x20AC, 600},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_COURIER_BOLD[316] = {
     {32, 0x0020, 600},
@@ -655,7 +655,7 @@ static const HPDF_CharData CHAR_DATA_COURIER_BOLD[316] = {
     {-1, 0x012B, 600},
     {-1, 0x20AC, 600},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_COURIER_BOLD_OBLIQUE[316] = {
     {32, 0x0020, 600},
@@ -974,7 +974,7 @@ static const HPDF_CharData CHAR_DATA_COURIER_BOLD_OBLIQUE[316] = {
     {-1, 0x012B, 600},
     {-1, 0x20AC, 600},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_COURIER_OBLIQUE[316] = {
     {32, 0x0020, 600},
@@ -1293,7 +1293,7 @@ static const HPDF_CharData CHAR_DATA_COURIER_OBLIQUE[316] = {
     {-1, 0x012B, 600},
     {-1, 0x20AC, 600},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_HELVETICA[316] = {
     {32, 0x0020, 278},
@@ -1612,7 +1612,7 @@ static const HPDF_CharData CHAR_DATA_HELVETICA[316] = {
     {-1, 0x012B, 278},
     {-1, 0x20AC, 556},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_HELVETICA_BOLD[316] = {
     {32, 0x0020, 278},
@@ -1931,7 +1931,7 @@ static const HPDF_CharData CHAR_DATA_HELVETICA_BOLD[316] = {
     {-1, 0x012B, 278},
     {-1, 0x20AC, 556},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_HELVETICA_BOLD_OBLIQUE[316] = {
     {32, 0x0020, 278},
@@ -2250,7 +2250,7 @@ static const HPDF_CharData CHAR_DATA_HELVETICA_BOLD_OBLIQUE[316] = {
     {-1, 0x012B, 278},
     {-1, 0x20AC, 556},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_HELVETICA_OBLIQUE[316] = {
     {32, 0x0020, 278},
@@ -2569,7 +2569,7 @@ static const HPDF_CharData CHAR_DATA_HELVETICA_OBLIQUE[316] = {
     {-1, 0x012B, 278},
     {-1, 0x20AC, 556},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_TIMES_ROMAN[316] = {
     {32, 0x0020, 250},
@@ -2888,7 +2888,7 @@ static const HPDF_CharData CHAR_DATA_TIMES_ROMAN[316] = {
     {-1, 0x012B, 278},
     {-1, 0x20AC, 500},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_TIMES_BOLD[316] = {
     {32, 0x0020, 250},
@@ -3207,7 +3207,7 @@ static const HPDF_CharData CHAR_DATA_TIMES_BOLD[316] = {
     {-1, 0x012B, 278},
     {-1, 0x20AC, 500},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_TIMES_BOLD_ITALIC[316] = {
     {32, 0x0020, 250},
@@ -3526,7 +3526,7 @@ static const HPDF_CharData CHAR_DATA_TIMES_BOLD_ITALIC[316] = {
     {-1, 0x012B, 278},
     {-1, 0x20AC, 500},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_TIMES_ITALIC[316] = {
     {32, 0x0020, 250},
@@ -3845,7 +3845,7 @@ static const HPDF_CharData CHAR_DATA_TIMES_ITALIC[316] = {
     {-1, 0x012B, 278},
     {-1, 0x20AC, 500},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_ZAPF_DINGBATS[203] = {
     {32, 0x0020, 278},
@@ -4051,7 +4051,7 @@ static const HPDF_CharData CHAR_DATA_ZAPF_DINGBATS[203] = {
     {253, 0x00FD, 970},
     {254, 0x00FE, 918},
     {-1, 0xFFFF, 0}
-    };
+};
 
 static const HPDF_CharData CHAR_DATA_SYMBOL[190] = {
     {32, 0x0020, 250},
@@ -4244,7 +4244,7 @@ static const HPDF_CharData CHAR_DATA_SYMBOL[190] = {
     {253, 0x00FD, 494},
     {254, 0x00FE, 494},
     {-1, 0xFFFF, 0}
-    };
+};
 
 
 /*----------------------------------------------------------------------------*/
@@ -4267,14 +4267,14 @@ static const HPDF_CharData CHAR_DATA_SYMBOL[190] = {
 
 
 typedef struct _HPDF_Base14FontDefData {
-    char const     *font_name;
-    const HPDF_CharData  *widths_table;
-    HpdfBool             is_font_specific;
-    HpdfInt16            ascent;
-    HpdfInt16            descent;
-    HpdfUInt16           x_height;
-    HpdfUInt16           cap_height;
-    HPDF_Box              bbox;
+   char const     *font_name;
+   const HPDF_CharData  *widths_table;
+   HpdfBool             is_font_specific;
+   HpdfInt16            ascent;
+   HpdfInt16            descent;
+   HpdfUInt16           x_height;
+   HpdfUInt16           cap_height;
+   HPDF_Box              bbox;
 } HPDF_Base14FontDefData;
 
 
@@ -4435,77 +4435,78 @@ static const HPDF_Base14FontDefData  HPDF_BUILTIN_FONTS[] = {
 /*---------------------------------------------------------------------------*/
 
 const HPDF_Base14FontDefData*
-HPDF_Base14FontDef_FindBuiltinData  (char const *font_name);
+HPDF_Base14FontDef_FindBuiltinData(char const *font_name);
 
 
 /*---------------------------------------------------------------------------*/
 /*----- PDF_Base14FontDef ---------------------------------------------------*/
 
 const HPDF_Base14FontDefData*
-HPDF_Base14FontDef_FindBuiltinData  (char const *font_name)
+HPDF_Base14FontDef_FindBuiltinData(char const *font_name)
 {
-    HpdfUInt i = 0;
+   HpdfUInt i = 0;
 
-    while (HPDF_BUILTIN_FONTS[i].font_name) 
-    {
-        if (HpdfStrIsEqual(HPDF_BUILTIN_FONTS[i].font_name, font_name))
-        {
-            break;
-        }
+   while (HPDF_BUILTIN_FONTS[i].font_name)
+   {
+      if (HpdfStrIsEqual(HPDF_BUILTIN_FONTS[i].font_name, font_name))
+      {
+         break;
+      }
 
-        i++;
-    }
+      i++;
+   }
 
-    return &HPDF_BUILTIN_FONTS[i];
+   return &HPDF_BUILTIN_FONTS[i];
 }
 
 HPDF_FontDef
-HPDF_Base14FontDef_New  (HPDF_MMgr        mmgr,
-                         char const *font_name)
+   HPDF_Base14FontDef_New(
+      HpdfMemMgr * const mmgr,
+      char const *font_name)
 {
-    HPDF_FontDef                   fontdef;
-    HpdfStatus                    ret;
-    const HPDF_Base14FontDefData   *data;
-    char                      *eptr;
-    HPDF_Type1FontDefAttr          attr;
+   HPDF_FontDef                   fontdef;
+   HpdfStatus                    ret;
+   const HPDF_Base14FontDefData   *data;
+   char                      *eptr;
+   HPDF_Type1FontDefAttr          attr;
 
-    fontdef = HPDF_Type1FontDef_New (mmgr);
-    if (!fontdef)
-        return NULL;
+   fontdef = HPDF_Type1FontDef_New(mmgr);
+   if (!fontdef)
+      return NULL;
 
-    data = HPDF_Base14FontDef_FindBuiltinData (font_name);
+   data = HPDF_Base14FontDef_FindBuiltinData(font_name);
 
-    if (!data->font_name) {
-        HPDF_SetError (mmgr->error, HPDF_INVALID_FONT_NAME, 0);
-        HPDF_FontDef_Free (fontdef);
-        return NULL;
-    }
+   if (!data->font_name) {
+      HPDF_SetError(mmgr->error, HPDF_INVALID_FONT_NAME, 0);
+      HPDF_FontDef_Free(fontdef);
+      return NULL;
+   }
 
-    eptr = fontdef->base_font + HPDF_LIMIT_MAX_NAME_LEN;
-    HPDF_StrCpy (fontdef->base_font, data->font_name, eptr);
+   eptr = fontdef->base_font + HPDF_LIMIT_MAX_NAME_LEN;
+   HPDF_StrCpy(fontdef->base_font, data->font_name, eptr);
 
-    attr = (HPDF_Type1FontDefAttr)fontdef->attr;
-    attr->is_base14font = HPDF_TRUE;
+   attr = (HPDF_Type1FontDefAttr) fontdef->attr;
+   attr->is_base14font = HPDF_TRUE;
 
-    if (data->is_font_specific)
-        HPDF_StrCpy (attr->encoding_scheme, HPDF_ENCODING_FONT_SPECIFIC,
-                attr->encoding_scheme + HPDF_LIMIT_MAX_NAME_LEN);
+   if (data->is_font_specific)
+      HPDF_StrCpy(attr->encoding_scheme, HPDF_ENCODING_FONT_SPECIFIC,
+         attr->encoding_scheme + HPDF_LIMIT_MAX_NAME_LEN);
 
-    ret = HPDF_Type1FontDef_SetWidths (fontdef, data->widths_table);
+   ret = HPDF_Type1FontDef_SetWidths(fontdef, data->widths_table);
 
-    if (ret != HPDF_OK) {
-        HPDF_FontDef_Free (fontdef);
-        return NULL;
-    }
+   if (ret != HPDF_OK) {
+      HPDF_FontDef_Free(fontdef);
+      return NULL;
+   }
 
-    fontdef->font_bbox = data->bbox;
-    fontdef->ascent = data->ascent;
-    fontdef->descent = data->descent;
-    fontdef->x_height = data->x_height;
-    fontdef->cap_height = data->cap_height;
+   fontdef->font_bbox = data->bbox;
+   fontdef->ascent = data->ascent;
+   fontdef->descent = data->descent;
+   fontdef->x_height = data->x_height;
+   fontdef->cap_height = data->cap_height;
 
-    fontdef->valid = HPDF_TRUE;
+   fontdef->valid = HPDF_TRUE;
 
-    return fontdef;
+   return fontdef;
 }
 

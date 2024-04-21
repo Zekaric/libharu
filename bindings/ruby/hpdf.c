@@ -301,7 +301,7 @@ static VALUE
       VALUE action)
 {
    HpdfDoc *pdf;
-   HPDF_Destination dst;
+   HpdfDestination *dst;
    HpdfStatus ret;
 
    if (!HpdfStrIsEqual(rb_obj_classname(action), "HPDFDestination"))
@@ -745,7 +745,7 @@ static VALUE
 hpdf_outline_set_destination(VALUE obj, VALUE dest)
 {
    HPDF_Outline outline;
-   HPDF_Destination d;
+   HpdfDestination *d;
    HpdfStatus ret;
 
    if (!HpdfStrIsEqual(rb_obj_classname(dest), "HPDFDestination"))
@@ -768,7 +768,7 @@ static VALUE
 hpdf_page_create_destination(VALUE obj)
 {
    HPDF_Page page;
-   HPDF_Destination d;
+   HpdfDestination *d;
 
    Data_Get_Struct(obj, HPDF_Dict_Rec, page);
 
@@ -782,7 +782,7 @@ hpdf_page_create_destination(VALUE obj)
 static VALUE
 hpdf_destination_set_xyz(VALUE obj, VALUE left, VALUE top, VALUE zoom)
 {
-   HPDF_Destination d;
+   HpdfDestination *d;
    HpdfStatus ret;
    HpdfInt i1;
    HpdfInt i2;
@@ -803,7 +803,7 @@ hpdf_destination_set_xyz(VALUE obj, VALUE left, VALUE top, VALUE zoom)
 static VALUE
 hpdf_destination_set_fit(VALUE obj)
 {
-   HPDF_Destination d;
+   HpdfDestination *d;
    HpdfStatus ret;
 
    Data_Get_Struct(obj, HPDF_Array_Rec, d);
@@ -818,7 +818,7 @@ hpdf_destination_set_fit(VALUE obj)
 static VALUE
 hpdf_destination_set_fit_h(VALUE obj, VALUE top)
 {
-   HPDF_Destination d;
+   HpdfDestination *d;
    HpdfStatus ret;
    HpdfInt i1;
 
@@ -835,7 +835,7 @@ hpdf_destination_set_fit_h(VALUE obj, VALUE top)
 static VALUE
 hpdf_destination_set_fit_v(VALUE obj, VALUE left)
 {
-   HPDF_Destination d;
+   HpdfDestination *d;
    HpdfStatus ret;
    HpdfInt i1;
 
@@ -852,7 +852,7 @@ hpdf_destination_set_fit_v(VALUE obj, VALUE left)
 static VALUE
 hpdf_destination_set_fit_b(VALUE obj)
 {
-   HPDF_Destination d;
+   HpdfDestination *d;
    HpdfStatus ret;
 
    Data_Get_Struct(obj, HPDF_Array_Rec, d);
@@ -867,7 +867,7 @@ hpdf_destination_set_fit_b(VALUE obj)
 static VALUE
 hpdf_destination_set_fit_bh(VALUE obj, VALUE top)
 {
-   HPDF_Destination d;
+   HpdfDestination *d;
    HpdfStatus ret;
    HpdfInt i1;
 
@@ -884,7 +884,7 @@ hpdf_destination_set_fit_bh(VALUE obj, VALUE top)
 static VALUE
 hpdf_destination_set_fit_bv(VALUE obj, VALUE left)
 {
-   HPDF_Destination d;
+   HpdfDestination *d;
    HpdfStatus ret;
    HpdfInt i1;
 
@@ -902,7 +902,7 @@ hpdf_destination_set_fit_bv(VALUE obj, VALUE left)
 static VALUE
 hpdf_destination_set_fit_r(VALUE obj, VALUE left, VALUE bottom, VALUE right, VALUE top)
 {
-   HPDF_Destination d;
+   HpdfDestination *d;
    HpdfStatus ret;
    HpdfInt i1;
    HpdfInt i2;
@@ -1155,7 +1155,7 @@ static VALUE
 {
    HPDF_Page         page;
    HpdfRect          rect;
-   HPDF_Destination  d = NULL;
+   HpdfDestination *d = NULL;
    HPDF_Annotation   annot;
 
    if (HpdfStrIsEqual(rb_obj_classname(dest), "HPDFDestination"))

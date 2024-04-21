@@ -44,6 +44,10 @@ HpdfPoint    HPDF_ToPoint(    HpdfInt16 x,    HpdfInt16 y);
 HpdfRect     HPDF_ToRect(     HpdfReal  left, HpdfReal  bottom, HpdfReal  right, HpdfReal  top);
 void         HPDF_UInt16Swap( HpdfUInt16 *value);
 
+#define HpdfMemClear(         BUF, BYTECOUNT)   HPDF_MemSet((void *) BUF, 0, (BYTECOUNT))
+#define HpdfMemClearType(     BUF, TYPE)        HPDF_MemSet((void *) BUF, 0, sizeof(TYPE))
+#define HpdfMemClearTypeArray(BUF, TYPE, COUNT) HPDF_MemSet((void *) BUF, 0, sizeof(TYPE) * (COUNT))
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

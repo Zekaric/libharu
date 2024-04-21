@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     HPDF_Page page[4];
     HPDF_Outline root;
     HPDF_Outline outline[4];
-    HPDF_Destination dst;
+    HpdfDestination *dst;
     char fname[256];
 
     strcpy (fname, argv[0]);

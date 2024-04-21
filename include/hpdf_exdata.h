@@ -27,11 +27,7 @@ extern "C" {
 /*----------------------------------------------------------------------------*/
 /*------ HPDF_ExData -----------------------------------------------------*/
 
-HPDF_ExData
-HPDF_3DAnnotExData_New(HPDF_MMgr mmgr,
-					   HPDF_Xref xref );
-
-         
+HPDF_ExData HPDF_3DAnnotExData_New(HpdfMemMgr * const mmgr, HPDF_Xref xref );
 
 #ifdef __cplusplus
 }

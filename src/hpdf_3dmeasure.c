@@ -30,7 +30,7 @@ HpdfStatus
       const char* key, 
       HpdfPoint3D const point)
 {
-   HPDF_Array array;
+   HpdfArray *array;
    HpdfStatus ret = HPDF_OK;
    array = HPDF_Array_New(dict->mmgr);
    if (!array)
@@ -52,7 +52,7 @@ HpdfStatus
 
 HPDF_3DMeasure
    HPDF_3DC3DMeasure_New(
-      HPDF_MMgr mmgr,
+      HpdfMemMgr * const mmgr,
       HPDF_Xref xref,
       HpdfPoint3D const firstanchorpoint,
       HpdfPoint3D const textanchorpoint)
@@ -93,7 +93,7 @@ HPDF_EXPORT(HpdfStatus)
 HPDF_3DMeasure_SetColor(HPDF_3DMeasure measure,
    HPDF_RGBColor color)
 {
-   HPDF_Array array;
+   HpdfArray *array;
    HpdfStatus ret = HPDF_OK;
 
    array = HPDF_Array_New(measure->mmgr);
@@ -146,7 +146,7 @@ HPDF_3DC3DMeasure_SetTextBoxSize(HPDF_3DMeasure measure,
    HpdfInt32 x,
    HpdfInt32 y)
 {
-   HPDF_Array array;
+   HpdfArray *array;
    HpdfStatus ret = HPDF_OK;
 
    array = HPDF_Array_New(measure->mmgr);
@@ -193,16 +193,17 @@ HPDF_3DC3DMeasure_SetProjectionAnotation(HPDF_3DMeasure measure,
 
 
 HPDF_3DMeasure
-HPDF_PD33DMeasure_New(HPDF_MMgr mmgr,
-   HPDF_Xref xref,
-   HpdfPoint3D    annotationPlaneNormal,
-   HpdfPoint3D    firstAnchorPoint,
-   HpdfPoint3D    secondAnchorPoint,
-   HpdfPoint3D    leaderLinesDirection,
-   HpdfPoint3D    measurementValuePoint,
-   HpdfPoint3D    textYDirection,
-   HpdfReal       value,
-   const char*     unitsString
+   HPDF_PD33DMeasure_New(
+      HpdfMemMgr * const mmgr,
+      HPDF_Xref xref,
+      HpdfPoint3D    annotationPlaneNormal,
+      HpdfPoint3D    firstAnchorPoint,
+      HpdfPoint3D    secondAnchorPoint,
+      HpdfPoint3D    leaderLinesDirection,
+      HpdfPoint3D    measurementValuePoint,
+      HpdfPoint3D    textYDirection,
+      HpdfReal       value,
+      const char*     unitsString
 )
 {
    HPDF_3DMeasure measure;

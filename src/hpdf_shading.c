@@ -37,7 +37,7 @@ static const char *COL_GRAY = "DeviceGray";
 static HpdfBool _GetDecodeArrayVertexValues(HPDF_Shading shading,
    HpdfReal *bbox)
 {
-   HPDF_Array decodeArray;
+   HpdfArray *decodeArray;
    HPDF_Real r;
    int i;
 
@@ -45,9 +45,9 @@ static HpdfBool _GetDecodeArrayVertexValues(HPDF_Shading shading,
       return HPDF_FALSE;
    }
 
-   decodeArray = (HPDF_Array) (HPDF_Dict_GetItem(shading, "Decode",
-      HPDF_OCLASS_ARRAY));
-   if (!decodeArray) {
+   decodeArray = (HpdfArray *) (HPDF_Dict_GetItem(shading, "Decode", HPDF_OCLASS_ARRAY));
+   if (!decodeArray) 
+   {
       return HPDF_FALSE;
    }
 
@@ -94,7 +94,7 @@ HPDF_Shading_New(
    HpdfReal yMin, HpdfReal yMax)
 {
    HPDF_Shading shading;
-   HPDF_Array decodeArray;
+   HpdfArray *decodeArray;
    HpdfStatus ret = HPDF_OK;
    int i;
 

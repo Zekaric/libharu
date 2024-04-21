@@ -79,7 +79,7 @@ int main (int argc, char **argv)
     HPDF_Font font;
     HPDF_Page page;
     char fname[256];
-    HPDF_Destination dst;
+    HpdfDestination *dst;
 
     strcpy (fname, argv[0]);
     strcat (fname, ".pdf");

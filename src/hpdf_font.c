@@ -22,7 +22,7 @@
 
 HPDF_EXPORT(HPDF_TextWidth)
 HPDF_Font_TextWidth  (HPDF_Font        font,
-                      HpdfByte  const *const text,
+                      HpdfByte  const * const text,
                       HpdfUInt        len)
 {
     HPDF_TextWidth tw = {0, 0, 0, 0};
@@ -53,7 +53,7 @@ HPDF_Font_TextWidth  (HPDF_Font        font,
 
 HPDF_EXPORT(HpdfUInt)
 HPDF_Font_MeasureText (HPDF_Font          font,
-                       HpdfByte   const *const text,
+                       HpdfByte   const * const text,
                        HpdfUInt          len,
                        HpdfReal          width,
                        HpdfReal          font_size,

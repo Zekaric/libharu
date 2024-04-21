@@ -359,8 +359,8 @@ HpdfByte *
 
 HpdfInt
    HPDF_MemCmp(
-      HpdfByte const *const s1,
-      HpdfByte const *const s2,
+      HpdfByte const * const s1,
+      HpdfByte const * const s2,
       HpdfUInt              count)
 {
    HpdfByte const *s1Temp = s1;

@@ -316,7 +316,7 @@ HpdfStatus
 HPDF_PDFA_GenerateID(
    HpdfDoc const * const doc)
 {
-   HPDF_Array id;
+   HpdfArray *id;
    HpdfByte *currentTime;
    HpdfByte idkey[HPDF_MD5_KEY_LEN];
    HPDF_MD5_CTX md5_ctx;
@@ -381,7 +381,7 @@ HPDF_PDFA_AppendOutputIntents(
    const char *iccname,
    HPDF_Dict iccdict)
 {
-   HPDF_Array intents;
+   HpdfArray *intents;
    HPDF_Dict intent;
    HpdfStatus ret;
    if (!HPDF_HasDoc(doc))

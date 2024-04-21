@@ -28,46 +28,15 @@ extern "C" {
 /*----------------------------------------------------------------------------*/
 /*----- HPDF_Outline ---------------------------------------------------------*/
 
-HPDF_Outline
-HPDF_OutlineRoot_New  (HPDF_MMgr   mmgr,
-                       HPDF_Xref   xref);
-
-
-HPDF_Outline
-HPDF_Outline_New  (HPDF_MMgr          mmgr,
-                   HPDF_Outline       parent,
-                   char const  *title,
-                   HPDF_Encoder       encoder,
-                   HPDF_Xref          xref);
-
-
-HPDF_Outline
-HPDF_Outline_GetFirst (HPDF_Outline outline);
-
-
-HPDF_Outline
-HPDF_Outline_GetLast (HPDF_Outline outline);
-
-
-HPDF_Outline
-HPDF_Outline_GetPrev(HPDF_Outline outline);
-
-
-HPDF_Outline
-HPDF_Outline_GetNext (HPDF_Outline outline);
-
-
-HPDF_Outline
-HPDF_Outline_GetParent (HPDF_Outline outline);
-
-
-HpdfBool
-HPDF_Outline_GetOpened  (HPDF_Outline  outline);
-
-
-
-HpdfBool
-HPDF_Outline_Validate (HPDF_Outline  obj);
+HPDF_Outline HPDF_OutlineRoot_New  (HpdfMemMgr * const mmgr, HPDF_Xref   xref);
+HPDF_Outline HPDF_Outline_New  (HpdfMemMgr * const mmgr, HPDF_Outline       parent, char const  *title, HPDF_Encoder       encoder, HPDF_Xref          xref);
+HPDF_Outline HPDF_Outline_GetFirst (HPDF_Outline outline);
+HPDF_Outline HPDF_Outline_GetLast (HPDF_Outline outline);
+HPDF_Outline HPDF_Outline_GetPrev(HPDF_Outline outline);
+HPDF_Outline HPDF_Outline_GetNext (HPDF_Outline outline);
+HPDF_Outline HPDF_Outline_GetParent (HPDF_Outline outline);
+HpdfBool HPDF_Outline_GetOpened  (HPDF_Outline  outline);
+HpdfBool HPDF_Outline_Validate (HPDF_Outline  obj);
 
 #ifdef __cplusplus
 }

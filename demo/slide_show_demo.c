@@ -48,7 +48,7 @@ void
     float             g = (float)rand() / RAND_MAX;
     float             b = (float)rand() / RAND_MAX;
     HpdfRect          rect;
-    HPDF_Destination  dst;
+    HpdfDestination *dst;
     HPDF_Annotation   annot;
 
     HPDF_Page_SetWidth (page, 800);

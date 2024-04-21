@@ -100,7 +100,7 @@ HPDF_EXPORT(HpdfBool)
    }
 }
 
-HPDF_EXPORT(HPDF_MMgr)
+HPDF_EXPORT(HpdfMemMgr *)
    HPDF_GetDocMMgr(
       HpdfDoc const * const doc)
 {
@@ -127,9 +127,9 @@ HPDF_EXPORT(HpdfDoc *)
       HpdfUInt             mem_pool_buf_size,
       void                 *user_data)
 {
-   HpdfDoc *doc;
-   HPDF_MMgr mmgr;
-   HPDF_Error_Rec tmp_error;
+   HpdfDoc     *doc;
+   HpdfMemMgr  *mmgr;
+   HpdfError    tmp_error;
 
    HPDF_PTRACE((" HPDF_NewEx\n"));
 
@@ -137,7 +137,7 @@ HPDF_EXPORT(HpdfDoc *)
    HPDF_Error_Init(&tmp_error, user_data);
 
    /* create memory-manager object */
-   mmgr = HPDF_MMgr_New(&tmp_error, mem_pool_buf_size, user_alloc_fn, user_free_fn);
+   mmgr = HpdfMemMgrCreate(&tmp_error, mem_pool_buf_size, user_alloc_fn, user_free_fn);
    if (!mmgr) 
    {
       HPDF_CheckError(&tmp_error);
@@ -145,15 +145,15 @@ HPDF_EXPORT(HpdfDoc *)
    }
 
    /* now create pdf_doc object */
-   doc = HPDF_GetMem(mmgr, sizeof(HPDF_Doc_Rec));
+   doc = HpdfMemCreateType(mmgr, HpdfDoc);
    if (!doc) 
    {
-      HPDF_MMgr_Free(mmgr);
+      HpdfMemMgrDestroy(mmgr);
       HPDF_CheckError(&tmp_error);
       return NULL;
    }
 
-   HPDF_MemSet(doc, 0, sizeof(HPDF_Doc_Rec));
+   HpdfMemClearType(doc, HpdfDoc);
    doc->sig_bytes = HPDF_SIG_BYTES;
    doc->mmgr = mmgr;
    doc->pdf_version = HPDF_VER_13;
@@ -186,14 +186,14 @@ HPDF_EXPORT(void)
 
    if (doc)
    {
-      HPDF_MMgr mmgr = doc->mmgr;
+      HpdfMemMgr *mmgr = doc->mmgr;
 
       HPDF_FreeDocAll(doc);
 
       doc->sig_bytes = 0;
 
-      HPDF_FreeMem(mmgr, doc);
-      HPDF_MMgr_Free(mmgr);
+      HpdfMemDestroy(mmgr, doc);
+      HpdfMemMgrDestroy(mmgr);
    }
 }
 
@@ -304,7 +304,7 @@ HPDF_EXPORT(void)
          _CleanupFontDefList(doc);
       }
 
-      HPDF_MemSet(doc->ttfont_tag, 0, 6);
+      HpdfMemClear(doc->ttfont_tag, 6);
 
       doc->pdf_version    = HPDF_VER_13;
       doc->outlines       = NULL;
@@ -639,7 +639,7 @@ HpdfStatus
 {
    HPDF_Encrypt e= HPDF_EncryptDict_GetAttr(doc->encrypt_dict);
    HPDF_Dict info = _GetInfo(doc);
-   HPDF_Array id;
+   HpdfArray *id;
 
    if (!e)
    {
@@ -764,7 +764,7 @@ HPDF_EXPORT(HpdfStatus)
 HPDF_EXPORT(HpdfStatus)
    HPDF_GetContents(
       HpdfDoc * const doc,
-      HpdfByte  *const buf,
+      HpdfByte  * const buf,
       HpdfUInt32  *size)
 {
    HPDF_Stream stream;
@@ -821,7 +821,7 @@ HPDF_EXPORT(HpdfUInt32)
 HPDF_EXPORT(HpdfStatus)
    HPDF_ReadFromStream(
       HpdfDoc * const doc,
-      HpdfByte     *const buf,
+      HpdfByte     * const buf,
       HpdfUInt32   *size)
 {
    HpdfUInt isize = *size;
@@ -2244,7 +2244,7 @@ HPDF_EXPORT(HPDF_Image)
 HPDF_EXPORT(HPDF_Image)
    HPDF_LoadRawImageFromMem(
       HpdfDoc * const doc,
-      HpdfByte   const *const buf,
+      HpdfByte   const * const buf,
       HpdfUInt          width,
       HpdfUInt          height,
       HPDF_ColorSpace    color_space,
@@ -2363,7 +2363,7 @@ HPDF_EXPORT(HPDF_Image)
 HPDF_EXPORT(HPDF_Image)
    HPDF_LoadJpegImageFromMem(
       HpdfDoc * const doc,
-      HpdfByte   const *const buffer,
+      HpdfByte   const * const buffer,
       HpdfUInt    size)
 {
    HPDF_Image image;
@@ -2481,7 +2481,7 @@ HPDF_EXPORT(HpdfStatus)
 HPDF_EXPORT(HpdfStatus)
    HPDF_SetOpenAction(
       HpdfDoc * const doc,
-      HPDF_Destination    open_action)
+      HpdfDestination * const open_action)
 {
    HpdfStatus ret;
 
@@ -2979,7 +2979,7 @@ HPDF_EXPORT(HPDF_OutputIntent)
       const char* condition,
       const char* registry,
       const char* info,
-      HPDF_Array  outputprofile)
+      HpdfArray * const outputprofile)
 {
    HPDF_OutputIntent intent;
    HpdfStatus ret = HPDF_OK;
@@ -3035,7 +3035,7 @@ HPDF_EXPORT(HpdfStatus)
       HpdfDoc * const doc,
       HPDF_OutputIntent  intent)
 {
-   HPDF_Array intents;
+   HpdfArray *intents;
    
    if (!HPDF_HasDoc(doc))
    {
@@ -3065,7 +3065,7 @@ HPDF_EXPORT(HpdfStatus)
 HPDF_EXPORT(HPDF_OutputIntent)
    HPDF_ICC_LoadIccFromMem(
       HpdfDoc * const doc,
-      HPDF_MMgr   mmgr,
+      HpdfMemMgr * const mmgr,
       HPDF_Stream iccdata,
       HPDF_Xref   xref,
       int         numcomponent)
@@ -3141,13 +3141,13 @@ HPDF_EXPORT(HPDF_OutputIntent)
 }
 
 //TODO exported function not in any .h files!
-HPDF_EXPORT(HPDF_Array)
+HPDF_EXPORT(HpdfArray *)
    HPDF_AddColorspaceFromProfile(
       HpdfDoc * const doc,
       HPDF_Dict icc)
 {
    HpdfStatus ret = HPDF_OK;
-   HPDF_Array iccentry;
+   HpdfArray *iccentry;
 
    if (!HPDF_HasDoc(doc))
    {

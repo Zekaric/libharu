@@ -58,7 +58,7 @@ MD5Transform(HpdfUInt32       buf[4],
 
 
 static void
-MD5ByteReverse(HpdfByte    *const buf,
+MD5ByteReverse(HpdfByte    * const buf,
    HpdfUInt32  longs);
 
 
@@ -77,7 +77,7 @@ HPDF_MD5Init(struct HPDF_MD5Context  *ctx)
 
 void
 HPDF_MD5Update(struct HPDF_MD5Context *ctx,
-   HpdfByte        const *const buf,
+   HpdfByte        const * const buf,
    HpdfUInt32            len)
 {
    HpdfUInt32 t;
@@ -131,7 +131,7 @@ HPDF_MD5Update(struct HPDF_MD5Context *ctx,
  */
 void
 HPDF_MD5Final(HpdfByte              digest[16],
-   struct HPDF_MD5Context *ctx)
+   HPDF_MD5_CTX *ctx)
 {
    HpdfUInt32 count;
    HpdfByte *p;
@@ -150,16 +150,17 @@ HPDF_MD5Final(HpdfByte              digest[16],
    /* Pad out to 56 mod 64 */
    if (count < 8) {
       /* Two lots of padding:  Pad the first block to 64 bytes */
-      HPDF_MemSet(p, 0, count);
+      HpdfMemClear(p, count);
       MD5ByteReverse(ctx->in, 16);
       MD5Transform(ctx->buf, (HpdfUInt32 *) ctx->in);
 
       /* Now fill the next block with 56 bytes */
-      HPDF_MemSet(ctx->in, 0, 56);
+      HpdfMemClear(ctx->in, 56);
    }
-   else {
+   else 
+   {
       /* Pad block to 56 bytes */
-      HPDF_MemSet(p, 0, count - 8);
+      HpdfMemClear(p, count - 8);
    }
    MD5ByteReverse(ctx->in, 14);
 
@@ -170,7 +171,7 @@ HPDF_MD5Final(HpdfByte              digest[16],
    MD5Transform(ctx->buf, (HpdfUInt32 *) ctx->in);
    MD5ByteReverse((HpdfByte *) ctx->buf, 4);
    HPDF_MemCpy((HpdfByte *) digest, (HpdfByte *) ctx->buf, 16);
-   HPDF_MemSet((HpdfByte *) ctx, 0, sizeof(ctx));   /* In case it's sensitive */
+   HpdfMemClearType(ctx, HPDF_MD5_CTX);   /* In case it's sensitive */
 }
 
 /* The four core functions - F1 is optimized somewhat */
@@ -279,7 +280,7 @@ MD5Transform(HpdfUInt32       buf[4],
 
 static void
    MD5ByteReverse(
-      HpdfByte    *const buf,
+      HpdfByte    * const buf,
       HpdfUInt32  longs)
 {
    HpdfUInt32 t;
@@ -298,14 +299,14 @@ static void
 
 static void
 ARC4Init(HPDF_ARC4_Ctx_Rec  *ctx,
-   HpdfByte    const *const key,
+   HpdfByte    const * const key,
    HpdfUInt           key_len);
 
 
 static void
 ARC4CryptBuf(HPDF_ARC4_Ctx_Rec   *ctx,
-   HpdfByte     const *const in,
-   HpdfByte           *const out,
+   HpdfByte     const * const in,
+   HpdfByte           * const out,
    HpdfUInt            len);
 
 
@@ -313,13 +314,13 @@ ARC4CryptBuf(HPDF_ARC4_Ctx_Rec   *ctx,
 
 void
 HPDF_PadOrTrancatePasswd(char const *pwd,
-   HpdfByte        *const new_pwd)
+   HpdfByte        * const new_pwd)
 {
    HpdfUInt len = HPDF_StrLen(pwd, HPDF_PASSWD_LEN + 1);
 
    HPDF_PTRACE((" HPDF_PadOrTrancatePasswd\n"));
 
-   HPDF_MemSet(new_pwd, 0x00, HPDF_PASSWD_LEN);
+   HpdfMemClear(new_pwd, HPDF_PASSWD_LEN);
 
    if (len >= HPDF_PASSWD_LEN) {
       HPDF_MemCpy(new_pwd, (HpdfByte *) pwd, HPDF_PASSWD_LEN);
@@ -336,7 +337,7 @@ HPDF_PadOrTrancatePasswd(char const *pwd,
 void
 HPDF_Encrypt_Init(HPDF_Encrypt  attr)
 {
-   HPDF_MemSet(attr, 0, sizeof(HPDF_Encrypt_Rec));
+   HpdfMemClearType(attr, HPDF_Encrypt_Rec);
    attr->mode = HPDF_ENCRYPT_R2;
    attr->key_len = 5;
    HPDF_MemCpy(attr->owner_passwd, HPDF_PADDING_STRING, HPDF_PASSWD_LEN);
@@ -516,7 +517,7 @@ HPDF_Encrypt_CreateUserKey(HPDF_Encrypt  attr)
       }
 
       /* use the result of Algorithm 3.4 as 'arbitrary padding' */
-      HPDF_MemSet(attr->user_key, 0, HPDF_PASSWD_LEN);
+      HpdfMemClear(attr->user_key, HPDF_PASSWD_LEN);
       HPDF_MemCpy(attr->user_key, digest2, HPDF_MD5_KEY_LEN);
    }
 }
@@ -524,7 +525,7 @@ HPDF_Encrypt_CreateUserKey(HPDF_Encrypt  attr)
 
 void
 ARC4Init(HPDF_ARC4_Ctx_Rec  *ctx,
-   HpdfByte    const *const key,
+   HpdfByte    const * const key,
    HpdfUInt          key_len)
 {
    HpdfByte tmp_array[HPDF_ARC4_BUF_SIZE];
@@ -556,7 +557,7 @@ ARC4Init(HPDF_ARC4_Ctx_Rec  *ctx,
 
 void
 ARC4CryptBuf(HPDF_ARC4_Ctx_Rec  *ctx,
-   HpdfByte    const *const in,
+   HpdfByte    const * const in,
    HpdfByte          *out,
    HpdfUInt          len)
 {
@@ -627,8 +628,8 @@ HPDF_Encrypt_Reset(HPDF_Encrypt  attr)
 
 void
 HPDF_Encrypt_CryptBuf(HPDF_Encrypt  attr,
-   HpdfByte   const *const src,
-   HpdfByte         *const dst,
+   HpdfByte   const * const src,
+   HpdfByte         * const dst,
    HpdfUInt         len)
 {
    ARC4CryptBuf(&attr->arc4ctx, src, dst, len);

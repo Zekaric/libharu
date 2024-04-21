@@ -105,7 +105,7 @@ HPDF_Info_SetInfoDateAttr(HPDF_Dict      info,
    if (type > HPDF_INFO_MOD_DATE)
       return HPDF_SetError(info->error, HPDF_INVALID_PARAMETER, 0);
 
-   HPDF_MemSet(tmp, 0, HPDF_DATE_TIME_STR_LEN + 1);
+   HpdfMemClear(tmp, HPDF_DATE_TIME_STR_LEN + 1);
    if (value.month < 1 || 12 < value.month ||
       value.day < 1 ||
       23 < value.hour ||

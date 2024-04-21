@@ -110,7 +110,7 @@ int main(int argc, char **argv)
    {
       HPDF_Page          page;
       HPDF_Outline       outline;
-      HPDF_Destination   dst;
+      HpdfDestination *dst;
       HpdfReal           x_pos;
       HpdfPoint          p;
       HpdfUInt           j;

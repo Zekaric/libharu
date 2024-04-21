@@ -185,7 +185,7 @@ FreeFunc(HPDF_FontDef  fontdef)
    if (attr) {
       InitAttr(fontdef);
 
-      HPDF_FreeMem(fontdef->mmgr, attr);
+      HpdfMemDestroy(fontdef->mmgr, attr);
    }
 }
 
@@ -194,8 +194,7 @@ static void
 CleanFunc(HPDF_FontDef   fontdef)
 {
    HPDF_TTFontDefAttr attr = (HPDF_TTFontDefAttr) fontdef->attr;
-   HPDF_MemSet(attr->glyph_tbl.flgs, 0,
-      sizeof(HpdfByte) * attr->num_glyphs);
+   HpdfMemClearTypeArray(attr->glyph_tbl.flgs, HpdfByte, attr->num_glyphs);
    attr->glyph_tbl.flgs[0] = 1;
 }
 
@@ -207,37 +206,37 @@ InitAttr(HPDF_FontDef  fontdef)
 
    if (attr) {
       if (attr->char_set)
-         HPDF_FreeMem(fontdef->mmgr, attr->char_set);
+         HpdfMemDestroy(fontdef->mmgr, attr->char_set);
 
       if (attr->h_metric)
-         HPDF_FreeMem(fontdef->mmgr, attr->h_metric);
+         HpdfMemDestroy(fontdef->mmgr, attr->h_metric);
 
       if (attr->name_tbl.name_records)
-         HPDF_FreeMem(fontdef->mmgr, attr->name_tbl.name_records);
+         HpdfMemDestroy(fontdef->mmgr, attr->name_tbl.name_records);
 
       if (attr->cmap.end_count)
-         HPDF_FreeMem(fontdef->mmgr, attr->cmap.end_count);
+         HpdfMemDestroy(fontdef->mmgr, attr->cmap.end_count);
 
       if (attr->cmap.start_count)
-         HPDF_FreeMem(fontdef->mmgr, attr->cmap.start_count);
+         HpdfMemDestroy(fontdef->mmgr, attr->cmap.start_count);
 
       if (attr->cmap.id_delta)
-         HPDF_FreeMem(fontdef->mmgr, attr->cmap.id_delta);
+         HpdfMemDestroy(fontdef->mmgr, attr->cmap.id_delta);
 
       if (attr->cmap.id_range_offset)
-         HPDF_FreeMem(fontdef->mmgr, attr->cmap.id_range_offset);
+         HpdfMemDestroy(fontdef->mmgr, attr->cmap.id_range_offset);
 
       if (attr->cmap.glyph_id_array)
-         HPDF_FreeMem(fontdef->mmgr, attr->cmap.glyph_id_array);
+         HpdfMemDestroy(fontdef->mmgr, attr->cmap.glyph_id_array);
 
       if (attr->offset_tbl.table)
-         HPDF_FreeMem(fontdef->mmgr, attr->offset_tbl.table);
+         HpdfMemDestroy(fontdef->mmgr, attr->offset_tbl.table);
 
       if (attr->glyph_tbl.flgs)
-         HPDF_FreeMem(fontdef->mmgr, attr->glyph_tbl.flgs);
+         HpdfMemDestroy(fontdef->mmgr, attr->glyph_tbl.flgs);
 
       if (attr->glyph_tbl.offsets)
-         HPDF_FreeMem(fontdef->mmgr, attr->glyph_tbl.offsets);
+         HpdfMemDestroy(fontdef->mmgr, attr->glyph_tbl.offsets);
 
       if (attr->stream)
          HPDF_Stream_Free(attr->stream);
@@ -246,7 +245,8 @@ InitAttr(HPDF_FontDef  fontdef)
 
 
 HPDF_FontDef
-HPDF_TTFontDef_New(HPDF_MMgr   mmgr)
+   HPDF_TTFontDef_New(
+      HpdfMemMgr * const mmgr)
 {
    HPDF_FontDef fontdef;
    HPDF_TTFontDefAttr fontdef_attr;
@@ -256,11 +256,13 @@ HPDF_TTFontDef_New(HPDF_MMgr   mmgr)
    if (!mmgr)
       return NULL;
 
-   fontdef = HPDF_GetMem(mmgr, sizeof(HPDF_FontDef_Rec));
+   fontdef = HpdfMemCreateType(mmgr, HPDF_FontDef_Rec);
    if (!fontdef)
+   {
       return NULL;
+   }
 
-   HPDF_MemSet(fontdef, 0, sizeof(HPDF_FontDef_Rec));
+   HpdfMemClearType(fontdef, HPDF_FontDef_Rec);
    fontdef->sig_bytes = HPDF_FONTDEF_SIG_BYTES;
    fontdef->mmgr = mmgr;
    fontdef->error = mmgr->error;
@@ -268,14 +270,15 @@ HPDF_TTFontDef_New(HPDF_MMgr   mmgr)
    fontdef->clean_fn = CleanFunc;
    fontdef->free_fn = FreeFunc;
 
-   fontdef_attr = HPDF_GetMem(mmgr, sizeof(HPDF_TTFontDefAttr_Rec));
-   if (!fontdef_attr) {
-      HPDF_FreeMem(fontdef->mmgr, fontdef);
+   fontdef_attr = HpdfMemCreateType(mmgr, HPDF_TTFontDefAttr_Rec);
+   if (!fontdef_attr) 
+   {
+      HpdfMemDestroy(fontdef->mmgr, fontdef);
       return NULL;
    }
 
    fontdef->attr = fontdef_attr;
-   HPDF_MemSet((HpdfByte *) fontdef_attr, 0, sizeof(HPDF_TTFontDefAttr_Rec));
+   HpdfMemClearType(fontdef_attr, HPDF_TTFontDefAttr_Rec);
    fontdef->flags = HPDF_FONT_STD_CHARSET;
 
    return fontdef;
@@ -283,9 +286,10 @@ HPDF_TTFontDef_New(HPDF_MMgr   mmgr)
 
 
 HPDF_FontDef
-HPDF_TTFontDef_Load(HPDF_MMgr     mmgr,
-   HPDF_Stream   stream,
-   HpdfBool     embedding)
+   HPDF_TTFontDef_Load(
+      HpdfMemMgr * const mmgr,
+      HPDF_Stream   stream,
+      HpdfBool     embedding)
 {
    HpdfStatus ret;
    HPDF_FontDef fontdef;
@@ -310,10 +314,11 @@ HPDF_TTFontDef_Load(HPDF_MMgr     mmgr,
 
 
 HPDF_FontDef
-HPDF_TTFontDef_Load2(HPDF_MMgr     mmgr,
-   HPDF_Stream   stream,
-   HpdfUInt     index,
-   HpdfBool     embedding)
+   HPDF_TTFontDef_Load2(
+      HpdfMemMgr * const mmgr,
+      HPDF_Stream   stream,
+      HpdfUInt     index,
+      HpdfBool     embedding)
 {
    HpdfStatus ret;
    HPDF_FontDef fontdef;
@@ -354,7 +359,7 @@ DumpTable(HPDF_FontDef   fontdef)
          return;
       }
 
-      HPDF_MemSet(fname, 0, 9);
+      HpdfMemClear(fname, 9);
       HPDF_MemCpy(fname, REQUIRED_TAGS[i], 4);
       HPDF_MemCpy(fname + 4, ".dat", 4);
       HPDF_PTRACE((" %s open\n", fname));
@@ -717,10 +722,14 @@ LoadTTFTable(HPDF_FontDef  fontdef)
       HPDF_TTF_MAX_MEM_SIZ)
       return HPDF_SetError(fontdef->error, HPDF_TTF_INVALID_FOMAT, 0);
 
-   attr->offset_tbl.table = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HPDF_TTFTable) * attr->offset_tbl.num_tables);
+   attr->offset_tbl.table = HpdfMemCreateTypeArray(
+      fontdef->mmgr, 
+      HPDF_TTFTable, 
+      attr->offset_tbl.num_tables);
    if (!attr->offset_tbl.table)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
    tbl = attr->offset_tbl.table;
    for (i = 0; i < attr->offset_tbl.num_tables; i++) {
@@ -997,10 +1006,11 @@ ParseCMAP_format0(HPDF_FontDef  fontdef,
       return ret;
 
    attr->cmap.glyph_id_array_count = 256;
-   attr->cmap.glyph_id_array = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HpdfUInt16) * 256);
+   attr->cmap.glyph_id_array = HpdfMemCreateTypeArray(fontdef->mmgr, HpdfUInt16, 256);
    if (!attr->cmap.glyph_id_array)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
    parray = attr->cmap.glyph_id_array;
    for (i = 0; i < 256; i++) {
@@ -1053,10 +1063,14 @@ ParseCMAP_format4(HPDF_FontDef  fontdef,
       return HPDF_Error_GetCode(fontdef->error);
 
    /* end_count */
-   attr->cmap.end_count = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HpdfUInt16) * attr->cmap.seg_count_x2 / 2);
+   attr->cmap.end_count = HpdfMemCreateTypeArray(
+      fontdef->mmgr, 
+      HpdfUInt16, 
+      attr->cmap.seg_count_x2 / 2);
    if (!attr->cmap.end_count)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
    pend_count = attr->cmap.end_count;
    for (i = 0; i < (HpdfUInt) attr->cmap.seg_count_x2 / 2; i++)
@@ -1067,10 +1081,14 @@ ParseCMAP_format4(HPDF_FontDef  fontdef,
       return ret;
 
    /* start_count */
-   attr->cmap.start_count = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HpdfUInt16) * attr->cmap.seg_count_x2 / 2);
+   attr->cmap.start_count = HpdfMemCreateTypeArray(
+      fontdef->mmgr, 
+      HpdfUInt16, 
+      attr->cmap.seg_count_x2 / 2);
    if (!attr->cmap.start_count)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
    pstart_count = attr->cmap.start_count;
    for (i = 0; i < (HpdfUInt) attr->cmap.seg_count_x2 / 2; i++)
@@ -1078,10 +1096,14 @@ ParseCMAP_format4(HPDF_FontDef  fontdef,
          return ret;
 
    /* id_delta */
-   attr->cmap.id_delta = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HpdfUInt16) * attr->cmap.seg_count_x2 / 2);
+   attr->cmap.id_delta = HpdfMemCreateTypeArray(
+      fontdef->mmgr,
+      HpdfInt16,
+      attr->cmap.seg_count_x2 / 2);
    if (!attr->cmap.id_delta)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
    pid_delta = attr->cmap.id_delta;
    for (i = 0; i < (HpdfUInt) attr->cmap.seg_count_x2 / 2; i++)
@@ -1089,10 +1111,14 @@ ParseCMAP_format4(HPDF_FontDef  fontdef,
          return ret;
 
    /* id_range_offset */
-   attr->cmap.id_range_offset = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HpdfUInt16) * attr->cmap.seg_count_x2 / 2);
+   attr->cmap.id_range_offset = HpdfMemCreateTypeArray(
+      fontdef->mmgr,
+      HpdfUInt16,
+      attr->cmap.seg_count_x2 / 2);
    if (!attr->cmap.id_range_offset)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
    pid_range_offset = attr->cmap.id_range_offset;
    for (i = 0; i < (HpdfUInt) attr->cmap.seg_count_x2 / 2; i++)
@@ -1107,10 +1133,14 @@ ParseCMAP_format4(HPDF_FontDef  fontdef,
 
    if (attr->cmap.glyph_id_array_count > 0) {
       /* glyph_id_array */
-      attr->cmap.glyph_id_array = HPDF_GetMem(fontdef->mmgr,
-         sizeof(HpdfUInt16) * attr->cmap.glyph_id_array_count);
+      attr->cmap.glyph_id_array = HpdfMemCreateTypeArray(
+         fontdef->mmgr,
+         HpdfUInt16,
+         attr->cmap.glyph_id_array_count);
       if (!attr->cmap.glyph_id_array)
+      {
          return HPDF_Error_GetCode(fontdef->error);
+      }
 
       pglyph_id_array = attr->cmap.glyph_id_array;
       for (i = 0; i < attr->cmap.glyph_id_array_count; i++)
@@ -1377,11 +1407,11 @@ ParseHmtx(HPDF_FontDef  fontdef)
    /* allocate memory for a table of holizontal matrix.
     * the count of metric records is same as the number of glyphs
     */
-   attr->h_metric = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HPDF_TTF_LongHorMetric) * attr->num_glyphs);
-
+   attr->h_metric = HpdfMemCreateTypeArray(fontdef->mmgr, HPDF_TTF_LongHorMetric, attr->num_glyphs);
    if (!attr->h_metric)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
    pmetric = attr->h_metric;
    for (i = 0; i < attr->num_h_metric; i++) {
@@ -1432,26 +1462,24 @@ ParseLoca(HPDF_FontDef  fontdef)
       return ret;
 
    /* allocate glyph-offset-table. */
-   attr->glyph_tbl.offsets = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HpdfUInt32) * (attr->num_glyphs + 1));
-
+   attr->glyph_tbl.offsets = HpdfMemCreateTypeArray(fontdef->mmgr, HpdfUInt32, attr->num_glyphs + 1);
    if (!attr->glyph_tbl.offsets)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
-   HPDF_MemSet(attr->glyph_tbl.offsets, 0,
-      sizeof(HpdfUInt32) * (attr->num_glyphs + 1));
+   HpdfMemClearTypeArray(attr->glyph_tbl.offsets, HpdfUInt32, attr->num_glyphs + 1);
 
    /* allocate glyph-flg-table.
     * this flgs are used to judge whether glyphs should be embedded.
     */
-   attr->glyph_tbl.flgs = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HpdfByte) * attr->num_glyphs);
-
+   attr->glyph_tbl.flgs = HpdfMemCreateTypeArray(fontdef->mmgr, HpdfByte, attr->num_glyphs);
    if (!attr->glyph_tbl.flgs)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
-   HPDF_MemSet(attr->glyph_tbl.flgs, 0,
-      sizeof(HpdfByte) * attr->num_glyphs);
+   HpdfMemClearTypeArray(attr->glyph_tbl.flgs, HpdfByte, attr->num_glyphs);
    attr->glyph_tbl.flgs[0] = 1;
 
    poffset = attr->glyph_tbl.offsets;
@@ -1502,7 +1530,7 @@ LoadUnicodeName(HPDF_Stream   stream,
    HpdfUInt j = 0;
    HpdfStatus ret;
 
-   HPDF_MemSet(buf, 0, HPDF_LIMIT_MAX_NAME_LEN + 1);
+   HpdfMemClear(buf, HPDF_LIMIT_MAX_NAME_LEN + 1);
 
    if ((ret = HPDF_Stream_Seek(stream, offset, HPDF_SEEK_SET)) !=
       HPDF_OK)
@@ -1559,11 +1587,14 @@ ParseName(HPDF_FontDef  fontdef)
       attr->name_tbl.format, attr->name_tbl.count,
       attr->name_tbl.string_offset));
 
-   attr->name_tbl.name_records = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HPDF_TTF_NameRecord) * attr->name_tbl.count);
-
+   attr->name_tbl.name_records = HpdfMemCreateTypeArray(
+      fontdef->mmgr,
+      HPDF_TTF_NameRecord,
+      attr->name_tbl.count);
    if (!attr->name_tbl.name_records)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
    name_rec = attr->name_tbl.name_records;
 
@@ -1626,7 +1657,7 @@ ParseName(HPDF_FontDef  fontdef)
    if (len_id1 + len_id2 + 8 > 127)
       return HPDF_SetError(fontdef->error, HPDF_TTF_INVALID_FOMAT, 0);
 
-   HPDF_MemSet(attr->base_font, 0, HPDF_LIMIT_MAX_NAME_LEN + 1);
+   HpdfMemClear(attr->base_font, HPDF_LIMIT_MAX_NAME_LEN + 1);
 
    if (offset_id1) {
       if ((ret = HPDF_Stream_Seek(attr->stream, offset_id1,
@@ -1643,7 +1674,7 @@ ParseName(HPDF_FontDef  fontdef)
          return ret;
    }
 
-   HPDF_MemSet(tmp, 0, HPDF_LIMIT_MAX_NAME_LEN + 1);
+   HpdfMemClear(tmp, HPDF_LIMIT_MAX_NAME_LEN + 1);
 
    if (offset_id2) {
       if ((ret = HPDF_Stream_Seek(attr->stream, offset_id2, HPDF_SEEK_SET))
@@ -1836,7 +1867,7 @@ RecreateGLYF(HPDF_FontDef   fontdef,
             HpdfUInt tmp_len =
                (len > HPDF_STREAM_BUF_SIZ) ? HPDF_STREAM_BUF_SIZ : len;
 
-            HPDF_MemSet(buf, 0, tmp_len);
+            HpdfMemClear(buf, tmp_len);
 
             if ((ret = HPDF_Stream_Read(attr->stream, buf, &tmp_len))
                != HPDF_OK)
@@ -2043,9 +2074,9 @@ HPDF_TTFontDef_SaveFontData(HPDF_FontDef   fontdef,
 
    offset_base = 12 + 16 * HPDF_REQUIRED_TAGS_COUNT;
 
-   new_offsets = HPDF_GetMem(fontdef->mmgr,
-      sizeof(HpdfUInt32) * (attr->num_glyphs + 1));
-   if (!new_offsets) {
+   new_offsets = HpdfMemCreateTypeArray(fontdef->mmgr, HpdfUInt32, attr->num_glyphs + 1);
+   if (!new_offsets) 
+   {
       HPDF_Stream_Free(tmp_stream);
       return HPDF_Error_GetCode(fontdef->error);
    }
@@ -2088,7 +2119,7 @@ HPDF_TTFontDef_SaveFontData(HPDF_FontDef   fontdef,
          HpdfUInt j;
          HPDF_TTF_LongHorMetric *pmetric;
 
-         HPDF_MemSet(&value, 0, 4);
+         HpdfMemClear(&value, 4);
          pmetric=attr->h_metric;
          for (j = 0; j < attr->num_h_metric; j++) {
             // write all the used glyphs and write the last metric in the hMetrics array
@@ -2118,7 +2149,7 @@ HPDF_TTFontDef_SaveFontData(HPDF_FontDef   fontdef,
       {
          HpdfUInt j;
 
-         HPDF_MemSet(&value, 0, 4);
+         HpdfMemClear(&value, 4);
          poffset = new_offsets;
 
          if (attr->header.index_to_loc_format == 0) {
@@ -2142,7 +2173,7 @@ HPDF_TTFontDef_SaveFontData(HPDF_FontDef   fontdef,
       {
          value=0x00030000;
          ret += HPDF_Stream_Write(tmp_stream, (HpdfByte *) &value, 4);
-         HPDF_MemSet(&value, 0, 4);
+         HpdfMemClear(&value, 4);
          ret  = HPDF_Stream_Write(tmp_stream, (HpdfByte *) &value, 4); // italicAngle
          ret += HPDF_Stream_Write(tmp_stream, (HpdfByte *) &value, 4); // underlinePosition + underlineThickness
          ret += HPDF_Stream_Write(tmp_stream, (HpdfByte *) &value, 4); // isFixedPitch
@@ -2175,7 +2206,7 @@ HPDF_TTFontDef_SaveFontData(HPDF_FontDef   fontdef,
       {
          HpdfUInt size=tmp_tbl[i].length % 4;
 
-         HPDF_MemSet(&value, 0, 4);
+         HpdfMemClear(&value, 4);
 
          if (size != 0)
             ret += HPDF_Stream_Write(tmp_stream, (HpdfByte *) &value, 4-size);
@@ -2275,7 +2306,7 @@ HPDF_TTFontDef_SaveFontData(HPDF_FontDef   fontdef,
    goto Exit;
 
 Exit:
-   HPDF_FreeMem(fontdef->mmgr, new_offsets);
+   HpdfMemDestroy(fontdef->mmgr, new_offsets);
    HPDF_Stream_Free(tmp_stream);
    return ret;
 }
@@ -2301,7 +2332,7 @@ HPDF_TTFontDef_SetTagName(HPDF_FontDef   fontdef,
       attr->tag_name2[i * 2 + 1] = attr->tag_name[i];
    }
 
-   HPDF_MemSet(buf, 0, HPDF_LIMIT_MAX_NAME_LEN + 1);
+   HpdfMemClear(buf, HPDF_LIMIT_MAX_NAME_LEN + 1);
    HPDF_MemCpy((HpdfByte *) buf, (HpdfByte *) attr->tag_name, HPDF_TTF_FONT_TAG_LEN + 1);
    HPDF_MemCpy((HpdfByte *) buf + HPDF_TTF_FONT_TAG_LEN + 1, (HpdfByte *) fontdef->base_font, HPDF_LIMIT_MAX_NAME_LEN - HPDF_TTF_FONT_TAG_LEN - 1);
 

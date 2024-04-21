@@ -32,31 +32,27 @@
 #endif
 #endif
 
-static void * HPDF_STDCALL
-InternalGetMem(HpdfUInt  size);
+static void * HPDF_STDCALL InternalGetMem(   HpdfUInt  size);
+static void HPDF_STDCALL   InternalFreeMem(  void     *aptr);
 
-static void HPDF_STDCALL
-InternalFreeMem(void*  aptr);
-
-
-HPDF_MMgr
-HPDF_MMgr_New(
-   HpdfError * const error,
-   HpdfUInt        buf_size,
-   HPDF_Alloc_Func  alloc_fn,
-   HPDF_Free_Func   free_fn)
+HpdfMemMgr *
+   HpdfMemMgrCreate(
+      HpdfError * const error,
+      HpdfUInt          buf_size,
+      HPDF_Alloc_Func   alloc_fn,
+      HPDF_Free_Func    free_fn)
 {
-   HPDF_MMgr mmgr;
+   HpdfMemMgr *mmgr;
 
-   HPDF_PTRACE((" HPDF_MMgr_New\n"));
+   HPDF_PTRACE((" HpdfMemMgrCreate\n"));
 
    if (alloc_fn)
    {
-      mmgr = (HPDF_MMgr) alloc_fn(sizeof(HPDF_MMgr_Rec));
+      mmgr = (HpdfMemMgr *) alloc_fn(sizeof(HpdfMemMgr));
    }
    else
    {
-      mmgr = (HPDF_MMgr) InternalGetMem(sizeof(HPDF_MMgr_Rec));
+      mmgr = (HpdfMemMgr *) InternalGetMem(sizeof(HpdfMemMgr));
    }
 
    HPDF_PTRACE(("+%p mmgr-new\n", mmgr));
@@ -68,7 +64,7 @@ HPDF_MMgr_New(
 
 #ifdef HPDF_MEM_DEBUG
       mmgr->alloc_cnt = 0;
-      mmgr->free_cnt = 0;
+      mmgr->free_cnt  = 0;
 #endif
 
       /*  if alloc_fn and free_fn are specified, these function is
@@ -77,12 +73,12 @@ HPDF_MMgr_New(
       if (alloc_fn && free_fn)
       {
          mmgr->alloc_fn = alloc_fn;
-         mmgr->free_fn = free_fn;
+         mmgr->free_fn  = free_fn;
       }
       else
       {
          mmgr->alloc_fn = InternalGetMem;
-         mmgr->free_fn = InternalFreeMem;
+         mmgr->free_fn  = InternalFreeMem;
       }
 
       /*  if buf_size parameter is specified, this object is configured
@@ -116,7 +112,8 @@ HPDF_MMgr_New(
          }
 
 #ifdef HPDF_MEM_DEBUG
-         if (mmgr) {
+         if (mmgr) 
+         {
             mmgr->alloc_cnt += 1;
          }
 #endif
@@ -136,19 +133,23 @@ HPDF_MMgr_New(
 }
 
 void
-HPDF_MMgr_Free(HPDF_MMgr  mmgr)
+   HpdfMemMgrDestroy(
+      HpdfMemMgr * const mmgr)
 {
    HPDF_MPool_Node node;
 
-   HPDF_PTRACE((" HPDF_MMgr_Free\n"));
+   HPDF_PTRACE((" HpdfMemMgrDestroy\n"));
 
    if (mmgr == NULL)
+   {
       return;
+   }
 
    node = mmgr->mpool;
 
    /* delete all nodes recursively */
-   while (node != NULL) {
+   while (node != NULL) 
+   {
       HPDF_MPool_Node tmp = node;
       node = tmp->next_node;
 
@@ -158,28 +159,30 @@ HPDF_MMgr_Free(HPDF_MMgr  mmgr)
 #ifdef HPDF_MEM_DEBUG
       mmgr->free_cnt++;
 #endif
-
    }
 
 #ifdef HPDF_MEM_DEBUG
-   HPDF_PRINTF("# HPDF_MMgr alloc-cnt=%u, free-cnt=%u\n",
-      mmgr->alloc_cnt, mmgr->free_cnt);
+   HPDF_PRINTF("# HpdfMemMgr * alloc-cnt=%u, free-cnt=%u\n", mmgr->alloc_cnt, mmgr->free_cnt);
 
    if (mmgr->alloc_cnt != mmgr->free_cnt)
+   {
       HPDF_PRINTF("# ERROR #\n");
+}
 #endif
 
    HPDF_PTRACE(("-%p mmgr-free\n", mmgr));
    mmgr->free_fn(mmgr);
 }
 
-void*
-HPDF_GetMem(HPDF_MMgr  mmgr,
-   HpdfUInt  size)
+void *
+   HpdfMemCreate(
+      HpdfMemMgr * const mmgr,
+      HpdfUInt  size)
 {
    void * ptr;
 
-   if (mmgr->mpool) {
+   if (mmgr->mpool) 
+   {
       HPDF_MPool_Node node = mmgr->mpool;
 
 #ifdef HPDF_ALINMENT_SIZ
@@ -187,22 +190,22 @@ HPDF_GetMem(HPDF_MMgr  mmgr,
       size *= HPDF_ALINMENT_SIZ;
 #endif
 
-      if (node->size - node->used_size >= size) {
-         ptr = (HpdfByte *) node->buf + node->used_size;
+      if (node->size - node->used_size >= size) 
+      {
+         ptr              = (HpdfByte *) node->buf + node->used_size;
          node->used_size += size;
          return ptr;
       }
-      else {
-         HpdfUInt tmp_buf_siz = (mmgr->buf_size < size) ?  size :
-            mmgr->buf_size;
+      else 
+      {
+         HpdfUInt tmp_buf_siz = (mmgr->buf_size < size) ?  size : mmgr->buf_size;
 
-         node = (HPDF_MPool_Node) mmgr->alloc_fn(sizeof(HPDF_MPool_Node_Rec)
-            + tmp_buf_siz);
+         node = (HPDF_MPool_Node) mmgr->alloc_fn(sizeof(HPDF_MPool_Node_Rec) + tmp_buf_siz);
          HPDF_PTRACE(("+%p mmgr-new-node\n", node));
 
-         if (!node) {
-            HPDF_SetError(mmgr->error, HPDF_FAILD_TO_ALLOC_MEM,
-               HPDF_NOERROR);
+         if (!node) 
+         {
+            HPDF_SetError(mmgr->error, HPDF_FAILD_TO_ALLOC_MEM, HPDF_NOERROR);
             return NULL;
          }
 
@@ -210,35 +213,44 @@ HPDF_GetMem(HPDF_MMgr  mmgr,
       }
 
       node->next_node = mmgr->mpool;
-      mmgr->mpool = node;
+      mmgr->mpool     = node;
       node->used_size = size;
-      node->buf = (HpdfByte *) node + sizeof(HPDF_MPool_Node_Rec);
-      ptr = node->buf;
+      node->buf       = (HpdfByte *) node + sizeof(HPDF_MPool_Node_Rec);
+      ptr             = node->buf;
    }
-   else {
+   else 
+   {
       ptr = mmgr->alloc_fn(size);
       HPDF_PTRACE(("+%p mmgr-alloc_fn size=%u\n", ptr, size));
 
       if (ptr == NULL)
+      {
          HPDF_SetError(mmgr->error, HPDF_FAILD_TO_ALLOC_MEM, HPDF_NOERROR);
+      }
    }
 
 #ifdef HPDF_MEM_DEBUG
    if (ptr)
+   {
       mmgr->alloc_cnt++;
+   }
 #endif
 
    return ptr;
 }
 
 void
-HPDF_FreeMem(HPDF_MMgr  mmgr,
-   void       *aptr)
+   HpdfMemDestroy(
+      HpdfMemMgr * const mmgr,
+      void      *aptr)
 {
    if (!aptr)
+   {
       return;
+   }
 
-   if (!mmgr->mpool) {
+   if (!mmgr->mpool) 
+   {
       HPDF_PTRACE(("-%p mmgr-free-mem\n", aptr));
       mmgr->free_fn(aptr);
 
@@ -251,15 +263,15 @@ HPDF_FreeMem(HPDF_MMgr  mmgr,
 }
 
 static void * HPDF_STDCALL
-InternalGetMem(HpdfUInt  size)
+   InternalGetMem(
+      HpdfUInt size)
 {
    return HPDF_MALLOC(size);
 }
 
 static void HPDF_STDCALL
-InternalFreeMem(void*  aptr)
+   InternalFreeMem(
+      void *aptr)
 {
    HPDF_FREE(aptr);
 }
-
-

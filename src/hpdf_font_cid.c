@@ -31,13 +31,13 @@ CIDFontType2_New(HPDF_Font parent,
 
 static HPDF_TextWidth
 TextWidth(HPDF_Font         font,
-   HpdfByte  const *const text,
+   HpdfByte  const * const text,
    HpdfUInt         len);
 
 
 static HpdfUInt
 MeasureText(HPDF_Font         font,
-   HpdfByte  const *const text,
+   HpdfByte  const * const text,
    HpdfUInt         len,
    HpdfReal         width,
    HpdfReal         font_size,
@@ -75,16 +75,17 @@ CIDFontType2_BeforeWrite_Func(HPDF_Dict   obj);
 /*--------------------------------------------------------------------------*/
 
 HPDF_Font
-HPDF_Type0Font_New(HPDF_MMgr        mmgr,
-   HPDF_FontDef     fontdef,
-   HPDF_Encoder     encoder,
-   HPDF_Xref        xref)
+   HPDF_Type0Font_New(
+      HpdfMemMgr * const mmgr,
+      HPDF_FontDef     fontdef,
+      HPDF_Encoder     encoder,
+      HPDF_Xref        xref)
 {
    HPDF_Dict font;
    HPDF_FontAttr attr;
    HPDF_CMapEncoderAttr encoder_attr;
    HpdfStatus ret = 0;
-   HPDF_Array descendant_fonts;
+   HpdfArray *descendant_fonts;
 
    HPDF_PTRACE((" HPDF_Type0Font_New\n"));
 
@@ -106,8 +107,9 @@ HPDF_Type0Font_New(HPDF_MMgr        mmgr,
       return NULL;
    }
 
-   attr = HPDF_GetMem(mmgr, sizeof(HPDF_FontAttr_Rec));
-   if (!attr) {
+   attr = HpdfMemCreateType(mmgr, HPDF_FontAttr_Rec);
+   if (!attr) 
+   {
       HPDF_Dict_Free(font);
       return NULL;
    }
@@ -119,7 +121,7 @@ HPDF_Type0Font_New(HPDF_MMgr        mmgr,
 
    encoder_attr = (HPDF_CMapEncoderAttr) encoder->attr;
 
-   HPDF_MemSet(attr, 0, sizeof(HPDF_FontAttr_Rec));
+   HpdfMemClearType(attr, HPDF_FontAttr_Rec);
 
    attr->writing_mode = encoder_attr->writing_mode;
    attr->text_width_fn = TextWidth;
@@ -207,7 +209,7 @@ OnFree_Func(HPDF_Dict  obj)
    HPDF_PTRACE((" HPDF_Type0Font_OnFree\n"));
 
    if (attr)
-      HPDF_FreeMem(obj->mmgr, attr);
+      HpdfMemDestroy(obj->mmgr, attr);
 }
 
 static HPDF_Font
@@ -223,8 +225,8 @@ CIDFontType0_New(HPDF_Font parent, HPDF_Xref xref)
 
    HpdfUInt16 save_cid = 0;
    HPDF_Font font;
-   HPDF_Array array;
-   HPDF_Array sub_array = NULL;
+   HpdfArray *array;
+   HpdfArray *sub_array = NULL;
    HpdfUInt i;
 
    HPDF_Dict descriptor;
@@ -358,7 +360,7 @@ CIDFontType2_New(HPDF_Font parent, HPDF_Xref xref)
       (HPDF_CMapEncoderAttr) encoder->attr;
 
    HPDF_Font font;
-   HPDF_Array array;
+   HpdfArray *array;
    HpdfUInt i;
    HpdfUnicode tmp_map[65536];
    HPDF_Dict cid_system_info;
@@ -394,7 +396,7 @@ CIDFontType2_New(HPDF_Font parent, HPDF_Xref xref)
    ret += HPDF_Array_AddNumber(array, (HpdfInt32) (fontdef->font_bbox.bottom -
       fontdef->font_bbox.top));
 
-   HPDF_MemSet(tmp_map, 0, sizeof(HpdfUnicode) * 65536);
+   HpdfMemClearTypeArray(tmp_map, HpdfUnicode, 65536);
 
    if (ret != HPDF_OK)
       return NULL;
@@ -428,7 +430,7 @@ CIDFontType2_New(HPDF_Font parent, HPDF_Xref xref)
    if (max > 0) {
       HpdfInt16 dw = fontdef->missing_width;
       HpdfUnicode *ptmp_map = tmp_map;
-      HPDF_Array tmp_array = NULL;
+      HpdfArray *tmp_array = NULL;
 
       /* add 'W' element */
       array = HPDF_Array_New(font->mmgr);
@@ -530,7 +532,7 @@ CIDFontType2_BeforeWrite_Func(HPDF_Dict obj)
 
    if (!font_attr->fontdef->descriptor) {
       HPDF_Dict descriptor = HPDF_Dict_New(obj->mmgr);
-      HPDF_Array array;
+      HpdfArray *array;
 
       if (!descriptor)
          return HPDF_Error_GetCode(obj->error);
@@ -595,12 +597,12 @@ CIDFontType2_BeforeWrite_Func(HPDF_Dict obj)
 
 static HPDF_TextWidth
 TextWidth(HPDF_Font         font,
-   HpdfByte  const *const text,
+   HpdfByte  const * const text,
    HpdfUInt         len)
 {
    HPDF_TextWidth tw = { 0, 0, 0, 0 };
    HPDF_FontAttr attr = (HPDF_FontAttr) font->attr;
-   HPDF_ParseText_Rec  parse_state;
+   HpdfParseText parse_state;
    HPDF_Encoder encoder = attr->encoder;
    HpdfUInt i = 0;
    HpdfInt dw2;
@@ -677,7 +679,7 @@ TextWidth(HPDF_Font         font,
 
 static HpdfUInt
 MeasureText(HPDF_Font          font,
-   HpdfByte   const *const text,
+   HpdfByte   const * const text,
    HpdfUInt          len,
    HpdfReal          width,
    HpdfReal          font_size,
@@ -692,7 +694,7 @@ MeasureText(HPDF_Font          font,
    HPDF_FontAttr attr = (HPDF_FontAttr) font->attr;
    HPDF_ByteType last_btype = HPDF_BYTE_TYPE_TRAIL;
    HPDF_Encoder encoder = attr->encoder;
-   HPDF_ParseText_Rec  parse_state;
+   HpdfParseText parse_state;
    HpdfInt dw2;
    HpdfByte const *textTemp = text;
 

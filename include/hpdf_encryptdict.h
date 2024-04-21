@@ -27,39 +27,13 @@ extern "C" {
 /*---------------------------------------------------------------------------*/
 /*------ HPDF_EncryptDict ---------------------------------------------------*/
 
-HPDF_EncryptDict
-HPDF_EncryptDict_New  (HPDF_MMgr  mmgr,
-                       HPDF_Xref  xref);
-
-
-void
-HPDF_EncryptDict_CreateID  (HPDF_EncryptDict  dict,
-                            HPDF_Dict         info,
-                            HPDF_Xref         xref);
-
-
-void
-HPDF_EncryptDict_OnFree  (HPDF_Dict  obj);
-
-
-HpdfStatus
-HPDF_EncryptDict_SetPassword  (HPDF_EncryptDict  dict,
-                               char const  *owner_passwd,
-                               char const  *user_passwd);
-
-
-HpdfBool
-HPDF_EncryptDict_Validate  (HPDF_EncryptDict  dict);
-
-
-HpdfStatus
-HPDF_EncryptDict_Prepare  (HPDF_EncryptDict  dict,
-                           HPDF_Dict         info,
-                           HPDF_Xref         xref);
-
-
-HPDF_Encrypt
-HPDF_EncryptDict_GetAttr (HPDF_EncryptDict  dict);
+HPDF_EncryptDict HPDF_EncryptDict_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref);
+void HPDF_EncryptDict_CreateID  (HPDF_EncryptDict  dict, HPDF_Dict         info, HPDF_Xref         xref);
+void HPDF_EncryptDict_OnFree  (HPDF_Dict  obj);
+HpdfStatus HPDF_EncryptDict_SetPassword  (HPDF_EncryptDict  dict, char const  *owner_passwd, char const  *user_passwd);
+HpdfBool HPDF_EncryptDict_Validate  (HPDF_EncryptDict  dict);
+HpdfStatus HPDF_EncryptDict_Prepare  (HPDF_EncryptDict  dict, HPDF_Dict         info, HPDF_Xref         xref);
+HPDF_Encrypt HPDF_EncryptDict_GetAttr (HPDF_EncryptDict  dict);
 
 #ifdef __cplusplus
 }

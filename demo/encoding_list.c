@@ -207,7 +207,7 @@ int main (int argc, char **argv)
     while (encodings[i]) {
         HPDF_Page page = HPDF_AddPage (pdf);
         HPDF_Outline outline;
-        HPDF_Destination dst;
+        HpdfDestination *dst;
         HPDF_Font font2;
 
         HPDF_Page_SetWidth (page, PAGE_WIDTH);

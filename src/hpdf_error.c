@@ -40,7 +40,7 @@ void
       HpdfError       * const error, 
       void *user_data)
 {
-   HPDF_MemSet(error, 0, sizeof(HPDF_Error_Rec));
+   HpdfMemClearType(error, HpdfError);
 
    error->user_data = user_data;
 }

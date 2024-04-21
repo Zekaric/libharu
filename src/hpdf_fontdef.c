@@ -43,7 +43,7 @@ HPDF_FontDef_Free (HPDF_FontDef  fontdef)
 
     if (fontdef->free_fn)
         fontdef->free_fn (fontdef);
-    HPDF_FreeMem (fontdef->mmgr, fontdef);
+    HpdfMemDestroy (fontdef->mmgr, fontdef);
 }
 
 HpdfBool

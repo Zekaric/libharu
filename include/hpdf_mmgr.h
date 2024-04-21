@@ -27,40 +27,43 @@ extern "C" {
 
 typedef struct  _HPDF_MPool_Node_Rec  *HPDF_MPool_Node;
 
-typedef struct  _HPDF_MPool_Node_Rec 
+typedef struct  _HPDF_MPool_Node_Rec
 {
-    HpdfByte         *buf;
-    HpdfUInt          size;
-    HpdfUInt          used_size;
-    HPDF_MPool_Node   next_node;
+   HpdfByte         *buf;
+   HpdfUInt          size;
+   HpdfUInt          used_size;
+   HPDF_MPool_Node   next_node;
 } HPDF_MPool_Node_Rec;
 
 
-typedef struct  _HPDF_MMgr_Rec  *HPDF_MMgr;
+typedef struct _HpdfMemMgr HpdfMemMgr;
 
-typedef struct  _HPDF_MMgr_Rec {
-    HpdfError        *error;
-    HPDF_Alloc_Func   alloc_fn;
-    HPDF_Free_Func    free_fn;
-    HPDF_MPool_Node   mpool;
-    HpdfUInt         buf_size;
+struct _HpdfMemMgr 
+{
+   HpdfError         *error;
+   HPDF_Alloc_Func    alloc_fn;
+   HPDF_Free_Func     free_fn;
+   HPDF_MPool_Node    mpool;
+   HpdfUInt           buf_size;
 
 #ifdef HPDF_MEM_DEBUG
-    HpdfUInt         alloc_cnt;
-    HpdfUInt         free_cnt;
+   HpdfUInt           alloc_cnt;
+   HpdfUInt           free_cnt;
 #endif
-} HPDF_MMgr_Rec;
-
+};
 
 /*  HPDF_mpool_new
 **
 **  create new HPDF_mpool object. when memory allocation goes wrong,
 **  it returns NULL and error handling function will be called.
 **  if buf_size is non-zero, mmgr is configured to be using memory-pool */
-HPDF_MMgr HPDF_MMgr_New(   HpdfError       * const error, HpdfUInt buf_size, HPDF_Alloc_Func  alloc_fn, HPDF_Free_Func free_fn);
-void      HPDF_MMgr_Free(  HPDF_MMgr  mmgr);
-void     *HPDF_GetMem(     HPDF_MMgr  mmgr, HpdfUInt size);
-void      HPDF_FreeMem(    HPDF_MMgr  mmgr, void *aptr);
+HpdfMemMgr  *HpdfMemMgrCreate(   HpdfError * const error, HpdfUInt buf_size, HPDF_Alloc_Func  alloc_fn, HPDF_Free_Func free_fn);
+void         HpdfMemMgrDestroy(  HpdfMemMgr * const mmgr);
+void        *HpdfMemCreate(      HpdfMemMgr * const mmgr, HpdfUInt size);
+void         HpdfMemDestroy(     HpdfMemMgr * const mmgr, void *aptr);
+
+#define HpdfMemCreateType(     MEMMGR, TYPE)          (TYPE *) HpdfMemCreate(MEMMGR, sizeof(TYPE))
+#define HpdfMemCreateTypeArray(MEMMGR, TYPE, COUNT)   (TYPE *) HpdfMemCreate(MEMMGR, sizeof(TYPE) * (COUNT))
 
 #ifdef __cplusplus
 }

@@ -28,7 +28,7 @@ Resize(HPDF_List  list,
 /*
  *  HPDF_List_new
  *
- *  mmgr :  handle to a HPDF_MMgr object.
+ *  mmgr :  handle to a HpdfMemMgr * object.
  *  items_per_block :  number of increases of pointers.
  *
  *  return:  If HPDF_List_New success, it returns a handle to new HPDF_List
@@ -37,8 +37,9 @@ Resize(HPDF_List  list,
  */
 
 HPDF_List
-HPDF_List_New(HPDF_MMgr  mmgr,
-   HpdfUInt  items_per_block)
+   HPDF_List_New(
+      HpdfMemMgr * const mmgr,
+      HpdfUInt  items_per_block)
 {
    HPDF_List list;
 
@@ -47,8 +48,9 @@ HPDF_List_New(HPDF_MMgr  mmgr,
    if (mmgr == NULL)
       return NULL;
 
-   list = (HPDF_List) HPDF_GetMem(mmgr, sizeof(HPDF_List_Rec));
-   if (list) {
+   list = HpdfMemCreateType(mmgr, HPDF_List_Rec);
+   if (list) 
+   {
       list->mmgr = mmgr;
       list->error = mmgr->error;
       list->block_siz = 0;
@@ -242,7 +244,7 @@ HPDF_List_Free(HPDF_List  list)
       return;
 
    HPDF_List_Clear(list);
-   HPDF_FreeMem(list->mmgr, list);
+   HpdfMemDestroy(list->mmgr, list);
 }
 
 /*
@@ -258,7 +260,7 @@ HPDF_List_Clear(HPDF_List  list)
    HPDF_PTRACE((" HPDF_List_Clear\n"));
 
    if (list->obj)
-      HPDF_FreeMem(list->mmgr, list->obj);
+      HpdfMemDestroy(list->mmgr, list->obj);
 
    list->block_siz = 0;
    list->count = 0;
@@ -272,7 +274,7 @@ HPDF_List_Clear(HPDF_List  list)
  *  count : The size of array of pointers.
  *
  *  return:  If Resize success, it returns HPDF_OK.
- *           otherwise it returns error-code which is set by HPDF_MMgr object.
+ *           otherwise it returns error-code which is set by HpdfMemMgr * object.
  *
  */
 
@@ -291,10 +293,11 @@ Resize(HPDF_List   list,
          return HPDF_INVALID_PARAMETER;
    }
 
-   new_obj = (void **) HPDF_GetMem(list->mmgr, count * sizeof(void *));
-
+   new_obj = HpdfMemCreateTypeArray(list->mmgr, void *, count);
    if (!new_obj)
+   {
       return HPDF_Error_GetCode(list->error);
+   }
 
    if (list->obj)
       HPDF_MemCpy((HpdfByte *) new_obj, (HpdfByte *) list->obj,
@@ -302,7 +305,7 @@ Resize(HPDF_List   list,
 
    list->block_siz = count;
    if (list->obj)
-      HPDF_FreeMem(list->mmgr, list->obj);
+      HpdfMemDestroy(list->mmgr, list->obj);
    list->obj = new_obj;
 
    return HPDF_OK;

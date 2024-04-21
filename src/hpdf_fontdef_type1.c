@@ -51,14 +51,15 @@ FreeWidth(HPDF_FontDef  fontdef)
 
    HPDF_PTRACE((" FreeWidth\n"));
 
-   HPDF_FreeMem(fontdef->mmgr, attr->widths);
+   HpdfMemDestroy(fontdef->mmgr, attr->widths);
    attr->widths = NULL;
 
    fontdef->valid = HPDF_FALSE;
 }
 
 HPDF_FontDef
-HPDF_Type1FontDef_New(HPDF_MMgr  mmgr)
+   HPDF_Type1FontDef_New(
+      HpdfMemMgr * const mmgr)
 {
    HPDF_FontDef fontdef;
    HPDF_Type1FontDefAttr fontdef_attr;
@@ -68,25 +69,28 @@ HPDF_Type1FontDef_New(HPDF_MMgr  mmgr)
    if (!mmgr)
       return NULL;
 
-   fontdef = HPDF_GetMem(mmgr, sizeof(HPDF_FontDef_Rec));
+   fontdef = HpdfMemCreateType(mmgr, HPDF_FontDef_Rec);
    if (!fontdef)
+   {
       return NULL;
+   }
 
-   HPDF_MemSet(fontdef, 0, sizeof(HPDF_FontDef_Rec));
+   HpdfMemClearType(fontdef, HPDF_FontDef_Rec);
    fontdef->sig_bytes = HPDF_FONTDEF_SIG_BYTES;
    fontdef->mmgr = mmgr;
    fontdef->error = mmgr->error;
    fontdef->type = HPDF_FONTDEF_TYPE_TYPE1;
    fontdef->free_fn = FreeFunc;
 
-   fontdef_attr = HPDF_GetMem(mmgr, sizeof(HPDF_Type1FontDefAttr_Rec));
-   if (!fontdef_attr) {
-      HPDF_FreeMem(fontdef->mmgr, fontdef);
+   fontdef_attr = HpdfMemCreateType(mmgr, HPDF_Type1FontDefAttr_Rec);
+   if (!fontdef_attr) 
+   {
+      HpdfMemDestroy(fontdef->mmgr, fontdef);
       return NULL;
    }
 
    fontdef->attr = fontdef_attr;
-   HPDF_MemSet((HpdfByte *) fontdef_attr, 0, sizeof(HPDF_Type1FontDefAttr_Rec));
+   HpdfMemClearType(fontdef_attr, HPDF_Type1FontDefAttr_Rec);
    fontdef->flags = HPDF_FONT_STD_CHARSET;
 
    return fontdef;
@@ -202,9 +206,11 @@ LoadAfm(HPDF_FontDef  fontdef,
 
                      if (len1 > 0) 
                      {
-                        attr->char_set = HPDF_GetMem(fontdef->mmgr, len1 + 1);
+                        attr->char_set = HpdfMemCreateTypeArray(fontdef->mmgr, char, len1 + 1);
                         if (!attr->char_set)
+                        {
                            return HPDF_Error_GetCode(fontdef->error);
+                        }
 
                         HPDF_StrCpy(attr->char_set, s, attr->char_set + len1);
                      }
@@ -285,12 +291,13 @@ LoadAfm(HPDF_FontDef  fontdef,
       }
    }
 
-   cdata = (HPDF_CharData*) HPDF_GetMem(fontdef->mmgr,
-      sizeof(HPDF_CharData) * attr->widths_count);
+   cdata = HpdfMemCreateTypeArray(fontdef->mmgr, HPDF_CharData, attr->widths_count);
    if (cdata == NULL)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
-   HPDF_MemSet(cdata, 0, sizeof(HPDF_CharData) * attr->widths_count);
+   HpdfMemClearTypeArray(cdata, HPDF_CharData, attr->widths_count);
    attr->widths = cdata;
 
    /* load CharMetrics */
@@ -436,9 +443,10 @@ LoadFontData(HPDF_FontDef  fontdef,
 
 
 HPDF_FontDef
-HPDF_Type1FontDef_Load(HPDF_MMgr         mmgr,
-   HPDF_Stream       afm,
-   HPDF_Stream       font_data)
+   HPDF_Type1FontDef_Load(
+      HpdfMemMgr * const mmgr,
+      HPDF_Stream       afm,
+      HPDF_Stream       font_data)
 {
    HPDF_FontDef fontdef;
    HpdfStatus ret;
@@ -472,8 +480,9 @@ HPDF_Type1FontDef_Load(HPDF_MMgr         mmgr,
 }
 
 HPDF_FontDef
-HPDF_Type1FontDef_Duplicate(HPDF_MMgr     mmgr,
-   HPDF_FontDef  src)
+   HPDF_Type1FontDef_Duplicate(
+      HpdfMemMgr * const mmgr,
+      HPDF_FontDef  src)
 {
    HPDF_FontDef fontdef = HPDF_Type1FontDef_New(mmgr);
 
@@ -507,12 +516,13 @@ HPDF_Type1FontDef_SetWidths(HPDF_FontDef          fontdef,
 
    attr->widths_count = i;
 
-   dst = (HPDF_CharData*) HPDF_GetMem(fontdef->mmgr, sizeof(HPDF_CharData) *
-      attr->widths_count);
+   dst = HpdfMemCreateTypeArray(fontdef->mmgr, HPDF_CharData, attr->widths_count);
    if (dst == NULL)
+   {
       return HPDF_Error_GetCode(fontdef->error);
+   }
 
-   HPDF_MemSet(dst, 0, sizeof(HPDF_CharData) * attr->widths_count);
+   HpdfMemClearTypeArray(dst, HPDF_CharData, attr->widths_count);
    attr->widths = dst;
 
    src = widths;
@@ -571,12 +581,12 @@ FreeFunc(HPDF_FontDef  fontdef)
    HPDF_PTRACE((" FreeFunc\n"));
 
    if (attr->char_set)
-      HPDF_FreeMem(fontdef->mmgr, attr->char_set);
+      HpdfMemDestroy(fontdef->mmgr, attr->char_set);
 
    if (attr->font_data)
       HPDF_Stream_Free(attr->font_data);
 
-   HPDF_FreeMem(fontdef->mmgr, attr->widths);
-   HPDF_FreeMem(fontdef->mmgr, attr);
+   HpdfMemDestroy(fontdef->mmgr, attr->widths);
+   HpdfMemDestroy(fontdef->mmgr, attr);
 }
 

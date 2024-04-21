@@ -35,19 +35,19 @@
 #include <zconf.h>
 #endif /* LIBHPDF_HAVE_ZLIB */
 
-HpdfStatus  HPDF_MemStream_WriteFunc(              HPDF_Stream stream, HpdfByte  const *const ptr, HpdfUInt        siz);
+HpdfStatus  HPDF_MemStream_WriteFunc(              HPDF_Stream stream, HpdfByte  const * const ptr, HpdfUInt        siz);
 HpdfStatus  HPDF_MemStream_SeekFunc(               HPDF_Stream stream, HpdfInt         pos, HPDF_WhenceMode  mode);
-HpdfStatus  HPDF_MemStream_ReadFunc(               HPDF_Stream stream, HpdfByte    *const buf, HpdfUInt    *size); 
+HpdfStatus  HPDF_MemStream_ReadFunc(               HPDF_Stream stream, HpdfByte    * const buf, HpdfUInt    *size); 
 HpdfInt32   HPDF_MemStream_TellFunc(               HPDF_Stream stream); 
 HpdfUInt32  HPDF_MemStream_SizeFunc(               HPDF_Stream stream);
 void        HPDF_MemStream_FreeFunc(               HPDF_Stream stream); 
 HpdfStatus  HPDF_MemStream_InWrite(                HPDF_Stream stream, HpdfByte const **ptr, HpdfUInt        *count);
 HpdfStatus  HPDF_Stream_WriteToStreamWithDeflate(  HPDF_Stream src, HPDF_Stream  dst, HPDF_Encrypt  e);
-HpdfStatus  HPDF_FileReader_ReadFunc(              HPDF_Stream stream, HpdfByte    *const ptr, HpdfUInt    *siz);
+HpdfStatus  HPDF_FileReader_ReadFunc(              HPDF_Stream stream, HpdfByte    * const ptr, HpdfUInt    *siz);
 HpdfStatus  HPDF_FileReader_SeekFunc(              HPDF_Stream stream, HpdfInt         pos, HPDF_WhenceMode  mode);
 HpdfInt32   HPDF_FileStream_TellFunc(              HPDF_Stream stream); 
 HpdfUInt32  HPDF_FileStream_SizeFunc(              HPDF_Stream stream);  
-HpdfStatus  HPDF_FileWriter_WriteFunc(             HPDF_Stream stream, HpdfByte  const *const ptr, HpdfUInt        siz);
+HpdfStatus  HPDF_FileWriter_WriteFunc(             HPDF_Stream stream, HpdfByte  const * const ptr, HpdfUInt        siz);
 void        HPDF_FileStream_FreeFunc(              HPDF_Stream stream);
 
 /*
@@ -177,7 +177,7 @@ HPDF_Stream_ReadLn(HPDF_Stream  stream,
  */
 HpdfStatus
 HPDF_Stream_Write(HPDF_Stream      stream,
-   HpdfByte  const *const ptr,
+   HpdfByte  const * const ptr,
    HpdfUInt        size)
 {
    HpdfStatus ret;
@@ -267,7 +267,7 @@ HPDF_Stream_Free(HPDF_Stream  stream)
 
    stream->sig_bytes = 0;
 
-   HPDF_FreeMem(stream->mmgr, stream);
+   HpdfMemDestroy(stream->mmgr, stream);
 }
 
 HpdfStatus
@@ -436,7 +436,7 @@ HPDF_Stream_WriteEscapeText(HPDF_Stream    stream,
 
 HpdfStatus
 HPDF_Stream_WriteBinary(HPDF_Stream      stream,
-   HpdfByte  const *const data,
+   HpdfByte  const * const data,
    HpdfUInt        len,
    HPDF_Encrypt     e)
 {
@@ -451,11 +451,15 @@ HPDF_Stream_WriteBinary(HPDF_Stream      stream,
 
    HPDF_PTRACE((" HPDF_Stream_WriteBinary\n"));
 
-   if (e) {
+   if (e) 
+   {
       if (len <= HPDF_TEXT_DEFAULT_LEN)
+      {
          pbuf = ebuf;
-      else {
-         pbuf = (HpdfByte *) HPDF_GetMem(stream->mmgr, len);
+      }
+      else 
+      {
+         pbuf = HpdfMemCreateTypeArray(stream->mmgr, HpdfByte, len);
          flg = HPDF_TRUE;
       }
 
@@ -486,7 +490,7 @@ HPDF_Stream_WriteBinary(HPDF_Stream      stream,
          ret = HPDF_Stream_Write(stream, (HpdfByte *) buf, idx);
          if (ret != HPDF_OK) {
             if (flg)
-               HPDF_FreeMem(stream->mmgr, pbuf);
+               HpdfMemDestroy(stream->mmgr, pbuf);
             return ret;
          }
          idx = 0;
@@ -498,7 +502,7 @@ HPDF_Stream_WriteBinary(HPDF_Stream      stream,
    }
 
    if (flg)
-      HPDF_FreeMem(stream->mmgr, pbuf);
+      HpdfMemDestroy(stream->mmgr, pbuf);
 
    return ret;
 }
@@ -529,7 +533,7 @@ HPDF_Stream_WriteToStreamWithDeflate(HPDF_Stream  src,
       return ret;
 
    /* initialize decompression stream. */
-   HPDF_MemSet(&strm, 0x00, sizeof(z_stream));
+   HpdfMemClearType(&strm, z_stream);
    strm.next_out = otbuf;
    strm.avail_out = DEFLATE_BUF_SIZ;
 
@@ -706,8 +710,9 @@ HPDF_Stream_WriteToStream(HPDF_Stream  src,
 }
 
 HPDF_Stream
-HPDF_FileReader_New(HPDF_MMgr   mmgr,
-   char const *fname)
+   HPDF_FileReader_New(
+      HpdfMemMgr * const mmgr,
+      char const *fname)
 {
    HPDF_Stream stream;
    HPDF_FILEP fp = HPDF_FOPEN(fname, "rb");
@@ -723,10 +728,10 @@ HPDF_FileReader_New(HPDF_MMgr   mmgr,
       return NULL;
    }
 
-   stream = (HPDF_Stream) HPDF_GetMem(mmgr, sizeof(HPDF_Stream_Rec));
-
-   if (stream) {
-      HPDF_MemSet(stream, 0, sizeof(HPDF_Stream_Rec));
+   stream = HpdfMemCreateType(mmgr, HPDF_Stream_Rec);
+   if (stream) 
+   {
+      HpdfMemClearType(stream, HPDF_Stream_Rec);
       stream->sig_bytes = HPDF_STREAM_SIG_BYTES;
       stream->type = HPDF_STREAM_FILE;
       stream->error = mmgr->error;
@@ -744,8 +749,9 @@ HPDF_FileReader_New(HPDF_MMgr   mmgr,
 
 #if defined(WIN32)
 HPDF_Stream
-HPDF_FileReader_NewW(HPDF_MMgr       mmgr,
-   const wchar_t  *fname)
+   HPDF_FileReader_NewW(
+      HpdfMemMgr * const mmgr,
+      const wchar_t  *fname)
 {
    HPDF_Stream stream;
    HPDF_FILEP fp = HPDF_FOPEN_W(fname, L"rb");
@@ -761,10 +767,10 @@ HPDF_FileReader_NewW(HPDF_MMgr       mmgr,
       return NULL;
    }
 
-   stream = (HPDF_Stream) HPDF_GetMem(mmgr, sizeof(HPDF_Stream_Rec));
-
-   if (stream) {
-      HPDF_MemSet(stream, 0, sizeof(HPDF_Stream_Rec));
+   stream = HpdfMemCreateType(mmgr, HPDF_Stream_Rec);
+   if (stream) 
+   {
+      HpdfMemClearType(stream, HPDF_Stream_Rec);
       stream->sig_bytes = HPDF_STREAM_SIG_BYTES;
       stream->type = HPDF_STREAM_FILE;
       stream->error = mmgr->error;
@@ -790,7 +796,7 @@ HPDF_FileReader_NewW(HPDF_MMgr       mmgr,
 
 HpdfStatus
 HPDF_FileReader_ReadFunc(HPDF_Stream  stream,
-   HpdfByte    *const ptr,
+   HpdfByte    * const ptr,
    HpdfUInt    *siz)
 {
    HPDF_FILEP fp = (HPDF_FILEP) stream->attr;
@@ -798,7 +804,7 @@ HPDF_FileReader_ReadFunc(HPDF_Stream  stream,
 
    HPDF_PTRACE((" HPDF_FileReader_ReadFunc\n"));
 
-   HPDF_MemSet(ptr, 0, *siz);
+   HpdfMemClear(ptr, *siz);
    rsiz = (HpdfUInt) HPDF_FREAD(ptr, 1, *siz, fp);
 
    if (rsiz != *siz) {
@@ -921,8 +927,9 @@ HPDF_FileStream_SizeFunc(HPDF_Stream   stream)
 
 
 HPDF_Stream
-HPDF_FileWriter_New(HPDF_MMgr        mmgr,
-   char const *fname)
+   HPDF_FileWriter_New(
+      HpdfMemMgr * const mmgr,
+      char const *fname)
 {
    HPDF_Stream stream;
    HPDF_FILEP fp = HPDF_FOPEN(fname, "wb");
@@ -938,10 +945,10 @@ HPDF_FileWriter_New(HPDF_MMgr        mmgr,
       return NULL;
    }
 
-   stream = (HPDF_Stream) HPDF_GetMem(mmgr, sizeof(HPDF_Stream_Rec));
-
-   if (stream) {
-      HPDF_MemSet(stream, 0, sizeof(HPDF_Stream_Rec));
+   stream = HpdfMemCreateType(mmgr, HPDF_Stream_Rec);
+   if (stream) 
+   {
+      HpdfMemClearType(stream, HPDF_Stream_Rec);
       stream->sig_bytes = HPDF_STREAM_SIG_BYTES;
       stream->error = mmgr->error;
       stream->mmgr = mmgr;
@@ -957,8 +964,9 @@ HPDF_FileWriter_New(HPDF_MMgr        mmgr,
 
 #if defined(WIN32)
 HPDF_Stream
-HPDF_FileWriter_NewW(HPDF_MMgr        mmgr,
-   const wchar_t  *fname)
+   HPDF_FileWriter_NewW(
+      HpdfMemMgr * const mmgr,
+      const wchar_t  *fname)
 {
    HPDF_Stream stream;
    HPDF_FILEP fp = HPDF_FOPEN_W(fname, L"wb");
@@ -974,10 +982,10 @@ HPDF_FileWriter_NewW(HPDF_MMgr        mmgr,
       return NULL;
    }
 
-   stream = (HPDF_Stream) HPDF_GetMem(mmgr, sizeof(HPDF_Stream_Rec));
-
-   if (stream) {
-      HPDF_MemSet(stream, 0, sizeof(HPDF_Stream_Rec));
+   stream = HpdfMemCreateType(mmgr, HPDF_Stream_Rec);
+   if (stream) 
+   {
+      HpdfMemClearType(stream, HPDF_Stream_Rec);
       stream->sig_bytes = HPDF_STREAM_SIG_BYTES;
       stream->error = mmgr->error;
       stream->mmgr = mmgr;
@@ -994,7 +1002,7 @@ HPDF_FileWriter_NewW(HPDF_MMgr        mmgr,
 
 HpdfStatus
 HPDF_FileWriter_WriteFunc(HPDF_Stream      stream,
-   HpdfByte  const *const ptr,
+   HpdfByte  const * const ptr,
    HpdfUInt        siz)
 {
    HPDF_FILEP fp;
@@ -1054,13 +1062,14 @@ HpdfStatus
          *ptr   += rsize;
          *count -= rsize;
       }
-      attr->w_ptr = (HpdfByte *) HPDF_GetMem(stream->mmgr, attr->buf_siz);
-
+      attr->w_ptr = HpdfMemCreateTypeArray(stream->mmgr, HpdfByte, attr->buf_siz);
       if (attr->w_ptr == NULL)
+      {
          return HPDF_Error_GetCode(stream->error);
+      }
 
       if (HPDF_List_Add(attr->buf, attr->w_ptr) != HPDF_OK) {
-         HPDF_FreeMem(stream->mmgr, attr->w_ptr);
+         HpdfMemDestroy(stream->mmgr, attr->w_ptr);
          attr->w_ptr = NULL;
 
          return HPDF_Error_GetCode(stream->error);
@@ -1199,7 +1208,7 @@ HPDF_MemStream_FreeData(HPDF_Stream  stream)
    attr = (HPDF_MemStreamAttr) stream->attr;
 
    for (i = 0; i < attr->buf->count; i++)
-      HPDF_FreeMem(stream->mmgr, HPDF_List_ItemAt(attr->buf, i));
+      HpdfMemDestroy(stream->mmgr, HPDF_List_ItemAt(attr->buf, i));
 
    HPDF_List_Clear(attr->buf);
 
@@ -1220,38 +1229,38 @@ HPDF_MemStream_FreeFunc(HPDF_Stream  stream)
    attr = (HPDF_MemStreamAttr) stream->attr;
    HPDF_MemStream_FreeData(stream);
    HPDF_List_Free(attr->buf);
-   HPDF_FreeMem(stream->mmgr, attr);
+   HpdfMemDestroy(stream->mmgr, attr);
    stream->attr = NULL;
 }
 
 HPDF_Stream
-HPDF_MemStream_New(HPDF_MMgr  mmgr,
-   HpdfUInt  buf_siz)
+   HPDF_MemStream_New(
+      HpdfMemMgr * const mmgr,
+      HpdfUInt  buf_siz)
 {
    HPDF_Stream stream;
 
    HPDF_PTRACE((" HPDF_MemStream_New\n"));
 
    /* Create new HPDF_Stream object. */
-   stream = (HPDF_Stream) HPDF_GetMem(mmgr, sizeof(HPDF_Stream_Rec));
-
-   if (stream) {
+   stream = HpdfMemCreateType(mmgr, HPDF_Stream_Rec);
+   if (stream) 
+   {
       /* Create attribute struct. */
-      HPDF_MemStreamAttr attr = (HPDF_MemStreamAttr) HPDF_GetMem(mmgr,
-         sizeof(HPDF_MemStreamAttr_Rec));
-
-      if (!attr) {
-         HPDF_FreeMem(mmgr, stream);
+      HPDF_MemStreamAttr attr = HpdfMemCreateType(mmgr, HPDF_MemStreamAttr_Rec);
+      if (!attr) 
+      {
+         HpdfMemDestroy(mmgr, stream);
          return NULL;
       }
 
-      HPDF_MemSet(stream, 0, sizeof(HPDF_Stream_Rec));
-      HPDF_MemSet(attr, 0, sizeof(HPDF_MemStreamAttr_Rec));
+      HpdfMemClearType(stream, HPDF_Stream_Rec);
+      HpdfMemClearType(attr,   HPDF_MemStreamAttr_Rec);
 
       attr->buf = HPDF_List_New(mmgr, HPDF_DEF_ITEMS_PER_BLOCK);
       if (!attr->buf) {
-         HPDF_FreeMem(mmgr, stream);
-         HPDF_FreeMem(mmgr, attr);
+         HpdfMemDestroy(mmgr, stream);
+         HpdfMemDestroy(mmgr, attr);
          return NULL;
       }
 
@@ -1304,7 +1313,7 @@ HPDF_MemStream_GetBufCount(HPDF_Stream  stream)
 
 HpdfStatus
 HPDF_MemStream_ReadFunc(HPDF_Stream  stream,
-   HpdfByte    *const buf,
+   HpdfByte    * const buf,
    HpdfUInt    *size)
 {
    HPDF_MemStreamAttr attr = (HPDF_MemStreamAttr) stream->attr;
@@ -1365,7 +1374,7 @@ HPDF_MemStream_ReadFunc(HPDF_Stream  stream,
 
 HpdfStatus
 HPDF_MemStream_Rewrite(HPDF_Stream  stream,
-   HpdfByte    *const buf,
+   HpdfByte    * const buf,
    HpdfUInt    size)
 {
    HPDF_MemStreamAttr attr = (HPDF_MemStreamAttr) stream->attr;
@@ -1417,7 +1426,7 @@ HPDF_MemStream_Rewrite(HPDF_Stream  stream,
  *
  *  Constructor for HPDF_CallbackReader.
  *
- *  mmgr : Pointer to a HPDF_MMgr object.
+ *  mmgr : Pointer to a HpdfMemMgr * object.
  *  read_fn : Pointer to a user function for reading data.
  *  seek_fn : Pointer to a user function for seeking data.
  *  data : Pointer to a data which defined by user.
@@ -1429,21 +1438,22 @@ HPDF_MemStream_Rewrite(HPDF_Stream  stream,
 
 
 HPDF_Stream
-HPDF_CallbackReader_New(HPDF_MMgr              mmgr,
-   HPDF_Stream_Read_Func  read_fn,
-   HPDF_Stream_Seek_Func  seek_fn,
-   HPDF_Stream_Tell_Func  tell_fn,
-   HPDF_Stream_Size_Func  size_fn,
-   void*                  data)
+   HPDF_CallbackReader_New(
+      HpdfMemMgr * const mmgr,
+      HPDF_Stream_Read_Func  read_fn,
+      HPDF_Stream_Seek_Func  seek_fn,
+      HPDF_Stream_Tell_Func  tell_fn,
+      HPDF_Stream_Size_Func  size_fn,
+      void*                  data)
 {
    HPDF_Stream stream;
 
    HPDF_PTRACE((" HPDF_CallbackReader_New\n"));
 
-   stream = (HPDF_Stream) HPDF_GetMem(mmgr, sizeof(HPDF_Stream_Rec));
-
-   if (stream) {
-      HPDF_MemSet(stream, 0, sizeof(HPDF_Stream_Rec));
+   stream = HpdfMemCreateType(mmgr, HPDF_Stream_Rec);
+   if (stream) 
+   {
+      HpdfMemClearType(stream, HPDF_Stream_Rec);
       stream->sig_bytes = HPDF_STREAM_SIG_BYTES;
       stream->error = mmgr->error;
       stream->mmgr = mmgr;
@@ -1463,7 +1473,7 @@ HPDF_CallbackReader_New(HPDF_MMgr              mmgr,
  *
  *  Constructor for HPDF_CallbackWriter.
  *
- *  mmgr : Pointer to a HPDF_MMgr object.
+ *  mmgr : Pointer to a HpdfMemMgr * object.
  *  read_fn : Pointer to a user function for writing data.
  *  data : Pointer to a data which defined by user.
  *
@@ -1474,18 +1484,19 @@ HPDF_CallbackReader_New(HPDF_MMgr              mmgr,
 
 
 HPDF_Stream
-HPDF_CallbackWriter_New(HPDF_MMgr               mmgr,
-   HPDF_Stream_Write_Func  write_fn,
-   void*                   data)
+   HPDF_CallbackWriter_New(
+      HpdfMemMgr * const mmgr,
+      HPDF_Stream_Write_Func  write_fn,
+      void  *data)
 {
    HPDF_Stream stream;
 
    HPDF_PTRACE((" HPDF_CallbackWriter_New\n"));
 
-   stream = (HPDF_Stream) HPDF_GetMem(mmgr, sizeof(HPDF_Stream_Rec));
-
-   if (stream) {
-      HPDF_MemSet(stream, 0, sizeof(HPDF_Stream_Rec));
+   stream = HpdfMemCreateType(mmgr, HPDF_Stream_Rec);
+   if (stream) 
+   {
+      HpdfMemClearType(stream, HPDF_Stream_Rec);
       stream->sig_bytes = HPDF_STREAM_SIG_BYTES;
       stream->error = mmgr->error;
       stream->mmgr = mmgr;

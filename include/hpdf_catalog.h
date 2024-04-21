@@ -26,64 +26,19 @@ extern "C" {
 
 typedef HPDF_Dict HPDF_Catalog;
 
-HPDF_Catalog
-HPDF_Catalog_New  (HPDF_MMgr  mmgr,
-                   HPDF_Xref  xref);
-
-
-HPDF_NameDict
-HPDF_Catalog_GetNames  (HPDF_Catalog  catalog);
-
-
-HpdfStatus
-HPDF_Catalog_SetNames  (HPDF_Catalog  catalog,
-                        HPDF_NameDict dict);
-
-
-HPDF_Pages
-HPDF_Catalog_GetRoot  (HPDF_Catalog  catalog);
-
-
-HPDF_PageLayout
-HPDF_Catalog_GetPageLayout  (HPDF_Catalog  catalog);
-
-
-HpdfStatus
-HPDF_Catalog_SetPageLayout  (HPDF_Catalog      catalog,
-                             HPDF_PageLayout   layout);
-
-
-HPDF_PageMode
-HPDF_Catalog_GetPageMode  (HPDF_Catalog  catalog);
-
-
-HpdfStatus
-HPDF_Catalog_SetPageMode  (HPDF_Catalog   catalog,
-                           HPDF_PageMode  mode);
-
-
-HpdfStatus
-HPDF_Catalog_SetOpenAction  (HPDF_Catalog       catalog,
-                             HPDF_Destination   open_action);
-
-
-HpdfStatus
-HPDF_Catalog_AddPageLabel  (HPDF_Catalog   catalog,
-                            HpdfUInt      page_num,
-                            HPDF_Dict      page_label);
-
-
-HpdfUInt
-HPDF_Catalog_GetViewerPreference  (HPDF_Catalog   catalog);
-
-
-HpdfStatus
-HPDF_Catalog_SetViewerPreference  (HPDF_Catalog   catalog,
-                                   HpdfUInt      value);
-
-
-HpdfBool
-HPDF_Catalog_Validate  (HPDF_Catalog  catalog);
+HPDF_Catalog HPDF_Catalog_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref);
+HPDF_NameDict HPDF_Catalog_GetNames  (HPDF_Catalog  catalog);
+HpdfStatus HPDF_Catalog_SetNames  (HPDF_Catalog  catalog, HPDF_NameDict dict);
+HPDF_Pages HPDF_Catalog_GetRoot  (HPDF_Catalog  catalog); 
+HPDF_PageLayout HPDF_Catalog_GetPageLayout  (HPDF_Catalog  catalog);
+HpdfStatus HPDF_Catalog_SetPageLayout  (HPDF_Catalog      catalog, HPDF_PageLayout   layout);
+HPDF_PageMode HPDF_Catalog_GetPageMode  (HPDF_Catalog  catalog);
+HpdfStatus HPDF_Catalog_SetPageMode  (HPDF_Catalog   catalog, HPDF_PageMode  mode);
+HpdfStatus HPDF_Catalog_SetOpenAction  (HPDF_Catalog       catalog, HpdfDestination * const open_action);
+HpdfStatus HPDF_Catalog_AddPageLabel  (HPDF_Catalog   catalog, HpdfUInt      page_num, HPDF_Dict      page_label);
+HpdfUInt HPDF_Catalog_GetViewerPreference  (HPDF_Catalog   catalog); 
+HpdfStatus HPDF_Catalog_SetViewerPreference  (HPDF_Catalog   catalog, HpdfUInt      value);
+HpdfBool HPDF_Catalog_Validate  (HPDF_Catalog  catalog);
 
 #ifdef __cplusplus
 }

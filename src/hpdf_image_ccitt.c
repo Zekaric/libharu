@@ -703,7 +703,7 @@ HPDF_Fax4PostEncode(struct _HPDF_CCITT_Data *pData)
 
 
 HpdfStatus
-HPDF_Stream_CcittToStream(HpdfByte   const *const buf,
+HPDF_Stream_CcittToStream(HpdfByte   const * const buf,
    HPDF_Stream  dst,
    HPDF_Encrypt  e,
    HpdfUInt          width,
@@ -769,14 +769,14 @@ HPDF_Stream_CcittToStream(HpdfByte   const *const buf,
 }
 
 HPDF_Image
-HPDF_Image_Load1BitImageFromMem(HPDF_MMgr        mmgr,
-   HpdfByte   const *const buf,
-   HPDF_Xref        xref,
-   HpdfUInt          width,
-   HpdfUInt          height,
-   HpdfUInt          line_width,
-   HpdfBool             top_is_first
-)
+   HPDF_Image_Load1BitImageFromMem(
+      HpdfMemMgr * const mmgr,
+      HpdfByte   const * const buf,
+      HPDF_Xref        xref,
+      HpdfUInt          width,
+      HpdfUInt          height,
+      HpdfUInt          line_width,
+      HpdfBool             top_is_first)
 {
    HPDF_Dict image;
    HpdfStatus ret = HPDF_OK;
@@ -824,7 +824,7 @@ HPDF_Image_Load1BitImageFromMem(HPDF_MMgr        mmgr,
 HPDF_EXPORT(HPDF_Image)
 HPDF_Image_LoadRaw1BitImageFromMem(
    HpdfDoc * const doc,
-   HpdfByte   const *const buf,
+   HpdfByte   const * const buf,
    HpdfUInt          width,
    HpdfUInt          height,
    HpdfUInt          line_width,

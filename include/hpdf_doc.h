@@ -33,50 +33,50 @@ extern "C" {
 
 #define HPDF_VER_DEFAULT  HPDF_VER_12
 
-typedef struct _HPDF_Doc_Rec HpdfDoc;
+typedef struct _HPDF_Doc HpdfDoc;
 
-typedef struct _HPDF_Doc_Rec 
+struct _HPDF_Doc
 {
-   HpdfUInt32       sig_bytes;
-   HPDF_PDFVer       pdf_version;
+   HpdfUInt32         sig_bytes;
+   HPDF_PDFVer        pdf_version;
 
-   HPDF_MMgr         mmgr;
-   HPDF_Catalog      catalog;
-   HPDF_Outline      outlines;
-   HPDF_Xref         xref;
-   HPDF_Pages        root_pages;
-   HPDF_Pages        cur_pages;
-   HPDF_Page         cur_page;
-   HPDF_List         page_list;
-   HPDF_Error_Rec    error;
-   HPDF_Dict         info;
-   HPDF_Dict         trailer;
+   HpdfMemMgr        *mmgr;
+   HPDF_Catalog       catalog;
+   HPDF_Outline       outlines;
+   HPDF_Xref          xref;
+   HPDF_Pages         root_pages;
+   HPDF_Pages         cur_pages;
+   HPDF_Page          cur_page;
+   HPDF_List          page_list;
+   HpdfError          error;
+   HPDF_Dict          info;
+   HPDF_Dict          trailer;
 
-   HPDF_List         font_mgr;
-   HpdfByte          ttfont_tag[6];
+   HPDF_List          font_mgr;
+   HpdfByte           ttfont_tag[6];
 
    /* list for loaded fontdefs */
-   HPDF_List         fontdef_list;
+   HPDF_List          fontdef_list;
 
    /* list for loaded encodings */
-   HPDF_List         encoder_list;
+   HPDF_List          encoder_list;
 
-   HPDF_Encoder      cur_encoder;
+   HPDF_Encoder       cur_encoder;
 
    /* default compression mode */
-   HpdfBool         compression_mode;
+   HpdfBool           compression_mode;
 
-   HpdfBool         encrypt_on;
-   HPDF_EncryptDict  encrypt_dict;
+   HpdfBool           encrypt_on;
+   HPDF_EncryptDict   encrypt_dict;
 
-   HPDF_Encoder      def_encoder;
+   HPDF_Encoder       def_encoder;
 
-   HpdfUInt         page_per_pages;
-   HpdfUInt         cur_page_num;
+   HpdfUInt           page_per_pages;
+   HpdfUInt           cur_page_num;
 
    /* buffer for saving into memory stream */
-   HPDF_Stream       stream;
-} HPDF_Doc_Rec;
+   HPDF_Stream        stream;
+};
 
 
 HPDF_Encoder   HPDF_Doc_FindEncoder(         HpdfDoc const * const pdf, char const * const encoding_name);

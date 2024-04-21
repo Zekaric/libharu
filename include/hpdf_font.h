@@ -85,27 +85,10 @@ typedef struct _HPDF_FontAttr_Rec {
 } HPDF_FontAttr_Rec;
 
 
-HPDF_Font
-HPDF_Type1Font_New  (HPDF_MMgr        mmgr,
-                     HPDF_FontDef     fontdef,
-                     HPDF_Encoder     encoder,
-                     HPDF_Xref        xref);
-
-HPDF_Font
-HPDF_TTFont_New  (HPDF_MMgr        mmgr,
-                  HPDF_FontDef     fontdef,
-                  HPDF_Encoder     encoder,
-                  HPDF_Xref        xref);
-
-HPDF_Font
-HPDF_Type0Font_New  (HPDF_MMgr        mmgr,
-                     HPDF_FontDef     fontdef,
-                     HPDF_Encoder     encoder,
-                     HPDF_Xref        xref);
-
-
-HpdfBool
-HPDF_Font_Validate  (HPDF_Font font);
+HPDF_Font HPDF_Type1Font_New  (HpdfMemMgr * const mmgr, HPDF_FontDef     fontdef, HPDF_Encoder     encoder, HPDF_Xref        xref);
+HPDF_Font HPDF_TTFont_New  (HpdfMemMgr * const mmgr, HPDF_FontDef     fontdef, HPDF_Encoder     encoder, HPDF_Xref        xref);
+HPDF_Font HPDF_Type0Font_New  (HpdfMemMgr * const mmgr, HPDF_FontDef     fontdef, HPDF_Encoder     encoder, HPDF_Xref        xref);
+HpdfBool HPDF_Font_Validate  (HPDF_Font font);
 
 #ifdef __cplusplus
 }

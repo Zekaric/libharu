@@ -27,8 +27,8 @@ extern "C" {
 HPDF_EXPORT(HPDF_JavaScript)  HPDF_CreateJavaScript(                 HpdfDoc const * const doc, const char *code);
 HPDF_EXPORT(HPDF_JavaScript)  HPDF_LoadJSFromFile(                   HpdfDoc       * const doc, const char *filename);
 HPDF_EXPORT(HPDF_U3D)         HPDF_LoadU3DFromFile(                  HpdfDoc       * const doc, const char *filename);
-HPDF_EXPORT(HPDF_Image)       HPDF_LoadU3DFromMem(                   HpdfDoc       * const doc, HpdfByte const *const buffer, HpdfUInt size);
-HPDF_EXPORT(HPDF_Dict)        HPDF_Create3DView(                     HPDF_MMgr mmgr, const char *name);
+HPDF_EXPORT(HPDF_Image)       HPDF_LoadU3DFromMem(                   HpdfDoc       * const doc, HpdfByte const * const buffer, HpdfUInt size);
+HPDF_EXPORT(HPDF_Dict)        HPDF_Create3DView(                     HpdfMemMgr * const mmgr, const char *name);
 HPDF_EXPORT(HpdfStatus)       HPDF_U3D_Add3DView(                    HPDF_U3D u3d, HPDF_Dict view);
 HPDF_EXPORT(HpdfStatus)       HPDF_U3D_SetDefault3DView(             HPDF_U3D u3d, const char *name);
 HPDF_EXPORT(HpdfStatus)       HPDF_U3D_AddOnInstanciate(             HPDF_U3D u3d, HPDF_JavaScript javaScript);
@@ -45,7 +45,7 @@ HPDF_EXPORT(HpdfStatus)       HPDF_3DView_SetCamera(                 HPDF_Dict v
 HPDF_EXPORT(HpdfStatus)       HPDF_3DView_SetCameraByMatrix(         HPDF_Dict view, HPDF_3DMatrix Mat3D, HpdfReal co);
 HPDF_EXPORT(HpdfStatus)       HPDF_3DView_SetCrossSectionOn(         HPDF_Dict view, HpdfPoint3D const center, HpdfReal const Roll, HpdfReal const Pitch, HpdfReal const opacity, HpdfBool const showintersection);
 HPDF_EXPORT(HpdfStatus)       HPDF_3DView_SetCrossSectionOff(        HPDF_Dict view);
-            HPDF_Dict         HPDF_3DView_New(                       HPDF_MMgr  mmgr, HPDF_Xref  xref, HPDF_U3D	u3d, const char *name);
+            HPDF_Dict         HPDF_3DView_New(                       HpdfMemMgr * const mmgr, HPDF_Xref  xref, HPDF_U3D	u3d, const char *name);
 
 #if defined(WIN32)
 HPDF_EXPORT(HPDF_JavaScript)  HPDF_LoadJSFromFileW(                  HpdfDoc       * const doc, const wchar_t *filename);

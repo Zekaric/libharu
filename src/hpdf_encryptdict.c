@@ -26,8 +26,9 @@
 #endif
 
 HPDF_EncryptDict
-HPDF_EncryptDict_New  (HPDF_MMgr  mmgr,
-                       HPDF_Xref  xref)
+   HPDF_EncryptDict_New(
+      HpdfMemMgr * const mmgr,
+      HPDF_Xref  xref)
 {
     HPDF_Encrypt attr;
     HPDF_EncryptDict dict;
@@ -41,8 +42,9 @@ HPDF_EncryptDict_New  (HPDF_MMgr  mmgr,
     dict->header.obj_class |= HPDF_OSUBCLASS_ENCRYPT;
     dict->free_fn = HPDF_EncryptDict_OnFree;
 
-    attr = HPDF_GetMem (dict->mmgr, sizeof(HPDF_Encrypt_Rec));
-    if (!attr) {
+    attr = HpdfMemCreateType(dict->mmgr, HPDF_Encrypt_Rec);
+    if (!attr) 
+    {
         HPDF_Dict_Free (dict);
         return NULL;
     }
@@ -182,7 +184,7 @@ HPDF_EncryptDict_OnFree  (HPDF_Dict  obj)
     HPDF_PTRACE((" HPDF_EncryptDict_OnFree\n"));
 
     if (attr)
-        HPDF_FreeMem (obj->mmgr, attr);
+        HpdfMemDestroy (obj->mmgr, attr);
 }
 
 

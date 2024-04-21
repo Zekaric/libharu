@@ -25,10 +25,7 @@
 #define M_PI       3.14159265358979323846
 #endif
 
-HPDF_U3D
-HPDF_U3D_LoadU3D(HPDF_MMgr        mmgr,
-   HPDF_Stream      u3d_data,
-   HPDF_Xref        xref);
+HPDF_U3D HPDF_U3D_LoadU3D( HpdfMemMgr * const mmgr, HPDF_Stream      u3d_data, HPDF_Xref        xref);
 
 static HpdfStatus Get3DStreamType(HPDF_Stream  stream, const char **type)
 {
@@ -154,7 +151,7 @@ HPDF_LoadU3DFromFileW(
 HPDF_EXPORT(HPDF_Image)
 HPDF_LoadU3DFromMem(
    HpdfDoc * const doc,
-   HpdfByte const *const buffer,
+   HpdfByte const * const buffer,
    HpdfUInt size)
 {
    HPDF_Stream imagedata;
@@ -202,9 +199,10 @@ HPDF_LoadU3DFromMem(
 }
 
 HPDF_U3D
-HPDF_U3D_LoadU3D(HPDF_MMgr        mmgr,
-   HPDF_Stream      u3d_data,
-   HPDF_Xref        xref)
+   HPDF_U3D_LoadU3D(
+      HpdfMemMgr * const mmgr,
+      HPDF_Stream      u3d_data,
+      HPDF_Xref        xref)
 {
    HPDF_Dict u3d;
    const char *type = NULL;
@@ -264,7 +262,10 @@ HPDF_U3D_LoadU3D(HPDF_MMgr        mmgr,
    return u3d;
 }
 
-HPDF_EXPORT(HPDF_Dict) HPDF_Create3DView(HPDF_MMgr mmgr, const char *name)
+HPDF_EXPORT(HPDF_Dict) 
+   HPDF_Create3DView(
+      HpdfMemMgr * const mmgr, 
+      const char *name)
 {
    HpdfStatus ret = HPDF_OK;
    HPDF_Dict view;
@@ -303,7 +304,7 @@ HPDF_EXPORT(HPDF_Dict) HPDF_Create3DView(HPDF_MMgr mmgr, const char *name)
 
 HPDF_EXPORT(HpdfStatus) HPDF_U3D_Add3DView(HPDF_U3D u3d, HPDF_Dict view)
 {
-   HPDF_Array views = NULL;
+   HpdfArray *views = NULL;
    HpdfStatus ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_Add3DView\n"));
@@ -312,8 +313,9 @@ HPDF_EXPORT(HpdfStatus) HPDF_U3D_Add3DView(HPDF_U3D u3d, HPDF_Dict view)
       return HPDF_INVALID_U3D_DATA;
    }
 
-   views = (HPDF_Array) HPDF_Dict_GetItem(u3d, "VA", HPDF_OCLASS_ARRAY);
-   if (views == NULL) {
+   views = (HpdfArray *) HPDF_Dict_GetItem(u3d, "VA", HPDF_OCLASS_ARRAY);
+   if (views == NULL) 
+   {
       views = HPDF_Array_New(u3d->mmgr);
       if (!views) {
          return HPDF_Error_GetCode(u3d->error);
@@ -369,7 +371,7 @@ HPDF_EXPORT(HpdfStatus) HPDF_U3D_SetDefault3DView(HPDF_U3D u3d, const char *name
 
 HPDF_EXPORT(HpdfStatus) HPDF_3DView_AddNode(HPDF_Dict view, HPDF_Dict node)
 {
-   HPDF_Array nodes = NULL;
+   HpdfArray *nodes = NULL;
    HpdfStatus ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_3DView_AddNode\n"));
@@ -378,8 +380,9 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_AddNode(HPDF_Dict view, HPDF_Dict node)
       return HPDF_INVALID_U3D_DATA;
    }
 
-   nodes = (HPDF_Array) HPDF_Dict_GetItem(view, "NA", HPDF_OCLASS_ARRAY);
-   if (nodes == NULL) {
+   nodes = (HpdfArray *) HPDF_Dict_GetItem(view, "NA", HPDF_OCLASS_ARRAY);
+   if (nodes == NULL) 
+   {
       nodes = HPDF_Array_New(view->mmgr);
       if (!nodes) {
          return HPDF_Error_GetCode(view->error);
@@ -459,7 +462,7 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DViewNode_SetVisibility(HPDF_Dict node, HpdfBool v
 HPDF_EXPORT(HpdfStatus) HPDF_3DViewNode_SetMatrix(HPDF_Dict node, HPDF_3DMatrix Mat3D)
 {
    HpdfStatus ret = HPDF_OK;
-   HPDF_Array array_m;
+   HpdfArray *array_m;
 
    HPDF_PTRACE((" HPDF_3DViewNode_SetMatrix\n"));
 
@@ -546,7 +549,7 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetLighting(HPDF_Dict view, const char *sche
 
 HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetBackgroundColor(HPDF_Dict view, HpdfReal r, HpdfReal g, HpdfReal b)
 {
-   HPDF_Array  color;
+   HpdfArray *color;
    HpdfStatus ret = HPDF_OK;
    HPDF_Dict background;
 
@@ -715,7 +718,7 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCamera(HPDF_Dict view, HpdfReal coox, Hpd
    HpdfReal upx, upy, upz;
    HpdfReal transx, transy, transz;
 
-   HPDF_Array  matrix;
+   HpdfArray *matrix;
    HpdfStatus ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_3DView_SetCamera\n"));
@@ -863,7 +866,7 @@ failed:
 
 HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCameraByMatrix(HPDF_Dict view, HPDF_3DMatrix Mat3D, HpdfReal co)
 {
-   HPDF_Array  matrix;
+   HpdfArray *matrix;
    HpdfStatus ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_3DView_SetCameraByMatrix\n"));
@@ -941,8 +944,8 @@ HPDF_3DView_SetCrossSectionOn(
    HpdfBool      showintersection)
 {
    HpdfStatus ret = HPDF_OK;
-   HPDF_Array array_b;
-   HPDF_Array array_sa;
+   HpdfArray *array_b;
+   HpdfArray *array_sa;
    HPDF_Dict  crosssection;
 
    HPDF_PTRACE((" HPDF_3DView_SetCrossSectionOn\n"));
@@ -1044,7 +1047,7 @@ HPDF_3DView_SetCrossSectionOn(
 HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCrossSectionOff(HPDF_Dict view)
 {
    HpdfStatus ret = HPDF_OK;
-   HPDF_Array array_sa;
+   HpdfArray *array_sa;
 
    HPDF_PTRACE((" HPDF_3DView_SetCrossSectionOff\n"));
 
@@ -1065,7 +1068,12 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCrossSectionOff(HPDF_Dict view)
    return ret;
 }
 
-HPDF_Dict HPDF_3DView_New(HPDF_MMgr  mmgr, HPDF_Xref  xref, HPDF_U3D u3d, const char *name)
+HPDF_Dict 
+   HPDF_3DView_New(
+      HpdfMemMgr * const mmgr, 
+      HPDF_Xref  xref, 
+      HPDF_U3D u3d, 
+      const char *name)
 {
    HpdfStatus ret = HPDF_OK;
    HPDF_Dict view;
@@ -1118,14 +1126,14 @@ HPDF_3DView_Add3DC3DMeasure(HPDF_Dict       view,
 {
 
    HpdfStatus ret = HPDF_OK;
-   HPDF_Array array;
+   HpdfArray *array;
    void* a;
 
    a = HPDF_Dict_GetItem(view, "MA", HPDF_OCLASS_ARRAY);
 
    if (a)
    {
-      array = (HPDF_Array) a;
+      array = (HpdfArray *) a;
    }
    else
    {

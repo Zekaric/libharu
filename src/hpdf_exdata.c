@@ -21,49 +21,50 @@
 #include "hpdf_exdata.h"
 #include "hpdf.h"
 
-/*----------------------------------------------------------------------------*/
-/*------ HPDF_ExData -----------------------------------------------------*/
+ /*----------------------------------------------------------------------------*/
+ /*------ HPDF_ExData -----------------------------------------------------*/
 
 
 
 HPDF_ExData
-HPDF_3DAnnotExData_New(HPDF_MMgr mmgr,
-					   HPDF_Xref xref)
+HPDF_3DAnnotExData_New(
+   HpdfMemMgr * const mmgr,
+   HPDF_Xref xref)
 {
-	HPDF_ExData exdata;
-	HpdfStatus ret = HPDF_OK;
+   HPDF_ExData exdata;
+   HpdfStatus ret = HPDF_OK;
 
 
-	HPDF_PTRACE((" HPDF_ExData_New\n"));
+   HPDF_PTRACE((" HPDF_ExData_New\n"));
 
-	exdata = HPDF_Dict_New (mmgr);
-	if (!exdata)
-		return NULL;
+   exdata = HPDF_Dict_New(mmgr);
+   if (!exdata)
+      return NULL;
 
-	if (HPDF_Xref_Add (xref, exdata) != HPDF_OK)
-		return NULL;
+   if (HPDF_Xref_Add(xref, exdata) != HPDF_OK)
+      return NULL;
 
-	ret += HPDF_Dict_AddName (exdata, "Type", "ExData");
-	ret += HPDF_Dict_AddName (exdata, "Subtype", "3DM");
+   ret += HPDF_Dict_AddName(exdata, "Type", "ExData");
+   ret += HPDF_Dict_AddName(exdata, "Subtype", "3DM");
 
-	if (ret != HPDF_OK)
-		return NULL;
+   if (ret != HPDF_OK)
+      return NULL;
 
-	return exdata;
+   return exdata;
 }
 
 
 
 HPDF_EXPORT(HpdfStatus)
-HPDF_3DAnnotExData_Set3DMeasurement(HPDF_ExData exdata, 
-						   HPDF_3DMeasure measure)
+HPDF_3DAnnotExData_Set3DMeasurement(HPDF_ExData exdata,
+   HPDF_3DMeasure measure)
 {
-	HpdfStatus ret = HPDF_OK;
+   HpdfStatus ret = HPDF_OK;
 
-	ret = HPDF_Dict_Add (exdata, "M3DREF", measure);
-	if (ret != HPDF_OK)
-		return ret;
+   ret = HPDF_Dict_Add(exdata, "M3DREF", measure);
+   if (ret != HPDF_OK)
+      return ret;
 
-	return ret;
+   return ret;
 }
 

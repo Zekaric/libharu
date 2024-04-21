@@ -25,16 +25,10 @@ extern "C" {
 #endif
 
 /*----------------------------------------------------------------------------*/
-/*----- HPDF_Destination -----------------------------------------------------*/
+/*----- HpdfDestination ------------------------------------------------------*/
 
-HPDF_Destination
-HPDF_Destination_New  (HPDF_MMgr   mmgr,
-                       HPDF_Page   target,
-                       HPDF_Xref   xref);
-
-
-HpdfBool
-HPDF_Destination_Validate (HPDF_Destination  dst);
+HpdfDestination *HPDF_Destination_New  (HpdfMemMgr * const mmgr, HPDF_Page   target, HPDF_Xref   xref);
+HpdfBool HPDF_Destination_Validate (HpdfDestination * const dst);
 
 #ifdef __cplusplus
 }

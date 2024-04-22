@@ -19,21 +19,22 @@
 #include "hpdf_utils.h"
 #include "hpdf_objects.h"
 
-
-HPDF_Name
-   HPDF_Name_New(
+HpdfValueName *
+   HpdfValueNameCreate(
       HpdfMemMgr * const mmgr,
-      char const *value)
+      char const        *value)
 {
-   HPDF_Name obj;
+   HpdfValueName *obj;
 
-   obj  = HpdfMemCreateType(mmgr, HPDF_Name_Rec);
+   obj  = HpdfMemCreateType(mmgr, HpdfValueName);
    if (obj)
    {
       HpdfMemClearType(&obj->header, HPDF_Obj_Header);
       obj->header.obj_class = HPDF_OCLASS_NAME;
-      obj->error = mmgr->error;
-      if (HPDF_Name_SetValue(obj, value) == HPDF_NAME_INVALID_VALUE) {
+      obj->error            = mmgr->error;
+
+      if (HpdfValueNameSet(obj, value) == HPDF_NAME_INVALID_VALUE) 
+      {
          HpdfMemDestroy(mmgr, obj);
          return NULL;
       }
@@ -42,34 +43,38 @@ HPDF_Name
    return obj;
 }
 
-
 HpdfStatus
-HPDF_Name_Write(HPDF_Name    obj,
-   HPDF_Stream  stream)
+   HpdfValueNameWrite(
+      HpdfValueName const * const obj,
+      HPDF_Stream                 stream)
 {
    return HPDF_Stream_WriteEscapeName(stream, obj->value);
 }
 
-
 HpdfStatus
-HPDF_Name_SetValue(HPDF_Name        obj,
-   char const *value)
+   HpdfValueNameSet(
+      HpdfValueName * const obj,
+      char const           *value)
 {
-   if (!value || value[0] == 0)
+   if (!value || 
+       value[0] == 0)
+   {
       return HPDF_SetError(obj->error, HPDF_NAME_INVALID_VALUE, 0);
+   }
 
-   if (HPDF_StrLen(value, HPDF_LIMIT_MAX_NAME_LEN + 1) >
-      HPDF_LIMIT_MAX_NAME_LEN)
+   if (HPDF_StrLen(value, HPDF_LIMIT_MAX_NAME_LEN + 1) > HPDF_LIMIT_MAX_NAME_LEN)
+   {
       return HPDF_SetError(obj->error, HPDF_NAME_OUT_OF_RANGE, 0);
+   }
 
    HPDF_StrCpy(obj->value, value, obj->value + HPDF_LIMIT_MAX_NAME_LEN);
 
    return HPDF_OK;
 }
 
-const char*
-HPDF_Name_GetValue(HPDF_Name  obj)
+char const *
+   HpdfValueNameGet(
+      HpdfValueName const * const obj)
 {
-   return (const char *) obj->value;
+   return (char const *) obj->value;
 }
-

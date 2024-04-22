@@ -46,7 +46,7 @@ int main (int argc, char **argv)
     HpdfUInt iw;
     HpdfUInt ih;
     HpdfUInt bits_per_comp;
-    const char *cs;
+    char const *cs;
 
     if (argc < 2) {
         printf ("usage: make_rawimage <in-file-name> <out-file-name>\n");

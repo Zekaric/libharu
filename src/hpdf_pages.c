@@ -77,7 +77,7 @@ AddAnnotation(HPDF_Page        page,
 static HpdfUInt
 GetPageCount(HPDF_Dict    pages);
 
-static const char * const HPDF_INHERITABLE_ENTRIES[5] = {
+static char const * const HPDF_INHERITABLE_ENTRIES[5] = {
                         "Resources",
                         "MediaBox",
                         "CropBox",
@@ -98,33 +98,39 @@ HPDF_Pages
    HpdfStatus ret = HPDF_OK;
    HPDF_Pages pages;
 
-
    HPDF_PTRACE((" HPDF_Pages_New\n"));
 
    pages = HPDF_Dict_New(mmgr);
    if (!pages)
+   {
       return NULL;
+   }
 
    pages->header.obj_class |= HPDF_OSUBCLASS_PAGES;
    pages->before_write_fn = Pages_BeforeWrite;
 
    if (HPDF_Xref_Add(xref, pages) != HPDF_OK)
+   {
       return NULL;
+   }
 
    /* add required elements */
    ret += HPDF_Dict_AddName(pages, "Type", "Pages");
-   ret += HPDF_Dict_Add(pages, "Kids", HPDF_Array_New(pages->mmgr));
-   ret += HPDF_Dict_Add(pages, "Count", HPDF_Number_New(pages->mmgr, 0));
+   ret += HPDF_Dict_Add(    pages, "Kids",  HPDF_Array_New(       pages->mmgr));
+   ret += HPDF_Dict_Add(    pages, "Count", HpdfValueNumIntCreate(pages->mmgr, 0));
 
    if (ret == HPDF_OK && parent)
+   {
       ret += HPDF_Pages_AddKids(parent, pages);
+   }
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    return pages;
 }
-
 
 HpdfStatus
 HPDF_Pages_AddKids(HPDF_Pages  parent,
@@ -195,33 +201,41 @@ HPDF_Page_InsertBefore(HPDF_Page   page,
    return HPDF_Array_Insert(kids, target, page);
 }
 
-
 HpdfStatus
-Pages_BeforeWrite(HPDF_Dict    obj)
+   Pages_BeforeWrite(
+      HPDF_Dict    obj)
 {
-   HpdfArray  *kids  = (HpdfArray *) HPDF_Dict_GetItem(obj, "Kids", HPDF_OCLASS_ARRAY);
-   HPDF_Number count = (HPDF_Number) HPDF_Dict_GetItem(obj, "Count", HPDF_OCLASS_NUMBER);
-   HpdfStatus ret;
+   HpdfArray       *kids  = (HpdfArray *)       HPDF_Dict_GetItem(obj, "Kids",  HPDF_OCLASS_ARRAY);
+   HpdfValueNumInt *count = (HpdfValueNumInt *) HPDF_Dict_GetItem(obj, "Count", HPDF_OCLASS_NUMBER);
+   HpdfStatus       ret;
 
    HPDF_PTRACE((" HPDF_Pages_BeforeWrite\n"));
 
    if (!kids)
+   {
       return HPDF_SetError(obj->error, HPDF_PAGES_MISSING_KIDS_ENTRY, 0);
+   }
 
    if (count)
+   {
       count->value = GetPageCount(obj);
-   else {
-      count = HPDF_Number_New(obj->mmgr, GetPageCount(obj));
+   }
+   else 
+   {
+      count = HpdfValueNumIntCreate(obj->mmgr, GetPageCount(obj));
       if (!count)
+      {
          return HPDF_Error_GetCode(obj->error);
+      }
 
       if ((ret = HPDF_Dict_Add(obj, "Count", count)) != HPDF_OK)
+      {
          return ret;
+      }
    }
 
    return HPDF_OK;
 }
-
 
 static HpdfStatus
 Page_BeforeWrite(HPDF_Dict    obj)
@@ -479,11 +493,11 @@ AddResource(HPDF_Page  page)
    if (HPDF_Dict_Add(resource, "ProcSet", procset) != HPDF_OK)
       return HPDF_Error_GetCode(resource->error);
 
-   ret += HPDF_Array_Add(procset, HPDF_Name_New(page->mmgr, "PDF"));
-   ret += HPDF_Array_Add(procset, HPDF_Name_New(page->mmgr, "Text"));
-   ret += HPDF_Array_Add(procset, HPDF_Name_New(page->mmgr, "ImageB"));
-   ret += HPDF_Array_Add(procset, HPDF_Name_New(page->mmgr, "ImageC"));
-   ret += HPDF_Array_Add(procset, HPDF_Name_New(page->mmgr, "ImageI"));
+   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "PDF"));
+   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "Text"));
+   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageB"));
+   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageC"));
+   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageI"));
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(procset->error);
@@ -492,12 +506,12 @@ AddResource(HPDF_Page  page)
 }
 
 
-const char*
+char const*
 HPDF_Page_GetLocalFontName(HPDF_Page  page,
    HPDF_Font  font)
 {
    HPDF_PageAttr attr = (HPDF_PageAttr) page->attr;
-   const char *key;
+   char const *key;
 
    HPDF_PTRACE((" HPDF_Page_GetLocalFontName\n"));
 
@@ -546,9 +560,9 @@ HPDF_Page_GetLocalFontName(HPDF_Page  page,
    return key;
 }
 
-
 HPDF_Box
-HPDF_Page_GetMediaBox(HPDF_Page   page)
+   HPDF_Page_GetMediaBox(
+      HPDF_Page   page)
 {
    HPDF_Box media_box = { 0, 0, 0, 0 };
 
@@ -559,27 +573,38 @@ HPDF_Page_GetMediaBox(HPDF_Page   page)
       HpdfArray *array = HPDF_Page_GetInheritableItem(page, "MediaBox", HPDF_OCLASS_ARRAY);
       if (array) 
       {
-         HPDF_Real r;
+         HpdfValueNumReal *r;
 
          r = HPDF_Array_GetItem(array, 0, HPDF_OCLASS_REAL);
          if (r)
+         {
             media_box.left = r->value;
+         }
 
          r = HPDF_Array_GetItem(array, 1, HPDF_OCLASS_REAL);
          if (r)
+         {
             media_box.bottom = r->value;
+         }
 
          r = HPDF_Array_GetItem(array, 2, HPDF_OCLASS_REAL);
          if (r)
+         {
             media_box.right = r->value;
+         }
 
          r = HPDF_Array_GetItem(array, 3, HPDF_OCLASS_REAL);
          if (r)
+         {
             media_box.top = r->value;
+         }
 
          HPDF_CheckError(page->error);
       }
-      else HPDF_RaiseError(page->error, HPDF_PAGE_CANNOT_FIND_OBJECT, 0);
+      else
+      {
+         HPDF_RaiseError(page->error, HPDF_PAGE_CANNOT_FIND_OBJECT, 0);
+      }
    }
 
    return media_box;
@@ -632,8 +657,8 @@ HPDF_Page_CreateXObjectFromImage(
    }
 
    ret += HPDF_Dict_Add(resource, "ProcSet", procset);
-   ret += HPDF_Array_Add(procset, HPDF_Name_New(page->mmgr, "PDF"));
-   ret += HPDF_Array_Add(procset, HPDF_Name_New(page->mmgr, "ImageC"));
+   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "PDF"));
+   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageC"));
 
    xobject = HPDF_Dict_New(page->mmgr);
    if (!xobject)
@@ -809,8 +834,8 @@ HPDF_Page_CreateXObjectAsWhiteRect(
    }
 
    ret += HPDF_Dict_Add(resource, "ProcSet", procset);
-   ret += HPDF_Array_Add(procset, HPDF_Name_New(page->mmgr, "PDF"));
-   ret += HPDF_Array_Add(procset, HPDF_Name_New(page->mmgr, "ImageC"));
+   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "PDF"));
+   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageC"));
 
    xobject = HPDF_Dict_New(page->mmgr);
    if (!xobject)
@@ -921,12 +946,12 @@ HPDF_Page_CreateXObjectAsWhiteRect(
    return fromxobject;
 }
 
-const char*
+char const*
 HPDF_Page_GetXObjectName(HPDF_Page     page,
    HPDF_XObject  xobj)
 {
    HPDF_PageAttr attr = (HPDF_PageAttr) page->attr;
-   const char *key;
+   char const *key;
 
    HPDF_PTRACE((" HPDF_Page_GetXObjectName\n"));
 
@@ -972,12 +997,12 @@ HPDF_Page_GetXObjectName(HPDF_Page     page,
 }
 
 
-const char*
+char const*
 HPDF_Page_GetExtGStateName(HPDF_Page       page,
    HPDF_ExtGState  state)
 {
    HPDF_PageAttr attr = (HPDF_PageAttr) page->attr;
-   const char *key;
+   char const *key;
 
    HPDF_PTRACE((" HPDF_Page_GetExtGStateName\n"));
 
@@ -1022,12 +1047,12 @@ HPDF_Page_GetExtGStateName(HPDF_Page       page,
    return key;
 }
 
-const char*
+char const*
 HPDF_Page_GetShadingName(HPDF_Page    page,
    HPDF_Shading shading)
 {
    HPDF_PageAttr attr = (HPDF_PageAttr) page->attr;
-   const char *key;
+   char const *key;
 
    HPDF_PTRACE((" HPDF_Page_GetShadingName\n"));
 
@@ -1673,26 +1698,33 @@ HPDF_Page_GetCurrentTextPos2(
 }
 
 HpdfStatus
-HPDF_Page_SetBoxValue(HPDF_Page          page,
-   char const  *name,
-   HpdfUInt          index,
-   HpdfReal          value)
+   HPDF_Page_SetBoxValue(
+      HPDF_Page          page,
+      char const  *name,
+      HpdfUInt          index,
+      HpdfReal          value)
 {
-   HPDF_Real r;
-   HpdfArray *array;
+   HpdfValueNumReal *r;
+   HpdfArray        *array;
 
    HPDF_PTRACE((" HPDF_Page_SetBoxValue\n"));
 
    if (!HPDF_Page_Validate(page))
+   {
       return HPDF_INVALID_PAGE;
+   }
 
    array = HPDF_Page_GetInheritableItem(page, name, HPDF_OCLASS_ARRAY);
    if (!array)
+   {
       return HPDF_SetError(page->error, HPDF_PAGE_CANNOT_FIND_OBJECT, 0);
+   }
 
    r = HPDF_Array_GetItem(array, index, HPDF_OCLASS_REAL);
    if (!r)
+   {
       return HPDF_SetError(page->error, HPDF_PAGE_INVALID_INDEX, 0);
+   }
 
    r->value = value;
 
@@ -1700,27 +1732,35 @@ HPDF_Page_SetBoxValue(HPDF_Page          page,
 }
 
 HPDF_EXPORT(HpdfStatus)
-HPDF_Page_SetRotate(HPDF_Page      page,
-   HpdfUInt16    angle)
+   HPDF_Page_SetRotate(
+      HPDF_Page     page,
+      HpdfUInt16    angle)
 {
-   HPDF_Number n;
-   HpdfStatus ret = HPDF_OK;
+   HpdfValueNumInt  *n;
+   HpdfStatus   ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_Page_SetRotate\n"));
 
    if (!HPDF_Page_Validate(page))
+   {
       return HPDF_INVALID_PAGE;
+   }
 
    if (angle % 90 != 0)
-      return HPDF_RaiseError(page->error, HPDF_PAGE_INVALID_ROTATE_VALUE,
-         (HpdfStatus) angle);
+   {
+      return HPDF_RaiseError(page->error, HPDF_PAGE_INVALID_ROTATE_VALUE, (HpdfStatus) angle);
+   }
 
    n = HPDF_Page_GetInheritableItem(page, "Rotate", HPDF_OCLASS_NUMBER);
 
    if (!n)
+   {
       ret = HPDF_Dict_AddNumber(page, "Rotate", angle);
+   }
    else
+   {
       n->value = angle;
+   }
 
    return ret;
 }
@@ -1893,11 +1933,11 @@ HPDF_Page_Create3DAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateTextAnnot(
-   HPDF_Page          page,
-   HpdfRect const rect,
-   char const  *text,
-   HPDF_Encoder       encoder)
+   HPDF_Page_CreateTextAnnot(
+      HPDF_Page          page,
+      HpdfRect const rect,
+      char const  *text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PageAttr attr;
    HPDF_Annotation annot;
@@ -1935,11 +1975,11 @@ HPDF_Page_CreateTextAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateFreeTextAnnot(
-   HPDF_Page          page,
-   HpdfRect const rect,
-   char const  *text,
-   HPDF_Encoder       encoder)
+   HPDF_Page_CreateFreeTextAnnot(
+      HPDF_Page          page,
+      HpdfRect const rect,
+      char const  *text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PageAttr attr;
    HPDF_Annotation annot;
@@ -1977,10 +2017,10 @@ HPDF_Page_CreateFreeTextAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateLineAnnot(
-   HPDF_Page          page,
-   char const          *text,
-   HPDF_Encoder       encoder)
+   HPDF_Page_CreateLineAnnot(
+      HPDF_Page          page,
+      char const          *text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PageAttr   attr;
    HPDF_Annotation annot;
@@ -1996,7 +2036,7 @@ HPDF_Page_CreateLineAnnot(
    attr = (HPDF_PageAttr) page->attr;
 
    if (encoder &&
-      !HPDF_Encoder_Validate(encoder))
+       !HPDF_Encoder_Validate(encoder))
    {
       HPDF_RaiseError(page->error, HPDF_INVALID_ENCODER, 0);
       return NULL;
@@ -2134,7 +2174,7 @@ HPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint(
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(annot, "T", HPDF_String_New(annot->mmgr, "Blind", NULL));
+   ret = HPDF_Dict_Add(annot, "T", HpdfValueStringCreate(annot->mmgr, "Blind", NULL));
    if (ret != HPDF_OK)
    {
       return NULL;
@@ -2229,11 +2269,11 @@ HPDF_Page_CreateURILinkAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateCircleAnnot(
-   HPDF_Page          page,
-   HpdfRect const rect,
-   char const           *text,
-   HPDF_Encoder       encoder)
+   HPDF_Page_CreateCircleAnnot(
+      HPDF_Page          page,
+      HpdfRect const rect,
+      char const           *text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PageAttr attr;
    HPDF_Annotation annot;
@@ -2271,11 +2311,11 @@ HPDF_Page_CreateCircleAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateSquareAnnot(
-   HPDF_Page          page,
-   HpdfRect const rect,
-   char const           *text,
-   HPDF_Encoder       encoder)
+   HPDF_Page_CreateSquareAnnot(
+      HPDF_Page          page,
+      HpdfRect const rect,
+      char const           *text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PageAttr attr;
    HPDF_Annotation annot;
@@ -2316,7 +2356,7 @@ HPDF_EXPORT(HPDF_Dict)
 HPDF_Page_Create3DView(HPDF_Page       page,
    HPDF_U3D        u3d,
    HPDF_Annotation    annot3d,
-   const char *name)
+   char const *name)
 {
    HPDF_PageAttr attr;
    HPDF_Dict view;
@@ -2337,12 +2377,12 @@ HPDF_Page_Create3DView(HPDF_Page       page,
 }
 
 HPDF_Annotation
-HPDF_Page_CreateTextMarkupAnnot(
-   HPDF_Page     page,
-   HpdfRect const rect,
-   char const    *text,
-   HPDF_Encoder   encoder,
-   HPDF_AnnotType subType)
+   HPDF_Page_CreateTextMarkupAnnot(
+      HPDF_Page     page,
+      HpdfRect const rect,
+      char const    *text,
+      HpdfEncoder * const encoder,
+      HPDF_AnnotType subType)
 {
    HPDF_PageAttr attr;
    HPDF_Annotation annot;
@@ -2380,11 +2420,11 @@ HPDF_Page_CreateTextMarkupAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateHighlightAnnot(
-   HPDF_Page          page,
-   HpdfRect const rect,
-   char const  *text,
-   HPDF_Encoder       encoder)
+   HPDF_Page_CreateHighlightAnnot(
+      HPDF_Page          page,
+      HpdfRect const rect,
+      char const  *text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PTRACE((" HPDF_Page_CreateHighlightAnnot\n"));
 
@@ -2392,11 +2432,11 @@ HPDF_Page_CreateHighlightAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateSquigglyAnnot(
-   HPDF_Page          page,
-   HpdfRect const rect,
-   char const  *text,
-   HPDF_Encoder       encoder)
+   HPDF_Page_CreateSquigglyAnnot(
+      HPDF_Page          page,
+      HpdfRect const rect,
+      char const  *text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PTRACE((" HPDF_Page_CreateSquigglyAnnot\n"));
 
@@ -2404,11 +2444,11 @@ HPDF_Page_CreateSquigglyAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateUnderlineAnnot(
-   HPDF_Page          page,
-   HpdfRect const rect,
-   char const  *text,
-   HPDF_Encoder       encoder)
+   HPDF_Page_CreateUnderlineAnnot(
+      HPDF_Page          page,
+      HpdfRect const rect,
+      char const  *text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PTRACE((" HPDF_Page_CreateUnderlineAnnot\n"));
 
@@ -2416,11 +2456,11 @@ HPDF_Page_CreateUnderlineAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateStrikeOutAnnot(
-   HPDF_Page          page,
-   HpdfRect const rect,
-   char const  *text,
-   HPDF_Encoder       encoder)
+   HPDF_Page_CreateStrikeOutAnnot(
+      HPDF_Page          page,
+      HpdfRect const rect,
+      char const  *text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PTRACE((" HPDF_Page_CreateStrikeOutAnnot\n"));
 
@@ -2463,12 +2503,12 @@ HPDF_Page_CreatePopupAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateStampAnnot(
-   HPDF_Page           page,
-   HpdfRect const rect,
-   HPDF_StampAnnotName name,
-   const char*            text,
-   HPDF_Encoder        encoder)
+   HPDF_Page_CreateStampAnnot(
+      HPDF_Page           page,
+      HpdfRect const rect,
+      HPDF_StampAnnotName name,
+      char const*            text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PageAttr attr;
    HPDF_Annotation annot;
@@ -2500,11 +2540,11 @@ HPDF_Page_CreateStampAnnot(
 }
 
 HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateProjectionAnnot(
-   HPDF_Page page,
-   HpdfRect const rect,
-   const char* text,
-   HPDF_Encoder encoder)
+   HPDF_Page_CreateProjectionAnnot(
+      HPDF_Page page,
+      HpdfRect const rect,
+      char const* text,
+      HpdfEncoder * const encoder)
 {
    HPDF_PageAttr attr;
    HPDF_Annotation annot;
@@ -2572,7 +2612,7 @@ HPDF_Page_CreatePD33DMeasure(
    HpdfPoint3D const measurementValuePoint,
    HpdfPoint3D const textYDirection,
    HpdfReal       value,
-   const char*     unitsString)
+   char const*     unitsString)
 {
    HPDF_PageAttr   attr;
    HPDF_Annotation measure;

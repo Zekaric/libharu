@@ -87,7 +87,7 @@ typedef struct _HPDF_MemStreamAttr_Rec  *HPDF_MemStreamAttr;
 
 typedef struct _HPDF_MemStreamAttr_Rec 
 {
-    HPDF_List   buf;
+    HpdfList   *buf;
     HpdfUInt    buf_siz;
     HpdfUInt    w_pos;
     HpdfByte   *w_ptr;
@@ -123,8 +123,8 @@ HPDF_Stream HPDF_FileReader_New  (HpdfMemMgr * const mmgr, char const *fname);
 HPDF_Stream HPDF_FileWriter_New  (HpdfMemMgr * const mmgr, char const *fname);
 
 #if defined(WIN32)
-HPDF_Stream HPDF_FileReader_NewW (HpdfMemMgr * const mmgr, const wchar_t  *fname);
-HPDF_Stream HPDF_FileWriter_NewW (HpdfMemMgr * const mmgr, const wchar_t  *fname);
+HPDF_Stream HPDF_FileReader_NewW (HpdfMemMgr * const mmgr, wchar_t const *fname);
+HPDF_Stream HPDF_FileWriter_NewW (HpdfMemMgr * const mmgr, wchar_t const *fname);
 #endif
 
 HPDF_Stream HPDF_CallbackReader_New  (HpdfMemMgr * const mmgr, HPDF_Stream_Read_Func  read_fn, HPDF_Stream_Seek_Func  seek_fn, HPDF_Stream_Tell_Func  tell_fn, HPDF_Stream_Size_Func  size_fn, void*                  data);

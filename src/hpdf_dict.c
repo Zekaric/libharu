@@ -47,44 +47,54 @@ HPDF_Dict
    return obj;
 }
 
-
 HPDF_Dict
    HPDF_DictStream_New( 
       HpdfMemMgr * const mmgr,
       HPDF_Xref  xref)
 {
-   HPDF_Dict  obj;
-   HPDF_Number length;
-   HpdfStatus ret = 0;
+   HPDF_Dict    obj;
+   HpdfValueNumInt  *length;
+   HpdfStatus   ret = 0;
 
    obj = HPDF_Dict_New(mmgr);
    if (!obj)
+   {
       return NULL;
+   }
 
    /* only stream object is added to xref automatically */
    ret += HPDF_Xref_Add(xref, obj);
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
-   length = HPDF_Number_New(mmgr, 0);
+   length = HpdfValueNumIntCreate(mmgr, 0);
    if (!length)
+   {
       return NULL;
+   }
 
    ret = HPDF_Xref_Add(xref, length);
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    ret = HPDF_Dict_Add(obj, "Length", length);
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    obj->stream = HPDF_MemStream_New(mmgr, HPDF_STREAM_BUF_SIZ);
    if (!obj->stream)
+   {
       return NULL;
+   }
 
    return obj;
 }
-
 
 void
 HPDF_Dict_Free(HPDF_Dict  dict)
@@ -138,56 +148,78 @@ HPDF_Dict_Add_FilterParams(HPDF_Dict    dict, HPDF_Dict filterParam)
 
 
 HpdfStatus
-HPDF_Dict_Write(HPDF_Dict     dict,
-   HPDF_Stream   stream,
-   HPDF_Encrypt  e)
+   HPDF_Dict_Write(
+      HPDF_Dict     dict,
+      HPDF_Stream   stream,
+      HPDF_Encrypt  e)
 {
-   HpdfUInt i;
+   HpdfUInt   i;
    HpdfStatus ret;
 
    ret = HPDF_Stream_WriteStr(stream, "<<\012");
    if (ret != HPDF_OK)
+   {
       return ret;
+   }
 
-   if (dict->before_write_fn) {
+   if (dict->before_write_fn) 
+   {
       if ((ret = dict->before_write_fn(dict)) != HPDF_OK)
+      {
          return ret;
+      }
    }
 
    /* encrypt-dict must not be encrypted. */
    if (dict->header.obj_class == (HPDF_OCLASS_DICT | HPDF_OSUBCLASS_ENCRYPT))
+   {
       e = NULL;
+   }
 
-   if (dict->stream) {
+   if (dict->stream) 
+   {
       /* set filter element */
       if (dict->filter == HPDF_STREAM_FILTER_NONE)
+      {
          HPDF_Dict_RemoveElement(dict, "Filter");
+      }
       else 
       {
          HpdfArray *array = HPDF_Dict_GetItem(dict, "Filter", HPDF_OCLASS_ARRAY);
 
-         if (!array) {
+         if (!array) 
+         {
             array = HPDF_Array_New(dict->mmgr);
             if (!array)
+            {
                return HPDF_Error_GetCode(dict->error);
+            }
 
             ret = HPDF_Dict_Add(dict, "Filter", array);
             if (ret != HPDF_OK)
+            {
                return ret;
+            }
          }
 
          HPDF_Array_Clear(array);
 
 #ifdef LIBHPDF_HAVE_ZLIB
          if (dict->filter & HPDF_STREAM_FILTER_FLATE_DECODE)
+         {
             HPDF_Array_AddName(array, "FlateDecode");
+         }
 #endif /* LIBHPDF_HAVE_ZLIB */
 
          if (dict->filter & HPDF_STREAM_FILTER_DCT_DECODE)
+         {
             HPDF_Array_AddName(array, "DCTDecode");
+         }
 
          if (dict->filter & HPDF_STREAM_FILTER_CCITT_DECODE)
+         {
             HPDF_Array_AddName(array, "CCITTFaxDecode");
+         }
 
          if (dict->filterParams!=NULL)
          {
@@ -199,81 +231,109 @@ HPDF_Dict_Write(HPDF_Dict     dict,
    for (i = 0; i < dict->list->count; i++) 
    {
       HpdfDictElement *element = (HpdfDictElement *) HPDF_List_ItemAt(dict->list, i);
-      HPDF_Obj_Header *header = (HPDF_Obj_Header *) (element->value);
+      HPDF_Obj_Header *header  = (HPDF_Obj_Header *) element->value;
 
       if (!element->value)
+      {
          return HPDF_SetError(dict->error, HPDF_INVALID_OBJECT, 0);
-
-      if (header->obj_id & HPDF_OTYPE_HIDDEN) {
-         HPDF_PTRACE((" HPDF_Dict_Write obj=%p skipped obj_id=0x%08X\n",
-            element->value, (HpdfUInt) header->obj_id));
       }
-      else {
+
+      if (header->obj_id & HPDF_OTYPE_HIDDEN) 
+      {
+         HPDF_PTRACE(
+            (" HPDF_Dict_Write obj=%p skipped obj_id=0x%08X\n",
+             element->value, 
+             (HpdfUInt) header->obj_id));
+      }
+      else 
+      {
          ret = HPDF_Stream_WriteEscapeName(stream, element->key);
          if (ret != HPDF_OK)
+         {
             return ret;
+         }
 
          ret = HPDF_Stream_WriteChar(stream, ' ');
          if (ret != HPDF_OK)
+         {
             return ret;
+         }
 
          ret = HPDF_Obj_Write(element->value, stream, e);
          if (ret != HPDF_OK)
+         {
             return ret;
+         }
 
          ret = HPDF_Stream_WriteStr(stream, "\012");
          if (ret != HPDF_OK)
+         {
             return ret;
+         }
       }
    }
 
-   if (dict->write_fn) {
+   if (dict->write_fn) 
+   {
       if ((ret = dict->write_fn(dict, stream)) != HPDF_OK)
+      {
          return ret;
+      }
    }
 
    if ((ret = HPDF_Stream_WriteStr(stream, ">>")) != HPDF_OK)
+   {
       return ret;
+   }
 
-   if (dict->stream) {
-      HpdfUInt32 strptr;
-      HPDF_Number length;
+   if (dict->stream) 
+   {
+      HpdfUInt32   strptr;
+      HpdfValueNumInt  *length;
 
       /* get "length" element */
-      length = (HPDF_Number) HPDF_Dict_GetItem(dict, "Length",
-         HPDF_OCLASS_NUMBER);
+      length = (HpdfValueNumInt *) HPDF_Dict_GetItem(dict, "Length", HPDF_OCLASS_NUMBER);
       if (!length)
-         return HPDF_SetError(dict->error,
-            HPDF_DICT_STREAM_LENGTH_NOT_FOUND, 0);
-
-      /* "length" element must be indirect-object */
-      if (!(length->header.obj_id & HPDF_OTYPE_INDIRECT)) {
-         return HPDF_SetError(dict->error, HPDF_DICT_ITEM_UNEXPECTED_TYPE,
-            0);
+      {
+         return HPDF_SetError(dict->error, HPDF_DICT_STREAM_LENGTH_NOT_FOUND, 0);
       }
 
-      if ((ret = HPDF_Stream_WriteStr(stream, "\012stream\015\012")) /* Acrobat 8.15 requires both \r and \n here */
-         != HPDF_OK)
+      /* "length" element must be indirect-object */
+      if (!(length->header.obj_id & HPDF_OTYPE_INDIRECT)) 
+      {
+         return HPDF_SetError(dict->error, HPDF_DICT_ITEM_UNEXPECTED_TYPE, 0);
+      }
+
+      /* Acrobat 8.15 requires both \r and \n here */
+      if ((ret = HPDF_Stream_WriteStr(stream, "\012stream\015\012")) != HPDF_OK)
+      {
          return ret;
+      }
 
       strptr = stream->size;
 
       if (e)
+      {
          HPDF_Encrypt_Reset(e);
+      }
 
-      if ((ret = HPDF_Stream_WriteToStream(dict->stream, stream,
-         dict->filter, e)) != HPDF_OK)
+      if ((ret = HPDF_Stream_WriteToStream(dict->stream, stream, dict->filter, e)) != HPDF_OK)
+      {
          return ret;
+      }
 
-      HPDF_Number_SetValue(length, stream->size - strptr);
+      HpdfValueNumIntSet(length, stream->size - strptr);
 
       ret = HPDF_Stream_WriteStr(stream, "\012endstream");
    }
 
    /* 2006.08.13 add. */
-   if (dict->after_write_fn) {
+   if (dict->after_write_fn) 
+   {
       if ((ret = dict->after_write_fn(dict)) != HPDF_OK)
+      {
          return ret;
+      }
    }
 
    return ret;
@@ -365,61 +425,66 @@ HPDF_Dict_Add(HPDF_Dict        dict,
    return ret;
 }
 
-
 HpdfStatus
-HPDF_Dict_AddName(HPDF_Dict        dict,
-   char const *key,
-   char const *value)
+   HPDF_Dict_AddName(
+      HPDF_Dict        dict,
+      char const *key,
+      char const *value)
 {
-   HPDF_Name name = HPDF_Name_New(dict->mmgr, value);
+   HpdfValueName *name = HpdfValueNameCreate(dict->mmgr, value);
    if (!name)
+   {
       return HPDF_Error_GetCode(dict->error);
+   }
 
    return HPDF_Dict_Add(dict, key, name);
 }
 
-
 HpdfStatus
-HPDF_Dict_AddNumber(HPDF_Dict        dict,
-   char const *key,
-   HpdfInt32       value)
+   HPDF_Dict_AddNumber(
+      HPDF_Dict   dict,
+      char const *key,
+      HpdfInt32   value)
 {
-   HPDF_Number number = HPDF_Number_New(dict->mmgr, value);
-
+   HpdfValueNumInt *number = HpdfValueNumIntCreate(dict->mmgr, value);
    if (!number)
+   {
       return HPDF_Error_GetCode(dict->error);
+   }
 
    return HPDF_Dict_Add(dict, key, number);
 }
-
 
 HpdfStatus
 HPDF_Dict_AddReal(HPDF_Dict        dict,
    char const *key,
    HpdfReal        value)
 {
-   HPDF_Real real = HPDF_Real_New(dict->mmgr, value);
+   HpdfValueNumReal *real = HpdfValueNumRealCreate(dict->mmgr, value);
 
    if (!real)
+   {
       return HPDF_Error_GetCode(dict->error);
+   }
 
    return HPDF_Dict_Add(dict, key, real);
 }
 
-
 HpdfStatus
-HPDF_Dict_AddBoolean(HPDF_Dict      dict,
-   char const   *key,
-   HpdfBool      value)
+   HPDF_Dict_AddBoolean(
+      HPDF_Dict     dict,
+      char const   *key,
+      HpdfBool      value)
 {
-   HPDF_Boolean obj = HPDF_Boolean_New(dict->mmgr, value);
+   HpdfValueBool *obj = HpdfValueBoolCreate(dict->mmgr, value);
 
    if (!obj)
+   {
       return HPDF_Error_GetCode(dict->error);
+   }
 
    return HPDF_Dict_Add(dict, key, obj);
 }
-
 
 void*
 HPDF_Dict_GetItem(HPDF_Dict        dict,
@@ -501,7 +566,7 @@ HPDF_Dict_RemoveElement(HPDF_Dict        dict,
    return HPDF_DICT_ITEM_NOT_FOUND;
 }
 
-const char*
+char const*
 HPDF_Dict_GetKeyByObj(HPDF_Dict  dict,
    void       *obj)
 {

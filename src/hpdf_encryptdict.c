@@ -83,7 +83,7 @@ HPDF_EncryptDict_CreateID  (HPDF_EncryptDict  dict,
 
     /* create File Identifier from elements of Into dictionary. */
     if (info) {
-        const char *s;
+        char const *s;
         HpdfUInt len;
 
         /* Author */

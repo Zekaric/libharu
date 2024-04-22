@@ -29,19 +29,20 @@ typedef struct _RGBVertex
    HpdfUInt8 RGB[3];
 } RGBVertex;
 
-static const char *COL_CMYK = "DeviceCMYK";
-static const char *COL_RGB = "DeviceRGB";
-static const char *COL_GRAY = "DeviceGray";
+static char const *COL_CMYK = "DeviceCMYK";
+static char const *COL_RGB = "DeviceRGB";
+static char const *COL_GRAY = "DeviceGray";
 
 /* bbox is filled with xMin, xMax, yMin, yMax */
 static HpdfBool _GetDecodeArrayVertexValues(HPDF_Shading shading,
    HpdfReal *bbox)
 {
-   HpdfArray *decodeArray;
-   HPDF_Real r;
-   int i;
+   HpdfArray         *decodeArray;
+   HpdfValueNumReal  *r;
+   int                i;
 
-   if (!shading) {
+   if (!shading) 
+   {
       return HPDF_FALSE;
    }
 
@@ -54,7 +55,8 @@ static HpdfBool _GetDecodeArrayVertexValues(HPDF_Shading shading,
    for (i = 0; i < 4; ++i)
    {
       r = HPDF_Array_GetItem(decodeArray, i, HPDF_OCLASS_REAL);
-      if (!r) {
+      if (!r) 
+      {
          return HPDF_FALSE;
       }
 
@@ -130,7 +132,7 @@ HPDF_Shading_New(
    ret += HPDF_Array_AddReal(decodeArray, yMin);
    ret += HPDF_Array_AddReal(decodeArray, yMax);
 
-   const char *colName = NULL;
+   char const *colName = NULL;
    switch (colorSpace)
    {
    case HPDF_CS_DEVICE_RGB:

@@ -61,7 +61,7 @@ HPDF_Font
    HPDF_TTFont_New(
       HpdfMemMgr * const mmgr,
       HPDF_FontDef     fontdef,
-      HPDF_Encoder     encoder,
+      HpdfEncoder * const encoder,
       HPDF_Xref        xref)
 {
    HPDF_Dict font;

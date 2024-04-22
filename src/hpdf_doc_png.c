@@ -114,11 +114,11 @@ HPDF_EXPORT(HPDF_Image)
 HPDF_EXPORT(HPDF_Image)
    HPDF_LoadPngImageFromFile2(
       HpdfDoc const * const doc,
-      char const *filename)
+      char const           *filename)
 {
-   HPDF_Stream imagedata;
-   HPDF_Image image;
-   HPDF_String fname;
+   HPDF_Stream        imagedata;
+   HPDF_Image         image;
+   HpdfValueString   *fname;
 
    HPDF_PTRACE((" HPDF_LoadPngImageFromFile2\n"));
 
@@ -153,7 +153,7 @@ HPDF_EXPORT(HPDF_Image)
 
    /* add file-name to image dictionary as a hidden entry.
    ** it is used when the image data is needed. */
-   fname = HPDF_String_New(doc->mmgr, filename, NULL);
+   fname = HpdfValueStringCreate(doc->mmgr, filename, NULL);
    if (!fname) 
    {
       HPDF_CheckError(&doc->error);
@@ -175,7 +175,7 @@ HPDF_EXPORT(HPDF_Image)
 HPDF_EXPORT(HPDF_Image)
    HPDF_LoadPngImageFromFileW(
       HpdfDoc const * const doc,
-      const wchar_t *filename)
+      wchar_t const        *filename)
 {
    HPDF_Stream imagedata;
    HPDF_Image image;
@@ -217,11 +217,11 @@ HPDF_EXPORT(HPDF_Image)
 HPDF_EXPORT(HPDF_Image)
    HPDF_LoadPngImageFromFile2W(
       HpdfDoc const * const doc,
-      const wchar_t *filename)
+      wchar_t const        *filename)
 {
-   HPDF_Stream imagedata;
-   HPDF_Image image;
-   HPDF_String fname;
+   HPDF_Stream        imagedata;
+   HPDF_Image         image;
+   HpdfValueString   *fname;
 
    HPDF_PTRACE((" HPDF_LoadPngImageFromFile\n"));
 
@@ -256,7 +256,7 @@ HPDF_EXPORT(HPDF_Image)
 
    /* add file-name to image dictionary as a hidden entry.
    ** it is used when the image data is needed. */
-   fname = HPDF_String_New(doc->mmgr, filename, NULL);
+   fname = HpdfValueStringCreate(doc->mmgr, filename, NULL);
    if (!fname) 
    {
       HPDF_CheckError(&doc->error);

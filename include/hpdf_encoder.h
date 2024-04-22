@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-/*-- HPDF_Encoder ---------------------------------------*/
+/*-- HpdfEncoder const * const ---------------------------------------*/
 
 #define HPDF_ENCODER_SIG_BYTES 0x454E4344L
 
@@ -66,17 +66,20 @@ extern "C" {
 
 #define char_NOTDEF        ".notdef"
 
-typedef enum _HPDF_EncodingType {
+#if 0 //TODO Not used?
+typedef enum
+{
    HPDF_STANDARD_ENCODING = 0,
    HPDF_MAC_ROMAN_ENCODING,
    HPDF_WIN_ANSI_ENCODING,
    HPDF_FONT_SPECIFIC,
    HPDF_ENCODING_EOF
-} HPDF_EncodingType;
+} HpdfEncodingType;
+#endif
 
-typedef struct _HPDF_ParseText HpdfParseText;
+typedef struct _HpdfParseText HpdfParseText;
 
-struct _HPDF_ParseText
+struct _HpdfParseText
 {
    HpdfByte const *text;
    HpdfUInt        index;
@@ -85,53 +88,52 @@ struct _HPDF_ParseText
 };
 
 
-typedef struct _HPDF_Encoder_Rec *HPDF_Encoder;
+typedef struct _HpdfEncoder HpdfEncoder;
 
-typedef HPDF_ByteType (*HPDF_Encoder_ByteType_Func)(  HPDF_Encoder encoder, HpdfParseText * const state);
-typedef HpdfUnicode   (*HPDF_Encoder_ToUnicode_Func)( HPDF_Encoder encoder, HpdfUInt16 code);
-typedef char         *(*HPDF_Encoder_EncodeText_Func)(HPDF_Encoder encoder, char const *text, HpdfUInt len, HpdfUInt *encoded_length);
-typedef HpdfStatus    (*HPDF_Encoder_Write_Func)(     HPDF_Encoder encoder, HPDF_Stream out);
-typedef HpdfStatus    (*HPDF_Encoder_Init_Func)(      HPDF_Encoder encoder);
-typedef void          (*HPDF_Encoder_Free_Func)(      HPDF_Encoder encoder);
+typedef HPDF_ByteType (*HPDF_Encoder_ByteType_Func)(  HpdfEncoder const * const encoder, HpdfParseText * const state);
+typedef HpdfUnicode   (*HPDF_Encoder_ToUnicode_Func)( HpdfEncoder const * const encoder, HpdfUInt16 code);
+typedef char         *(*HPDF_Encoder_EncodeText_Func)(HpdfEncoder const * const encoder, char const *text, HpdfUInt len, HpdfUInt *encoded_length);
+typedef HpdfStatus    (*HPDF_Encoder_Write_Func)(     HpdfEncoder const * const encoder, HPDF_Stream out);
+typedef HpdfStatus    (*HPDF_Encoder_Init_Func)(      HpdfEncoder       * const encoder);
+typedef void          (*HPDF_Encoder_Free_Func)(      HpdfEncoder       * const encoder);
 
-typedef struct  _HPDF_Encoder_Rec 
+struct _HpdfEncoder
 {
-   HpdfUInt32                      sig_bytes;
-   char                            name[HPDF_LIMIT_MAX_NAME_LEN + 1];
-   HpdfMemMgr                        *mmgr;
-   HpdfError                      *error;
-   HPDF_EncoderType                type;
+   HpdfUInt32                     sig_bytes;
+   char                           name[HPDF_LIMIT_MAX_NAME_LEN + 1];
+   HpdfMemMgr                    *mmgr;
+   HpdfError                     *error;
+   HpdfEncoderType                type;
 
-   HPDF_Encoder_ByteType_Func      byte_type_fn;
-   HPDF_Encoder_ToUnicode_Func     to_unicode_fn;
-   HPDF_Encoder_EncodeText_Func    encode_text_fn;
-   HPDF_Encoder_Write_Func         write_fn;
-   HPDF_Encoder_Free_Func          free_fn;
-   HPDF_Encoder_Init_Func          init_fn;
+   HPDF_Encoder_ByteType_Func     byte_type_fn;
+   HPDF_Encoder_ToUnicode_Func    to_unicode_fn;
+   HPDF_Encoder_EncodeText_Func   encode_text_fn;
+   HPDF_Encoder_Write_Func        write_fn;
+   HPDF_Encoder_Free_Func         free_fn;
+   HPDF_Encoder_Init_Func         init_fn;
    /*
    char                         lang_code[3];
    char                         country_code[3];
    */
-   void                            *attr;
-}  HPDF_Encoder_Rec;
+   void                          *attr;
+};
 
-
-typedef enum _HPDF_BaseEncodings {
+typedef enum
+{
    HPDF_BASE_ENCODING_STANDARD,
    HPDF_BASE_ENCODING_WIN_ANSI,
    HPDF_BASE_ENCODING_MAC_ROMAN,
    HPDF_BASE_ENCODING_FONT_SPECIFIC,
    HPDF_BASE_ENCODING_EOF
-} HPDF_BaseEncodings;
+} HpdfBaseEncodings;
 
-HpdfStatus     HPDF_Encoder_Validate(HPDF_Encoder encoder);
-void           HPDF_Encoder_SetParseText(HPDF_Encoder encoder, HpdfParseText *state, HpdfByte const * const text, HpdfUInt           len);
-HPDF_ByteType  HPDF_Encoder_ByteType(HPDF_Encoder encoder, HpdfParseText *state);
-HpdfUnicode    HPDF_Encoder_ToUnicode(HPDF_Encoder encoder, HpdfUInt16      code);
-void           HPDF_Encoder_Free(HPDF_Encoder encoder);
+HpdfStatus     HPDF_Encoder_Validate(     HpdfEncoder const * const encoder);
+void           HPDF_Encoder_SetParseText( HpdfEncoder const * const encoder, HpdfParseText *state, HpdfByte const * const text, HpdfUInt len);
+HPDF_ByteType  HPDF_Encoder_ByteType(     HpdfEncoder const * const encoder, HpdfParseText *state);
+HpdfUnicode    HPDF_Encoder_ToUnicode(    HpdfEncoder const * const encoder, HpdfUInt16 code);
+void           HPDF_Encoder_Free(         HpdfEncoder       * const encoder);
 
 /*-- HPDF_BasicEncoder ----------------------------------*/
-
 
 typedef struct _HPDF_BasicEncoderAttr_Rec  *HPDF_BasicEncoderAttr;
 
@@ -146,14 +148,14 @@ typedef struct  _HPDF_BasicEncoderAttr_Rec
 } HPDF_BasicEncoderAttr_Rec;
 
 
-HPDF_Encoder   HPDF_BasicEncoder_New(HpdfMemMgr * const mmgr, char const *encoding_name);
-void           HPDF_BasicEncoder_Free(HPDF_Encoder encoder);
-HpdfStatus     HPDF_BasicEncoder_Write(HPDF_Encoder encoder, HPDF_Stream   out);
-HpdfUnicode    HPDF_BasicEncoder_ToUnicode(HPDF_Encoder encoder, HpdfUInt16    code);
+HpdfEncoder    *HPDF_BasicEncoder_New(HpdfMemMgr * const mmgr, char const *encoding_name);
+void            HPDF_BasicEncoder_Free(HpdfEncoder       * const encoder);
+HpdfStatus      HPDF_BasicEncoder_Write(HpdfEncoder const * const encoder, HPDF_Stream   out);
+HpdfUnicode     HPDF_BasicEncoder_ToUnicode(HpdfEncoder const * const encoder, HpdfUInt16    code);
 
 /*-- HPDF_CMapEncoder ----------------------------------*/
 
-typedef HpdfBool(*HPDF_CMapEncoder_ByteType_Func)(HPDF_Encoder encoder, HpdfByte b);
+typedef HpdfBool(*HPDF_CMapEncoder_ByteType_Func)(HpdfEncoder const * const encoder, HpdfByte b);
 
 typedef struct _HPDF_CidRange_Rec
 {
@@ -172,41 +174,41 @@ typedef struct _HPDF_CMapEncoderAttr_Rec  *HPDF_CMapEncoderAttr;
 
 typedef struct  _HPDF_CMapEncoderAttr_Rec
 {
-   HpdfUnicode                      unicode_map[256][256];
-   HpdfUInt16                       cid_map[256][256];
-   HpdfUInt16                       jww_line_head[HPDF_MAX_JWW_NUM];
-   HPDF_List                        cmap_range;
-   HPDF_List                        notdef_range;
-   HPDF_List                        code_space_range;
-   HPDF_WritingMode                 writing_mode;
-   char                             registry[HPDF_LIMIT_MAX_NAME_LEN + 1];
-   char                             ordering[HPDF_LIMIT_MAX_NAME_LEN + 1];
-   HpdfInt                          suppliment;
-   HPDF_CMapEncoder_ByteType_Func   is_lead_byte_fn;
-   HPDF_CMapEncoder_ByteType_Func   is_trial_byte_fn;
-   HpdfInt                          uid_offset;
-   HpdfUInt                         xuid[3];
+   HpdfUnicode                       unicode_map[256][256];
+   HpdfUInt16                        cid_map[256][256];
+   HpdfUInt16                        jww_line_head[HPDF_MAX_JWW_NUM];
+   HpdfList                         *cmap_range;
+   HpdfList                         *notdef_range;
+   HpdfList                         *code_space_range;
+   HPDF_WritingMode                  writing_mode;
+   char                              registry[HPDF_LIMIT_MAX_NAME_LEN + 1];
+   char                              ordering[HPDF_LIMIT_MAX_NAME_LEN + 1];
+   HpdfInt                           suppliment;
+   HPDF_CMapEncoder_ByteType_Func    is_lead_byte_fn;
+   HPDF_CMapEncoder_ByteType_Func    is_trial_byte_fn;
+   HpdfInt                           uid_offset;
+   HpdfUInt                          xuid[3];
 } HPDF_CMapEncoderAttr_Rec;
 
 
-HPDF_Encoder   HPDF_CMapEncoder_New(HpdfMemMgr * const mmgr, char *name, HPDF_Encoder_Init_Func   init_fn);
-HpdfStatus     HPDF_CMapEncoder_InitAttr(HPDF_Encoder encoder);
-void           HPDF_CMapEncoder_Free(HPDF_Encoder encoder);
-HpdfStatus     HPDF_CMapEncoder_Write(HPDF_Encoder encoder, HPDF_Stream    out);
-HpdfUnicode    HPDF_CMapEncoder_ToUnicode(HPDF_Encoder encoder, HpdfUInt16    code);
-HpdfUInt16     HPDF_CMapEncoder_ToCID(HPDF_Encoder encoder, HpdfUInt16    code);
-HpdfStatus     HPDF_CMapEncoder_SetParseText(HPDF_Encoder encoder, HpdfParseText *state, HpdfByte const * const text, HpdfUInt len);
-HPDF_ByteType  HPDF_CMapEncoder_ByteType(HPDF_Encoder encoder, HpdfParseText *state);
-HpdfStatus     HPDF_CMapEncoder_AddCMap(HPDF_Encoder encoder, const HPDF_CidRange_Rec  *range);
-HpdfStatus     HPDF_CMapEncoder_AddNotDefRange(HPDF_Encoder encoder, HPDF_CidRange_Rec   range);
-HpdfStatus     HPDF_CMapEncoder_AddCodeSpaceRange(HPDF_Encoder encoder, HPDF_CidRange_Rec   range);
-void           HPDF_CMapEncoder_SetUnicodeArray(HPDF_Encoder encoder, const HPDF_UnicodeMap_Rec  *array1);
-HpdfStatus     HPDF_CMapEncoder_AddJWWLineHead(HPDF_Encoder encoder, const HpdfUInt16  *code);
-HpdfBool       HPDF_Encoder_CheckJWWLineHead(HPDF_Encoder encoder, const HpdfUInt16   code);
+HpdfEncoder    *HPDF_CMapEncoder_New(                 HpdfMemMgr * const mmgr, char *name, HPDF_Encoder_Init_Func   init_fn);
+HpdfStatus      HPDF_CMapEncoder_InitAttr(            HpdfEncoder       * const encoder);
+void            HPDF_CMapEncoder_Free(                HpdfEncoder       * const encoder);
+HpdfStatus      HPDF_CMapEncoder_Write(               HpdfEncoder const * const encoder, HPDF_Stream    out);
+HpdfUnicode     HPDF_CMapEncoder_ToUnicode(           HpdfEncoder const * const encoder, HpdfUInt16    code);
+HpdfUInt16      HPDF_CMapEncoder_ToCID(               HpdfEncoder const * const encoder, HpdfUInt16    code);
+HpdfStatus      HPDF_CMapEncoder_SetParseText(        HpdfEncoder const * const encoder, HpdfParseText *state, HpdfByte const * const text, HpdfUInt len);
+HPDF_ByteType   HPDF_CMapEncoder_ByteType(            HpdfEncoder const * const encoder, HpdfParseText *state);
+HpdfStatus      HPDF_CMapEncoder_AddCMap(             HpdfEncoder const * const encoder, const HPDF_CidRange_Rec  *range);
+HpdfStatus      HPDF_CMapEncoder_AddNotDefRange(      HpdfEncoder const * const encoder, HPDF_CidRange_Rec   range);
+HpdfStatus      HPDF_CMapEncoder_AddCodeSpaceRange(   HpdfEncoder const * const encoder, HPDF_CidRange_Rec   range);
+void            HPDF_CMapEncoder_SetUnicodeArray(     HpdfEncoder const * const encoder, const HPDF_UnicodeMap_Rec  *array1);
+HpdfStatus      HPDF_CMapEncoder_AddJWWLineHead(      HpdfEncoder const * const encoder, const HpdfUInt16  *code);
+HpdfBool        HPDF_Encoder_CheckJWWLineHead(        HpdfEncoder const * const encoder, const HpdfUInt16   code);
 
 /*-- utility functions ----------------------------------*/
 
-const char *HPDF_UnicodeToGryphName(HpdfUnicode  unicode);
+char const *HPDF_UnicodeToGryphName(HpdfUnicode  unicode);
 HpdfUnicode HPDF_GryphNameToUnicode(char const *gryph_name);
 
 #ifdef __cplusplus

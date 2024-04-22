@@ -26,22 +26,9 @@ extern "C" {
 #endif
 
 
-HpdfStatus
-HPDF_Info_SetInfoAttr (HPDF_Dict        info,
-                       HPDF_InfoType    type,
-                       char const *value,
-                       HPDF_Encoder     encoder);
-
-
-const char*
-HPDF_Info_GetInfoAttr (HPDF_Dict      info,
-                       HPDF_InfoType  type);
-
-
-HpdfStatus
-HPDF_Info_SetInfoDateAttr (HPDF_Dict      info,
-                           HPDF_InfoType  type,
-                           HPDF_Date      value);
+HpdfStatus   HPDF_Info_SetInfoAttr(    HPDF_Dict info, HPDF_InfoType type, char const *value, HpdfEncoder * const encoder);
+char const  *HPDF_Info_GetInfoAttr(    HPDF_Dict info, HPDF_InfoType type);
+HpdfStatus   HPDF_Info_SetInfoDateAttr(HPDF_Dict info, HPDF_InfoType type, HPDF_Date value);
 
 #ifdef __cplusplus
 }

@@ -27,7 +27,7 @@ static void
 FreeFunc(HPDF_FontDef  fontdef);
 
 
-static const char*
+static char const*
 GetKeyword(char const *src,
    char        *keyword,
    HpdfUInt        len);
@@ -96,7 +96,7 @@ HPDF_FontDef
    return fontdef;
 }
 
-static const char*
+static char const*
 GetKeyword(char const *src,
    char        *keyword,
    HpdfUInt        len)
@@ -157,7 +157,7 @@ LoadAfm(HPDF_FontDef  fontdef,
    /* Global Font Information */
 
    for (;;) {
-      const char *s;
+      char const *s;
 
       len = HPDF_TMP_BUF_SIZ;
       if ((ret = HPDF_Stream_ReadLn(stream, buf, &len)) != HPDF_OK)
@@ -302,7 +302,7 @@ LoadAfm(HPDF_FontDef  fontdef,
 
    /* load CharMetrics */
    for (i = 0; i < attr->widths_count; i++, cdata++) {
-      const char *s;
+      char const *s;
       char buf2[HPDF_LIMIT_MAX_NAME_LEN + 1] = { 0 };
 
       len = HPDF_TMP_BUF_SIZ;
@@ -395,7 +395,7 @@ LoadFontData(HPDF_FontDef  fontdef,
 
       if (len > 0) {
          if (attr->length1 == 0) {
-            const char *s1 = HPDF_StrStr(buf, "eexec", len + 11);
+            char const *s1 = HPDF_StrStr(buf, "eexec", len + 11);
 
             /* length1 indicate the size of ascii-data of font-file. */
             if (s1)
@@ -403,7 +403,7 @@ LoadFontData(HPDF_FontDef  fontdef,
          }
 
          if (attr->length1 > 0 && attr->length2 == 0) {
-            const char *s2 = HPDF_StrStr(buf, "cleartomark",
+            char const *s2 = HPDF_StrStr(buf, "cleartomark",
                len + 11);
 
             if (s2)
@@ -544,7 +544,7 @@ HPDF_Type1FontDef_SetWidths(HPDF_FontDef          fontdef,
 
 HpdfInt16
 HPDF_Type1FontDef_GetWidthByName(HPDF_FontDef      fontdef,
-   const char*  gryph_name)
+   char const*  gryph_name)
 {
    HpdfUnicode unicode = HPDF_GryphNameToUnicode(gryph_name);
 

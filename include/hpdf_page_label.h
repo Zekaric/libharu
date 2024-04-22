@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-HPDF_Dict HPDF_PageLabel_New(HpdfDoc       * const doc, HPDF_PageNumStyle style, HpdfInt first_page, const char *prefix);
+HPDF_Dict HPDF_PageLabel_New(HpdfDoc       * const doc, HPDF_PageNumStyle style, HpdfInt first_page, char const *prefix);
 
 #ifdef __cplusplus
 }

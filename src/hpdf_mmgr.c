@@ -89,9 +89,9 @@ HpdfMemMgr *
       }
       else
       {
-         HPDF_MPool_Node node;
+         HpdfMemPoolNode *node;
 
-         node = (HPDF_MPool_Node) mmgr->alloc_fn(sizeof(HPDF_MPool_Node_Rec) + buf_size);
+         node = (HpdfMemPoolNode *) mmgr->alloc_fn(sizeof(HpdfMemPoolNode) + buf_size);
 
          HPDF_PTRACE(("+%p mmgr-node-new\n", node));
 
@@ -105,7 +105,7 @@ HpdfMemMgr *
          else
          {
             mmgr->mpool     = node;
-            node->buf       = (HpdfByte *) node + sizeof(HPDF_MPool_Node_Rec);
+            node->buf       = (HpdfByte *) node + sizeof(HpdfMemPoolNode);
             node->size      = buf_size;
             node->used_size = 0;
             node->next_node = NULL;
@@ -136,7 +136,7 @@ void
    HpdfMemMgrDestroy(
       HpdfMemMgr * const mmgr)
 {
-   HPDF_MPool_Node node;
+   HpdfMemPoolNode *node;
 
    HPDF_PTRACE((" HpdfMemMgrDestroy\n"));
 
@@ -150,7 +150,7 @@ void
    /* delete all nodes recursively */
    while (node != NULL) 
    {
-      HPDF_MPool_Node tmp = node;
+      HpdfMemPoolNode *tmp = node;
       node = tmp->next_node;
 
       HPDF_PTRACE(("-%p mmgr-node-free\n", tmp));
@@ -183,7 +183,7 @@ void *
 
    if (mmgr->mpool) 
    {
-      HPDF_MPool_Node node = mmgr->mpool;
+      HpdfMemPoolNode *node = mmgr->mpool;
 
 #ifdef HPDF_ALINMENT_SIZ
       size = (size + (HPDF_ALINMENT_SIZ - 1)) / HPDF_ALINMENT_SIZ;
@@ -200,7 +200,7 @@ void *
       {
          HpdfUInt tmp_buf_siz = (mmgr->buf_size < size) ?  size : mmgr->buf_size;
 
-         node = (HPDF_MPool_Node) mmgr->alloc_fn(sizeof(HPDF_MPool_Node_Rec) + tmp_buf_siz);
+         node = (HpdfMemPoolNode *) mmgr->alloc_fn(sizeof(HpdfMemPoolNode) + tmp_buf_siz);
          HPDF_PTRACE(("+%p mmgr-new-node\n", node));
 
          if (!node) 
@@ -215,7 +215,7 @@ void *
       node->next_node = mmgr->mpool;
       mmgr->mpool     = node;
       node->used_size = size;
-      node->buf       = (HpdfByte *) node + sizeof(HPDF_MPool_Node_Rec);
+      node->buf       = (HpdfByte *) node + sizeof(HpdfMemPoolNode);
       ptr             = node->buf;
    }
    else 

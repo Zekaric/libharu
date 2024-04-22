@@ -28,10 +28,10 @@ extern "C" {
 /*----------------------------------------------------------------------------*/
 /*----- HPDF_Pages -----------------------------------------------------------*/
 
-HPDF_Pages HPDF_Pages_New  (HpdfMemMgr * const mmgr, HPDF_Pages  parent, HPDF_Xref   xref);
-HpdfBool HPDF_Pages_Validate  (HPDF_Pages  pages);
-HpdfStatus HPDF_Pages_AddKids  (HPDF_Pages  parent, HPDF_Dict   kid);
-HpdfStatus HPDF_Page_InsertBefore  (HPDF_Page   page, HPDF_Page   target);
+HPDF_Pages  HPDF_Pages_New(         HpdfMemMgr * const mmgr, HPDF_Pages  parent, HPDF_Xref   xref);
+HpdfBool    HPDF_Pages_Validate(    HPDF_Pages  pages);
+HpdfStatus  HPDF_Pages_AddKids(     HPDF_Pages  parent, HPDF_Dict   kid);
+HpdfStatus  HPDF_Page_InsertBefore( HPDF_Page   page, HPDF_Page   target);
 
 typedef struct _HPDF_PageAttr_Rec  *HPDF_PageAttr;
 
@@ -61,10 +61,10 @@ typedef struct _HPDF_PageAttr_Rec {
 HpdfBool HPDF_Page_Validate  (HPDF_Page  page);
 HPDF_Page HPDF_Page_New  (HpdfMemMgr * const mmgr, HPDF_Xref   xref);
 void *HPDF_Page_GetInheritableItem  (HPDF_Page      page, char const   *key, HpdfUInt16    obj_class);
-const char *HPDF_Page_GetXObjectName  (HPDF_Page     page, HPDF_XObject  xobj);
-const char *HPDF_Page_GetLocalFontName  (HPDF_Page  page, HPDF_Font  font);
-const char *HPDF_Page_GetExtGStateName  (HPDF_Page       page, HPDF_ExtGState  gstate);
-const char *HPDF_Page_GetShadingName  (HPDF_Page    page, HPDF_Shading shading);
+char const *HPDF_Page_GetXObjectName  (HPDF_Page     page, HPDF_XObject  xobj);
+char const *HPDF_Page_GetLocalFontName  (HPDF_Page  page, HPDF_Font  font);
+char const *HPDF_Page_GetExtGStateName  (HPDF_Page       page, HPDF_ExtGState  gstate);
+char const *HPDF_Page_GetShadingName  (HPDF_Page    page, HPDF_Shading shading);
 HPDF_Box HPDF_Page_GetMediaBox  (HPDF_Page    page);
 HpdfStatus HPDF_Page_SetBoxValue (HPDF_Page     page, char const  *name, HpdfUInt     index, HpdfReal     value);
 void HPDF_Page_SetFilter  (HPDF_Page    page, HpdfUInt    filter);

@@ -36027,22 +36027,22 @@ static const HPDF_CidRange_Rec GBK_EUC_NOTDEF_RANGE = { 0x00, 0x1F, 7716 };
 static const HPDF_CidRange_Rec GB_EUC_NOTDEF_RANGE  = { 0x00, 0x1F, 7716 };
 
 
-static HpdfBool     GBK_EUC_IsLeadByte(        HPDF_Encoder encoder, HpdfByte b);
-static HpdfBool     GBK_EUC_IsTrialByte(       HPDF_Encoder encoder, HpdfByte b);
-static HpdfStatus   GBK_EUC_AddCodeSpaceRange( HPDF_Encoder encoder);
-static HpdfStatus   GBK_EUC_H_Init(            HPDF_Encoder encoder);
-static HpdfStatus   GBK_EUC_V_Init(            HPDF_Encoder encoder);
-static HpdfBool     GB_EUC_IsLeadByte(         HPDF_Encoder encoder, HpdfByte b);
-static HpdfBool     GB_EUC_IsTrialByte(        HPDF_Encoder encoder, HpdfByte b);
-static HpdfStatus   GB_EUC_AddCodeSpaceRange(  HPDF_Encoder encoder);
-static HpdfStatus   GB_EUC_H_Init(             HPDF_Encoder encoder);
-static HpdfStatus   GB_EUC_V_Init(             HPDF_Encoder encoder);
+static HpdfBool     GBK_EUC_IsLeadByte(        HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfBool     GBK_EUC_IsTrialByte(       HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfStatus   GBK_EUC_AddCodeSpaceRange( HpdfEncoder const * const encoder);
+static HpdfStatus   GBK_EUC_H_Init(            HpdfEncoder       * const encoder);
+static HpdfStatus   GBK_EUC_V_Init(            HpdfEncoder       * const encoder);
+static HpdfBool     GB_EUC_IsLeadByte(         HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfBool     GB_EUC_IsTrialByte(        HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfStatus   GB_EUC_AddCodeSpaceRange(  HpdfEncoder const * const encoder);
+static HpdfStatus   GB_EUC_H_Init(             HpdfEncoder       * const encoder);
+static HpdfStatus   GB_EUC_V_Init(             HpdfEncoder       * const encoder);
 
 /*--------------------------------------------------------------------------*/
 
 static HpdfBool
    GBK_EUC_IsLeadByte(
-      HPDF_Encoder    encoder,
+      HpdfEncoder const * const    encoder,
       HpdfByte       b)
 {
    HPDF_UNUSED(encoder);
@@ -36051,7 +36051,7 @@ static HpdfBool
 
 static HpdfBool
    GBK_EUC_IsTrialByte(
-      HPDF_Encoder    encoder,
+      HpdfEncoder const * const    encoder,
       HpdfByte       b)
 {
    HPDF_UNUSED(encoder);
@@ -36060,7 +36060,7 @@ static HpdfBool
 
 static HpdfStatus
    GBK_EUC_AddCodeSpaceRange
-   (HPDF_Encoder    encoder)
+   (HpdfEncoder const * const    encoder)
 {
    HPDF_CidRange_Rec code_space_range1 = { 0x00, 0x80, 0 };
    HPDF_CidRange_Rec code_space_range2 = { 0x8140, 0xFEFE, 0 };
@@ -36080,7 +36080,7 @@ static HpdfStatus
 
 static HpdfStatus
    GBK_EUC_H_Init(
-      HPDF_Encoder  encoder)
+      HpdfEncoder * const  encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -36126,7 +36126,7 @@ static HpdfStatus
 
 static HpdfStatus
    GBK_EUC_V_Init(
-      HPDF_Encoder  encoder)
+      HpdfEncoder * const encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -36179,7 +36179,7 @@ static HpdfStatus
 
 static HpdfBool
    GB_EUC_IsLeadByte(
-      HPDF_Encoder    encoder,
+      HpdfEncoder const * const    encoder,
       HpdfByte       b)
 {
    HPDF_UNUSED(encoder);
@@ -36188,7 +36188,7 @@ static HpdfBool
 
 static HpdfBool
    GB_EUC_IsTrialByte(
-      HPDF_Encoder    encoder,
+      HpdfEncoder const * const    encoder,
       HpdfByte       b)
 {
    HPDF_UNUSED(encoder);
@@ -36197,7 +36197,7 @@ static HpdfBool
 
 static HpdfStatus
    GB_EUC_AddCodeSpaceRange(
-      HPDF_Encoder    encoder)
+      HpdfEncoder const * const    encoder)
 {
    HPDF_CidRange_Rec code_space_range1 = { 0x00, 0x80, 0 };
    HPDF_CidRange_Rec code_space_range2 = { 0xA1A1, 0xFEFE, 0 };
@@ -36217,7 +36217,7 @@ static HpdfStatus
 
 static HpdfStatus
    GB_EUC_H_Init(
-      HPDF_Encoder  encoder)
+      HpdfEncoder * const  encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -36263,7 +36263,7 @@ static HpdfStatus
 
 static HpdfStatus
    GB_EUC_V_Init(
-      HPDF_Encoder  encoder)
+      HpdfEncoder * const  encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -36319,7 +36319,7 @@ HPDF_EXPORT(HpdfStatus)
    HPDF_UseCNSEncodings(
       HpdfDoc * const doc)
 {
-   HPDF_Encoder encoder;
+   HpdfEncoder *encoder;
    HpdfStatus ret;
 
    if (!HPDF_HasDoc(doc))

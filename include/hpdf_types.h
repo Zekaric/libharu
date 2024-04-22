@@ -535,13 +535,13 @@ typedef enum _HPDF_PageDirection
 } HPDF_PageDirection;
 
 
-typedef enum _HPDF_EncoderType 
+typedef enum
 {
    HPDF_ENCODER_TYPE_SINGLE_BYTE,
    HPDF_ENCODER_TYPE_DOUBLE_BYTE,
    HPDF_ENCODER_TYPE_UNINITIALIZED,
    HPDF_ENCODER_UNKNOWN
-} HPDF_EncoderType;
+} HpdfEncoderType;
 
 typedef enum _HPDF_ByteType 
 {
@@ -562,11 +562,11 @@ typedef enum _HPDF_TextAlignment
 /*----------------------------------------------------------------------------*/
 
 /* Name Dictionary values -- see PDF reference section 7.7.4 */
-typedef enum _HPDF_NameDictKey 
+typedef enum _HpdfValueNameDictKey 
 {
    HPDF_NAME_EMBEDDED_FILES = 0,    /* TODO the rest */
    HPDF_NAME_EOF
-} HPDF_NameDictKey;
+} HpdfValueNameDictKey;
 
 /*----------------------------------------------------------------------------*/
 

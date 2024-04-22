@@ -15127,165 +15127,156 @@ static const HPDF_CidRange_Rec CMAP_ARRAY_ETen_B5_V[] = {
 };
 
 
-static const HPDF_CidRange_Rec ETen_B5_NOTDEF_RANGE = {0x00, 0x1F, 13648};
+static const HPDF_CidRange_Rec ETen_B5_NOTDEF_RANGE = { 0x00, 0x1F, 13648 };
 
-
-static HpdfBool
-ETen_B5_IsLeadByte  (HPDF_Encoder    encoder,
-                     HpdfByte       b);
-
-
-static HpdfBool
-ETen_B5_IsTrialByte  (HPDF_Encoder    encoder,
-                      HpdfByte       b);
-
-
-static HpdfStatus
-ETen_B5_AddCodeSpaceRange (HPDF_Encoder    encoder);
-
-
-static HpdfStatus
-ETen_B5_H_Init  (HPDF_Encoder    encoder);
-
-
-static HpdfStatus
-ETen_B5_V_Init  (HPDF_Encoder    encoder);
+static HpdfBool   ETen_B5_IsLeadByte(        HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfBool   ETen_B5_IsTrialByte(       HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfStatus ETen_B5_AddCodeSpaceRange( HpdfEncoder const * const encoder); 
+static HpdfStatus ETen_B5_H_Init(            HpdfEncoder       * const encoder);
+static HpdfStatus ETen_B5_V_Init(            HpdfEncoder       * const encoder);
 
 
 /*--------------------------------------------------------------------------*/
 
 static HpdfBool
-ETen_B5_IsLeadByte  (HPDF_Encoder    encoder,
-                  HpdfByte       b)
+ETen_B5_IsLeadByte(HpdfEncoder const * const    encoder,
+   HpdfByte       b)
 {
-    HPDF_UNUSED (encoder);
-    return ((b >= 0x81 && b <= 0xfe));
+   HPDF_UNUSED(encoder);
+   return ((b >= 0x81 && b <= 0xfe));
 }
 
 
 static HpdfBool
-ETen_B5_IsTrialByte  (HPDF_Encoder    encoder,
-                   HpdfByte       b)
+ETen_B5_IsTrialByte(HpdfEncoder const * const    encoder,
+   HpdfByte       b)
 {
-    HPDF_UNUSED (encoder);
-    return (b >= 0x40 && b <= 0xfe);
+   HPDF_UNUSED(encoder);
+   return (b >= 0x40 && b <= 0xfe);
 }
 
 
 static HpdfStatus
-ETen_B5_AddCodeSpaceRange (HPDF_Encoder    encoder)
+ETen_B5_AddCodeSpaceRange(HpdfEncoder const * const    encoder)
 {
-    HPDF_CidRange_Rec code_space_range1 = {0x00, 0x80, 0};
-    HPDF_CidRange_Rec code_space_range2 = {0xA140, 0xFEFE, 0};
+   HPDF_CidRange_Rec code_space_range1 = { 0x00, 0x80, 0 };
+   HPDF_CidRange_Rec code_space_range2 = { 0xA140, 0xFEFE, 0 };
 
-    if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, code_space_range1)
-                    != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCodeSpaceRange(encoder, code_space_range1)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    if (HPDF_CMapEncoder_AddCodeSpaceRange (encoder, code_space_range2)
-                    != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCodeSpaceRange(encoder, code_space_range2)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
 static HpdfStatus
-ETen_B5_H_Init  (HPDF_Encoder  encoder)
+   ETen_B5_H_Init(
+      HpdfEncoder * const  encoder)
 {
-    HPDF_CMapEncoderAttr attr;
-    HpdfStatus ret;
+   HPDF_CMapEncoderAttr attr;
+   HpdfStatus ret;
 
-    if ((ret = HPDF_CMapEncoder_InitAttr (encoder)) != HPDF_OK)
-        return ret;
+   ret = HPDF_CMapEncoder_InitAttr(encoder);
+   if (ret != HPDF_OK)
+   {
+      return ret;
+   }
 
-    attr = (HPDF_CMapEncoderAttr)encoder->attr;
+   attr = (HPDF_CMapEncoderAttr) encoder->attr;
 
-    if (HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_ETen_B5_H) != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_ETen_B5_H) != HPDF_OK)
+      return encoder->error->error_no;
 
-    if ((ret = ETen_B5_AddCodeSpaceRange (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = ETen_B5_AddCodeSpaceRange(encoder)) != HPDF_OK)
+      return ret;
 
-    if (HPDF_CMapEncoder_AddNotDefRange (encoder, ETen_B5_NOTDEF_RANGE)
-                != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddNotDefRange(encoder, ETen_B5_NOTDEF_RANGE)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    HPDF_CMapEncoder_SetUnicodeArray (encoder, CP950_UNICODE_ARRAY);
+   HPDF_CMapEncoder_SetUnicodeArray(encoder, CP950_UNICODE_ARRAY);
 
-    attr->is_lead_byte_fn = ETen_B5_IsLeadByte;
-    attr->is_trial_byte_fn = ETen_B5_IsTrialByte;
-    HPDF_StrCpy (attr->registry, "Adobe", attr->registry +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    HPDF_StrCpy (attr->ordering, "CNS1", attr->ordering +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    attr->suppliment = 0;
-    attr->uid_offset = 200;
-    attr->xuid[0] = 1;
-    attr->xuid[1] = 10;
-    attr->xuid[2] = 25390;
+   attr->is_lead_byte_fn = ETen_B5_IsLeadByte;
+   attr->is_trial_byte_fn = ETen_B5_IsTrialByte;
+   HPDF_StrCpy(attr->registry, "Adobe", attr->registry +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   HPDF_StrCpy(attr->ordering, "CNS1", attr->ordering +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   attr->suppliment = 0;
+   attr->uid_offset = 200;
+   attr->xuid[0] = 1;
+   attr->xuid[1] = 10;
+   attr->xuid[2] = 25390;
 
-    encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
+   encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
-
 static HpdfStatus
-ETen_B5_V_Init  (HPDF_Encoder  encoder)
+   ETen_B5_V_Init(
+      HpdfEncoder * const  encoder)
 {
-    HPDF_CMapEncoderAttr attr;
-    HpdfStatus ret;
+   HPDF_CMapEncoderAttr attr;
+   HpdfStatus ret;
 
-    if ((ret = HPDF_CMapEncoder_InitAttr (encoder)) != HPDF_OK)
-        return ret;
+   ret = HPDF_CMapEncoder_InitAttr(encoder);
+   if (ret != HPDF_OK)
+   {
+      return ret;
+   }
 
-    attr = (HPDF_CMapEncoderAttr)encoder->attr;
+   attr = (HPDF_CMapEncoderAttr) encoder->attr;
 
-    if ((ret = HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_ETen_B5_H)) !=
-            HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_ETen_B5_H)) !=
+      HPDF_OK)
+      return ret;
 
-    if ((ret = HPDF_CMapEncoder_AddCMap (encoder, CMAP_ARRAY_ETen_B5_V)) !=
-            HPDF_OK)
-        return ret;
+   if ((ret = HPDF_CMapEncoder_AddCMap(encoder, CMAP_ARRAY_ETen_B5_V)) !=
+      HPDF_OK)
+      return ret;
 
-    if ((ret = ETen_B5_AddCodeSpaceRange (encoder)) != HPDF_OK)
-        return ret;
+   if ((ret = ETen_B5_AddCodeSpaceRange(encoder)) != HPDF_OK)
+      return ret;
 
-    if (HPDF_CMapEncoder_AddNotDefRange (encoder, ETen_B5_NOTDEF_RANGE)
-                != HPDF_OK)
-        return encoder->error->error_no;
+   if (HPDF_CMapEncoder_AddNotDefRange(encoder, ETen_B5_NOTDEF_RANGE)
+      != HPDF_OK)
+      return encoder->error->error_no;
 
-    HPDF_CMapEncoder_SetUnicodeArray (encoder, CP950_UNICODE_ARRAY);
+   HPDF_CMapEncoder_SetUnicodeArray(encoder, CP950_UNICODE_ARRAY);
 
-    attr->is_lead_byte_fn = ETen_B5_IsLeadByte;
-    attr->is_trial_byte_fn = ETen_B5_IsTrialByte;
-    HPDF_StrCpy (attr->registry, "Adobe", attr->registry +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    HPDF_StrCpy (attr->ordering, "CNS1", attr->ordering +
-                HPDF_LIMIT_MAX_NAME_LEN);
-    attr->suppliment = 0;
-    attr->uid_offset = 920;
-    attr->xuid[0] = 1;
-    attr->xuid[1] = 10;
-    attr->xuid[2] = 25391;
+   attr->is_lead_byte_fn = ETen_B5_IsLeadByte;
+   attr->is_trial_byte_fn = ETen_B5_IsTrialByte;
+   HPDF_StrCpy(attr->registry, "Adobe", attr->registry +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   HPDF_StrCpy(attr->ordering, "CNS1", attr->ordering +
+      HPDF_LIMIT_MAX_NAME_LEN);
+   attr->suppliment = 0;
+   attr->uid_offset = 920;
+   attr->xuid[0] = 1;
+   attr->xuid[1] = 10;
+   attr->xuid[2] = 25391;
 
-    attr->writing_mode = HPDF_WMODE_VERTICAL;
+   attr->writing_mode = HPDF_WMODE_VERTICAL;
 
-    encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
+   encoder->type = HPDF_ENCODER_TYPE_DOUBLE_BYTE;
 
-    return HPDF_OK;
+   return HPDF_OK;
 }
 
 
 /*--------------------------------------------------------------------------*/
 
 HPDF_EXPORT(HpdfStatus)
-   HPDF_UseCNTEncodings(
-      HpdfDoc * const doc)
+HPDF_UseCNTEncodings(
+   HpdfDoc * const doc)
 {
-   HPDF_Encoder encoder;
+   HpdfEncoder *encoder;
    HpdfStatus ret;
 
    if (!HPDF_HasDoc(doc))

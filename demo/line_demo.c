@@ -82,7 +82,7 @@ draw_rect (HPDF_Page     page,
 
 int main (int argc, char **argv)
 {
-    const char* page_title = "Line Example";
+    char const* page_title = "Line Example";
 
     HpdfDoc *pdf;
     HPDF_Font font;

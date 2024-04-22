@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     char              fname[256];
     HPDF_Page         page;
     HPDF_Font         font;
-    HPDF_Encoder      encoding;
+    HpdfEncoder const * const      encoding;
     HPDF_Annotation   annot;
 
     strcpy (fname, argv[0]);

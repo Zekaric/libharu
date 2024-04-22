@@ -64,31 +64,30 @@ typedef HpdfUInt
 typedef struct _HPDF_FontAttr_Rec  *HPDF_FontAttr;
 
 typedef struct _HPDF_FontAttr_Rec {
-    HPDF_FontType               type;
-    HPDF_WritingMode            writing_mode;
-    HPDF_Font_TextWidths_Func   text_width_fn;
-    HPDF_Font_MeasureText_Func  measure_text_fn;
-    HPDF_FontDef                fontdef;
-    HPDF_Encoder                encoder;
+    HPDF_FontType                 type;
+    HPDF_WritingMode              writing_mode;
+    HPDF_Font_TextWidths_Func     text_width_fn;
+    HPDF_Font_MeasureText_Func    measure_text_fn;
+    HPDF_FontDef                  fontdef;
+    HpdfEncoder                  *encoder;
 
     /* if the encoding-type is HPDF_ENCODER_TYPE_SINGLE_BYTE, the width of
-     * each characters are cashed in 'widths'.
-     * when HPDF_ENCODER_TYPE_DOUBLE_BYTE the width is calculate each time.
-     */
-    HpdfInt16                 *widths;
-    HpdfByte                  *used;
+    ** each characters are cashed in 'widths'.
+    ** when HPDF_ENCODER_TYPE_DOUBLE_BYTE the width is calculate each time. */
+    HpdfInt16                    *widths;
+    HpdfByte                     *used;
 
-    HPDF_Xref                   xref;
-    HPDF_Font                   descendant_font;
-    HPDF_Dict                   map_stream;
-    HPDF_Dict                   cmap_stream;
+    HPDF_Xref                     xref;
+    HPDF_Font                     descendant_font;
+    HPDF_Dict                     map_stream;
+    HPDF_Dict                     cmap_stream;
 } HPDF_FontAttr_Rec;
 
 
-HPDF_Font HPDF_Type1Font_New  (HpdfMemMgr * const mmgr, HPDF_FontDef     fontdef, HPDF_Encoder     encoder, HPDF_Xref        xref);
-HPDF_Font HPDF_TTFont_New  (HpdfMemMgr * const mmgr, HPDF_FontDef     fontdef, HPDF_Encoder     encoder, HPDF_Xref        xref);
-HPDF_Font HPDF_Type0Font_New  (HpdfMemMgr * const mmgr, HPDF_FontDef     fontdef, HPDF_Encoder     encoder, HPDF_Xref        xref);
-HpdfBool HPDF_Font_Validate  (HPDF_Font font);
+HPDF_Font   HPDF_Type1Font_New(  HpdfMemMgr * const mmgr, HPDF_FontDef fontdef, HpdfEncoder * const encoder, HPDF_Xref xref);
+HPDF_Font   HPDF_TTFont_New(     HpdfMemMgr * const mmgr, HPDF_FontDef fontdef, HpdfEncoder * const encoder, HPDF_Xref xref);
+HPDF_Font   HPDF_Type0Font_New(  HpdfMemMgr * const mmgr, HPDF_FontDef fontdef, HpdfEncoder * const encoder, HPDF_Xref xref);
+HpdfBool    HPDF_Font_Validate(  HPDF_Font font);
 
 #ifdef __cplusplus
 }

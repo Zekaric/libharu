@@ -303,10 +303,11 @@ void HPDF_TTFontDef_SetTagName  (HPDF_FontDef   fontdef, char     *tag);
 
 typedef struct _HPDF_CIDFontDefAttrRec   *HPDF_CIDFontDefAttr;
 
-typedef struct _HPDF_CIDFontDefAttrRec {
-    HPDF_List     widths;
-    HpdfInt16    DW;
-    HpdfInt16    DW2[2];
+typedef struct _HPDF_CIDFontDefAttrRec 
+{
+    HpdfList   *widths;
+    HpdfInt16   DW;
+    HpdfInt16   DW2[2];
 } HPDF_CIDFontDefAttr_Rec;
 
 HPDF_FontDef HPDF_CIDFontDef_New  (HpdfMemMgr * const mmgr, char              *name, HPDF_FontDef_InitFunc   init_fn);

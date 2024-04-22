@@ -277,7 +277,7 @@ HPDF_Page_SetExtGState(HPDF_Page        page,
 {
    HpdfStatus ret = HPDF_Page_CheckState(page, HPDF_GMODE_PAGE_DESCRIPTION);
    HPDF_PageAttr attr;
-   const char *local_name;
+   char const *local_name;
 
    HPDF_PTRACE((" HPDF_Page_SetExtGState\n"));
 
@@ -315,7 +315,7 @@ HPDF_Page_SetShading(HPDF_Page    page,
 {
    HpdfStatus ret = HPDF_Page_CheckState(page, HPDF_GMODE_PAGE_DESCRIPTION);
    HPDF_PageAttr attr;
-   const char *local_name;
+   char const *local_name;
 
    HPDF_PTRACE((" HPDF_Page_SetShading\n"));
 
@@ -1174,7 +1174,7 @@ HPDF_Page_SetFontAndSize(HPDF_Page  page,
    char buf[HPDF_TMP_BUF_SIZ];
    char *pbuf = buf;
    char *eptr = buf + HPDF_TMP_BUF_SIZ - 1;
-   const char *local_name;
+   char const *local_name;
    HPDF_PageAttr attr;
 
    HPDF_PTRACE((" HPDF_Page_SetFontAndSize\n"));
@@ -1889,7 +1889,7 @@ HPDF_Page_ExecuteXObject(HPDF_Page     page,
 {
    HpdfStatus ret = HPDF_Page_CheckState(page, HPDF_GMODE_PAGE_DESCRIPTION);
    HPDF_PageAttr attr;
-   const char *local_name;
+   char const *local_name;
 
    HPDF_PTRACE((" HPDF_Page_ExecuteXObject\n"));
 
@@ -2362,8 +2362,9 @@ HPDF_Page_DrawImage(HPDF_Page    page,
 
 
 static HpdfStatus
-InternalWriteText(HPDF_PageAttr      attr,
-   char const       *text)
+   InternalWriteText(
+      HPDF_PageAttr      attr,
+      char const       *text)
 {
    HPDF_FontAttr font_attr = (HPDF_FontAttr) attr->gstate->font->attr;
    HpdfStatus ret;
@@ -2372,7 +2373,7 @@ InternalWriteText(HPDF_PageAttr      attr,
 
    if (font_attr->type == HPDF_FONT_TYPE0_TT ||
       font_attr->type == HPDF_FONT_TYPE0_CID) {
-      HPDF_Encoder encoder;
+      HpdfEncoder *encoder;
       HpdfUInt len;
 
       if ((ret = HPDF_Stream_WriteStr(attr->stream, "<")) != HPDF_OK)
@@ -2475,7 +2476,7 @@ HPDF_Page_TextRect(HPDF_Page            page,
 {
    HpdfStatus ret = HPDF_Page_CheckState(page, HPDF_GMODE_TEXT_OBJECT);
    HPDF_PageAttr attr;
-   const char *ptr = text;
+   char const *ptr = text;
    HpdfBool pos_initialized = HPDF_FALSE;
    HpdfReal save_char_space = 0;
    HpdfBool is_insufficient_space = HPDF_FALSE;
@@ -2592,8 +2593,8 @@ HPDF_Page_TextRect(HPDF_Page            page,
             HpdfParseText state;
             HpdfUInt i = 0;
             HpdfUInt num_char = 0;
-            HPDF_Encoder encoder = ((HPDF_FontAttr) attr->gstate->font->attr)->encoder;
-            const char *tmp_ptr = ptr;
+            HpdfEncoder const * const encoder = ((HPDF_FontAttr) attr->gstate->font->attr)->encoder;
+            char const *tmp_ptr = ptr;
             HPDF_Encoder_SetParseText(encoder, &state, (HpdfByte *) tmp_ptr, tmp_len);
             while (*tmp_ptr) {
                HPDF_ByteType btype = HPDF_Encoder_ByteType(encoder, &state);
@@ -2664,7 +2665,7 @@ InternalShowTextNextLine(HPDF_Page    page,
 
    if (font_attr->type == HPDF_FONT_TYPE0_TT ||
       font_attr->type == HPDF_FONT_TYPE0_CID) {
-      HPDF_Encoder encoder = font_attr->encoder;
+      HpdfEncoder const * const encoder = font_attr->encoder;
 
       if ((ret = HPDF_Stream_WriteStr(attr->stream, "<")) != HPDF_OK)
          return ret;

@@ -32,11 +32,11 @@ HPDF_Annotation   HPDF_Annotation_New(       HpdfMemMgr * const mmgr, HPDF_Xref 
 HPDF_Annotation   HPDF_WidgetAnnot_New(      HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect); 
 HPDF_Annotation   HPDF_LinkAnnot_New(        HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect, HpdfDestination * const dst);
 HPDF_Annotation   HPDF_URILinkAnnot_New(     HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect, char const  *uri);
-HPDF_Annotation   HPDF_3DAnnot_New(          HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect, HpdfBool        tb, HpdfBool        np, HPDF_U3D         u3d, HPDF_Image       ap);
-HPDF_Annotation   HPDF_MarkupAnnot_New(      HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect, char const     *text, HPDF_Encoder     encoder, HPDF_AnnotType  subtype);
+HPDF_Annotation   HPDF_3DAnnot_New(          HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect, HpdfBool tb, HpdfBool np, HPDF_U3D u3d, HPDF_Image ap);
+HPDF_Annotation   HPDF_MarkupAnnot_New(      HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect,                           char const *text, HpdfEncoder * const encoder, HPDF_AnnotType subtype);
 HPDF_Annotation   HPDF_PopupAnnot_New(       HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect, HPDF_Annotation   parent);
-HPDF_Annotation   HPDF_StampAnnot_New(       HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect, HPDF_StampAnnotName name, const char*    text, HPDF_Encoder    encoder);
-HPDF_Annotation   HPDF_ProjectionAnnot_New(  HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect, const char*       text, HPDF_Encoder       encoder);
+HPDF_Annotation   HPDF_StampAnnot_New(       HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect, HPDF_StampAnnotName name, char const *text, HpdfEncoder * const encoder);
+HPDF_Annotation   HPDF_ProjectionAnnot_New(  HpdfMemMgr * const mmgr, HPDF_Xref xref, HpdfRect const rect,                           char const *text, HpdfEncoder * const encoder);
 HpdfBool          HPDF_Annotation_Validate(  HPDF_Annotation annot);
 
 #ifdef __cplusplus

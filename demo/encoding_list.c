@@ -139,11 +139,11 @@ int main (int argc, char **argv)
     HpdfDoc *pdf;
     char fname[256];
     HPDF_Font font;
-    const char *font_name;
+    char const *font_name;
     int i = 0;
     HPDF_Outline root;
 
-    const char *encodings[] = {
+    char const *encodings[] = {
             "StandardEncoding",
             "MacRomanEncoding",
             "WinAnsiEncoding",

@@ -19,151 +19,183 @@
 #include "hpdf_utils.h"
 #include "hpdf.h"
 
-static const char *COL_CMYK = "DeviceCMYK";
-static const char *COL_RGB = "DeviceRGB";
-static const char *COL_GRAY = "DeviceGray";
+static char const *COL_CMYK = "DeviceCMYK";
+static char const *COL_RGB = "DeviceRGB";
+static char const *COL_GRAY = "DeviceGray";
 
-static HpdfStatus
-LoadJpegHeader(HPDF_Image   image,
-   HPDF_Stream  stream);
-
+static HpdfStatus LoadJpegHeader(HPDF_Image   image, HPDF_Stream  stream);
 
 /*---------------------------------------------------------------------------*/
 
 static HpdfStatus
-LoadJpegHeader(HPDF_Image   image,
-   HPDF_Stream  stream)
+   LoadJpegHeader(
+      HPDF_Image   image,
+      HPDF_Stream  stream)
 {
-   HpdfUInt16 tag;
-   HpdfUInt16 height;
-   HpdfUInt16 width;
-   HpdfByte precision;
-   HpdfByte num_components;
-   const char *color_space_name;
-   HpdfUInt len;
-   HpdfStatus ret;
-   HpdfArray *array;
+   HpdfUInt16   tag;
+   HpdfUInt16   height;
+   HpdfUInt16   width;
+   HpdfByte     precision;
+   HpdfByte     num_components;
+   char const  *color_space_name;
+   HpdfUInt     len;
+   HpdfStatus   ret;
+   HpdfArray   *array;
 
    HPDF_PTRACE((" HPDF_Image_LoadJpegHeader\n"));
 
    len = 2;
    if (HPDF_Stream_Read(stream, (HpdfByte *) &tag, &len) != HPDF_OK)
+   {
       return HPDF_Error_GetCode(stream->error);
+   }
 
    HPDF_UInt16Swap(&tag);
    if (tag != 0xFFD8)
+   {
       return HPDF_INVALID_JPEG_DATA;
+   }
 
    /* find SOF record */
-   for (;;) {
+   for (;;) 
+   {
       HpdfUInt16 size;
 
       len = 2;
       if (HPDF_Stream_Read(stream, (HpdfByte *) &tag, &len) != HPDF_OK)
+      {
          return HPDF_Error_GetCode(stream->error);
+      }
 
       HPDF_UInt16Swap(&tag);
 
       len = 2;
       if (HPDF_Stream_Read(stream, (HpdfByte *) &size, &len) != HPDF_OK)
+      {
          return HPDF_Error_GetCode(stream->error);
+      }
 
       HPDF_UInt16Swap(&size);
 
       HPDF_PTRACE(("tag=%04X size=%u\n", tag, size));
 
-      if (tag == 0xFFC0 || tag == 0xFFC1 ||
-         tag == 0xFFC2 || tag == 0xFFC9) {
-
+      if (tag == 0xFFC0 || 
+          tag == 0xFFC1 ||
+          tag == 0xFFC2 ||
+          tag == 0xFFC9) 
+      {
          len = 1;
-         if (HPDF_Stream_Read(stream, (HpdfByte *) &precision, &len) !=
-            HPDF_OK)
+         if (HPDF_Stream_Read(stream, (HpdfByte *) &precision, &len) != HPDF_OK)
+         {
             return HPDF_Error_GetCode(stream->error);
+         }
 
          len = 2;
-         if (HPDF_Stream_Read(stream, (HpdfByte *) &height, &len) !=
-            HPDF_OK)
+         if (HPDF_Stream_Read(stream, (HpdfByte *) &height, &len) != HPDF_OK)
+         {
             return HPDF_Error_GetCode(stream->error);
+         }
 
          HPDF_UInt16Swap(&height);
 
          len = 2;
          if (HPDF_Stream_Read(stream, (HpdfByte *) &width, &len) != HPDF_OK)
+         {
             return HPDF_Error_GetCode(stream->error);
+         }
 
          HPDF_UInt16Swap(&width);
 
          len = 1;
-         if (HPDF_Stream_Read(stream, (HpdfByte *) &num_components, &len) !=
-            HPDF_OK)
+         if (HPDF_Stream_Read(stream, (HpdfByte *) &num_components, &len) != HPDF_OK)
+         {
             return HPDF_Error_GetCode(stream->error);
+         }
 
          break;
       }
       else if ((tag | 0x00FF) != 0xFFFF)
+      {
          /* lost marker */
-         return HPDF_SetError(image->error, HPDF_UNSUPPORTED_JPEG_FORMAT,
-            0);
+         return HPDF_SetError(image->error, HPDF_UNSUPPORTED_JPEG_FORMAT, 0);
+      }
 
       if (HPDF_Stream_Seek(stream, size - 2, HPDF_SEEK_CUR) != HPDF_OK)
+      {
          return HPDF_Error_GetCode(stream->error);
+      }
    }
 
    if (HPDF_Dict_AddNumber(image, "Height", height) != HPDF_OK)
+   {
       return HPDF_Error_GetCode(stream->error);
+   }
 
    if (HPDF_Dict_AddNumber(image, "Width", width) != HPDF_OK)
+   {
       return HPDF_Error_GetCode(stream->error);
+   }
 
    /* classification of RGB and CMYK is less than perfect
-    * YCbCr and YCCK are classified into RGB or CMYK.
-    *
-    * It is necessary to read APP14 data to distinguish colorspace perfectly.
-
-    */
-   switch (num_components) {
+   ** YCbCr and YCCK are classified into RGB or CMYK.
+   **
+   ** It is necessary to read APP14 data to distinguish colorspace perfectly. */
+   switch (num_components) 
+   {
    case 1:
       color_space_name = COL_GRAY;
       break;
+   
    case 3:
       color_space_name = COL_RGB;
       break;
+   
    case 4:
       array = HPDF_Array_New(image->mmgr);
       if (!array)
+      {
          return HPDF_Error_GetCode(stream->error);
+      }
 
       ret = HPDF_Dict_Add(image, "Decode", array);
       if (ret != HPDF_OK)
+      {
          return HPDF_Error_GetCode(stream->error);
+      }
 
-      ret += HPDF_Array_Add(array, HPDF_Number_New(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HPDF_Number_New(image->mmgr, 0));
-      ret += HPDF_Array_Add(array, HPDF_Number_New(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HPDF_Number_New(image->mmgr, 0));
-      ret += HPDF_Array_Add(array, HPDF_Number_New(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HPDF_Number_New(image->mmgr, 0));
-      ret += HPDF_Array_Add(array, HPDF_Number_New(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HPDF_Number_New(image->mmgr, 0));
+      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 1));
+      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 0));
+      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 1));
+      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 0));
+      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 1));
+      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 0));
+      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 1));
+      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 0));
 
       if (ret != HPDF_OK)
+      {
          return HPDF_Error_GetCode(stream->error);
+      }
 
       color_space_name = COL_CMYK;
 
       break;
+
    default:
-      return HPDF_SetError(image->error, HPDF_UNSUPPORTED_JPEG_FORMAT,
-         0);
+      return HPDF_SetError(image->error, HPDF_UNSUPPORTED_JPEG_FORMAT, 0);
    }
 
-   if (HPDF_Dict_Add(image, "ColorSpace",
-      HPDF_Name_New(image->mmgr, color_space_name)) != HPDF_OK)
+   if (HPDF_Dict_Add(image, "ColorSpace", HpdfValueNameCreate(image->mmgr, color_space_name)) != 
+         HPDF_OK)
+   {
       return HPDF_Error_GetCode(stream->error);
+   }
 
-   if (HPDF_Dict_Add(image, "BitsPerComponent",
-      HPDF_Number_New(image->mmgr, precision)) != HPDF_OK)
+   if (HPDF_Dict_Add(image, "BitsPerComponent", HpdfValueNumIntCreate(image->mmgr, precision)) != 
+         HPDF_OK)
+   {
       return HPDF_Error_GetCode(stream->error);
+   }
 
    return HPDF_OK;
 }
@@ -401,19 +433,21 @@ HPDF_Image
    return image;
 }
 
-
 HpdfBool
-HPDF_Image_Validate(HPDF_Image  image)
+   HPDF_Image_Validate(
+      HPDF_Image  image)
 {
-   HPDF_Name subtype;
+   HpdfValueName *subtype;
 
    HPDF_PTRACE((" HPDF_Image_Validate\n"));
 
    if (!image)
+   {
       return HPDF_FALSE;
+   }
 
-   if (image->header.obj_class != (HPDF_OSUBCLASS_XOBJECT |
-      HPDF_OCLASS_DICT)) {
+   if (image->header.obj_class != (HPDF_OSUBCLASS_XOBJECT | HPDF_OCLASS_DICT)) 
+   {
       HPDF_RaiseError(image->error, HPDF_INVALID_IMAGE, 0);
       return HPDF_FALSE;
    }
@@ -430,11 +464,11 @@ HPDF_Image_Validate(HPDF_Image  image)
 }
 
 HPDF_EXPORT(HpdfPoint)
-HPDF_Image_GetSize(
-   HPDF_Image image)
+   HPDF_Image_GetSize(
+      HPDF_Image image)
 {
-   HPDF_Number width;
-   HPDF_Number height;
+   HpdfValueNumInt *width;
+   HpdfValueNumInt *height;
    HpdfPoint   ret = { 0, 0 };
 
    HPDF_PTRACE((" HPDF_Image_GetSize\n"));
@@ -457,12 +491,12 @@ HPDF_Image_GetSize(
 }
 
 HPDF_EXPORT(HpdfStatus)
-HPDF_Image_GetSize2(
-   HPDF_Image image,
-   HpdfPoint * const size)
+   HPDF_Image_GetSize2(
+      HPDF_Image image,
+      HpdfPoint * const size)
 {
-   HPDF_Number width;
-   HPDF_Number height;
+   HpdfValueNumInt *width;
+   HpdfValueNumInt *height;
    size->x = 0;
    size->y = 0;
 
@@ -487,9 +521,10 @@ HPDF_Image_GetSize2(
 }
 
 HPDF_EXPORT(HpdfUInt)
-HPDF_Image_GetBitsPerComponent(HPDF_Image  image)
+   HPDF_Image_GetBitsPerComponent(
+      HPDF_Image  image)
 {
-   HPDF_Number n;
+   HpdfValueNumInt *n;
 
    HPDF_PTRACE((" HPDF_Image_GetBitsPerComponent\n"));
 
@@ -504,10 +539,11 @@ HPDF_Image_GetBitsPerComponent(HPDF_Image  image)
    return n->value;
 }
 
-HPDF_EXPORT(const char*)
-HPDF_Image_GetColorSpace(HPDF_Image  image)
+HPDF_EXPORT(char const*)
+   HPDF_Image_GetColorSpace(
+      HPDF_Image  image)
 {
-   HPDF_Name n;
+   HpdfValueName *n;
 
    HPDF_PTRACE((" HPDF_Image_GetColorSpace\n"));
 
@@ -521,12 +557,14 @@ HPDF_Image_GetColorSpace(HPDF_Image  image)
 
       a = HPDF_Dict_GetItem(image, "ColorSpace", HPDF_OCLASS_ARRAY);
 
-      if (a) {
+      if (a) 
+      {
          n = HPDF_Array_GetItem(a, 0, HPDF_OCLASS_NAME);
       }
    }
 
-   if (!n) {
+   if (!n) 
+   {
       HPDF_CheckError(image->error);
       return NULL;
    }
@@ -547,31 +585,37 @@ HPDF_Image_GetHeight(HPDF_Image   image)
 }
 
 HpdfStatus
-HPDF_Image_SetMask(HPDF_Image   image,
-   HpdfBool    mask)
+   HPDF_Image_SetMask(
+      HPDF_Image   image,
+      HpdfBool    mask)
 {
-   HPDF_Boolean image_mask;
+   HpdfValueBool *image_mask;
 
    if (!HPDF_Image_Validate(image))
+   {
       return HPDF_INVALID_IMAGE;
+   }
 
    if (mask && HPDF_Image_GetBitsPerComponent(image) != 1)
-      return HPDF_SetError(image->error, HPDF_INVALID_BIT_PER_COMPONENT,
-         0);
+   {
+      return HPDF_SetError(image->error, HPDF_INVALID_BIT_PER_COMPONENT, 0);
+   }
 
    image_mask = HPDF_Dict_GetItem(image, "ImageMask", HPDF_OCLASS_BOOLEAN);
-   if (!image_mask) {
+   if (!image_mask) 
+   {
       HpdfStatus ret;
-      image_mask = HPDF_Boolean_New(image->mmgr, HPDF_FALSE);
+      image_mask = HpdfValueBoolCreate(image->mmgr, HPDF_FALSE);
 
       if ((ret = HPDF_Dict_Add(image, "ImageMask", image_mask)) != HPDF_OK)
+      {
          return ret;
+      }
    }
 
    image_mask->value = mask;
    return HPDF_OK;
 }
-
 
 HPDF_EXPORT(HpdfStatus)
 HPDF_Image_SetMaskImage(HPDF_Image   image,
@@ -600,7 +644,7 @@ HPDF_Image_SetColorMask(HPDF_Image   image,
    HpdfUInt    bmax)
 {
    HpdfArray *array;
-   const char *name;
+   char const *name;
    HpdfStatus ret = HPDF_OK;
 
    if (!HPDF_Image_Validate(image))
@@ -647,7 +691,7 @@ HPDF_Image_AddSMask(HPDF_Image  image,
    HPDF_Image  smask)
 {
 
-   const char *name;
+   char const *name;
 
    if (!HPDF_Image_Validate(image))
       return HPDF_INVALID_IMAGE;
@@ -681,7 +725,7 @@ HpdfStatus
 
 HpdfStatus
 HPDF_Image_SetRenderingIntent(HPDF_Image   image,
-   const char* intent)
+   char const* intent)
 {
    if (!HPDF_Image_Validate(image))
       return HPDF_INVALID_IMAGE;

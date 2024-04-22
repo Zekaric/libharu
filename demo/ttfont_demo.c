@@ -36,14 +36,14 @@ error_handler (HpdfStatus   error_no,
 
 int main (int argc, char **argv)
 {
-    const char* SAMP_TXT = "The quick brown fox jumps over the lazy dog.";
+    char const* SAMP_TXT = "The quick brown fox jumps over the lazy dog.";
 
     HpdfDoc *pdf;
     char fname[256];
     HPDF_Page page;
     HPDF_Font title_font;
     HPDF_Font detail_font;
-    const char *detail_font_name;
+    char const *detail_font_name;
     HpdfBool embed;
     HpdfReal page_height;
     HpdfReal page_width;

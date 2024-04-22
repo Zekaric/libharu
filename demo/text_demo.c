@@ -81,15 +81,15 @@ show_description  (HPDF_Page          page,
 
 int main (int argc, char **argv)
 {
-    const char *page_title = "Text Demo";
+    char const *page_title = "Text Demo";
 
     HpdfDoc *pdf;
     HPDF_Font font;
     HPDF_Page page;
     char fname[256];
 
-    const char* samp_text = "abcdefgABCDEFG123!#$%&+-@?";
-    const char* samp_text2 = "The quick brown fox jumps over the lazy dog.";
+    char const* samp_text = "abcdefgABCDEFG123!#$%&+-@?";
+    char const* samp_text2 = "The quick brown fox jumps over the lazy dog.";
     float tw;
     float fsize;
     int i;

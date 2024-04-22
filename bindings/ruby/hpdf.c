@@ -497,8 +497,8 @@ static VALUE
 {
    HpdfDoc *pdf;
    HPDF_Font font;
-   const char *s1;
-   const char *s2;
+   char const *s1;
+   char const *s2;
 
    s1 = StringValuePtr(font_name);
 
@@ -527,9 +527,9 @@ static VALUE
       VALUE pfa)
 {
    HpdfDoc *pdf;
-   const char* font_name;
-   const char *s1;
-   const char *s2;
+   char const* font_name;
+   char const *s1;
+   char const *s2;
 
    s1 = StringValuePtr(afm);
    s2 = StringValuePtr(pfa);
@@ -553,8 +553,8 @@ static VALUE
       VALUE embedding)
 {
    HpdfDoc *pdf;
-   const char* font_name;
-   const char *s;
+   char const* font_name;
+   char const *s;
    HpdfInt i;
 
    s = StringValuePtr(file_name);
@@ -577,8 +577,8 @@ static VALUE
       VALUE embedding)
 {
    HpdfDoc *pdf;
-   const char* font_name;
-   const char *s;
+   char const* font_name;
+   char const *s;
    HpdfInt i1;
    HpdfInt i2;
 
@@ -608,7 +608,7 @@ static VALUE
    HpdfInt i1;
    HpdfInt i2;
    HpdfInt i3;
-   const char *s;
+   char const *s;
 
    i1 = NUM2INT(page_num);
    i2 = NUM2INT(style);
@@ -699,8 +699,8 @@ static VALUE
    HpdfDoc *pdf;
    HPDF_Outline outline1 = NULL;
    HPDF_Outline outline2;
-   HPDF_Encoder e = NULL;
-   const char *s;
+   HpdfEncoder const * const e = NULL;
+   char const *s;
 
    if (HpdfStrIsEqual(rb_obj_classname(parent), "HPDFOutline"))
    {
@@ -709,7 +709,7 @@ static VALUE
 
    if (HpdfStrIsEqual(rb_obj_classname(encoder), "HPDFEncoder"))
    {
-      Data_Get_Struct(encoder, HPDF_Encoder_Rec, e);
+      Data_Get_Struct(encoder, HpdfEncoder, e);
    }
 
    s = StringValuePtr(title);
@@ -928,8 +928,8 @@ static VALUE
       VALUE encoding_name)
 {
    HpdfDoc *pdf;
-   HPDF_Encoder encoder;
-   const char *s1;
+   HpdfEncoder const * const encoder;
+   char const *s1;
 
    s1 = StringValuePtr(encoding_name);
    Data_Get_Struct(obj, HPDF_Doc_Rec, pdf);
@@ -946,7 +946,7 @@ static VALUE
       VALUE obj)
 {
    HpdfDoc *pdf;
-   HPDF_Encoder encoder;
+   HpdfEncoder const * const encoder;
 
    Data_Get_Struct(obj, HPDF_Doc_Rec, pdf);
 
@@ -964,7 +964,7 @@ static VALUE
 {
    HpdfDoc *pdf;
    HpdfStatus ret;
-   const char *s1;
+   char const *s1;
 
    s1 = StringValuePtr(encoding_name);
    Data_Get_Struct(obj, HPDF_Doc_Rec, pdf);
@@ -979,10 +979,10 @@ static VALUE
 static VALUE
 hpdf_encoder_get_type(VALUE obj)
 {
-   HPDF_Encoder encoder;
+   HpdfEncoder *encoder;
    HpdfStatus ret;
 
-   Data_Get_Struct(obj, HPDF_Encoder_Rec, encoder);
+   Data_Get_Struct(obj, HpdfEncoder, encoder);
 
    HPDF_PTRACE(("hpdf_encoder_get_type encoder=%p\n", encoder));
 
@@ -994,15 +994,15 @@ hpdf_encoder_get_type(VALUE obj)
 static VALUE
 hpdf_encoder_get_byte_type(VALUE obj, VALUE text, VALUE index)
 {
-   HPDF_Encoder encoder;
-   const char *s;
+   HpdfEncoder *encoder;
+   char const *s;
    HpdfInt i;
    HpdfStatus ret;
 
    s = StringValuePtr(text);
    i = NUM2INT(index);
 
-   Data_Get_Struct(obj, HPDF_Encoder_Rec, encoder);
+   Data_Get_Struct(obj, HpdfEncoder, encoder);
 
    HPDF_PTRACE(("hpdf_encoder_get_byte_type encoder=%p\n", encoder));
 
@@ -1014,13 +1014,13 @@ hpdf_encoder_get_byte_type(VALUE obj, VALUE text, VALUE index)
 static VALUE
 hpdf_encoder_get_unicode(VALUE obj, VALUE code)
 {
-   HPDF_Encoder encoder;
+   HpdfEncoder *encoder;
    HpdfInt i;
    HpdfStatus ret;
 
    i = NUM2INT(code);
 
-   Data_Get_Struct(obj, HPDF_Encoder_Rec, encoder);
+   Data_Get_Struct(obj, HpdfEncoder, encoder);
 
    HPDF_PTRACE(("hpdf_encoder_get_unicode encoder=%p\n", encoder));
 
@@ -1032,10 +1032,10 @@ hpdf_encoder_get_unicode(VALUE obj, VALUE code)
 static VALUE
 hpdf_encoder_get_writing_mode(VALUE obj)
 {
-   HPDF_Encoder encoder;
+   HpdfEncoder *encoder;
    HpdfStatus ret;
 
-   Data_Get_Struct(obj, HPDF_Encoder_Rec, encoder);
+   Data_Get_Struct(obj, HpdfEncoder, encoder);
 
    HPDF_PTRACE(("hpdf_encoder_get_writing_mode encoder=%p\n", encoder));
 
@@ -1120,13 +1120,13 @@ static VALUE
 {
    HPDF_Page       page;
    HpdfRect        rect;
-   HPDF_Encoder    e = NULL;
-   char const    *s;
+   HpdfEncoder    *e = NULL;
+   char const     *s;
    HPDF_Annotation annot;
 
    if (HpdfStrIsEqual(rb_obj_classname(encoder), "HPDFEncoder"))
    {
-      Data_Get_Struct(encoder, HPDF_Encoder_Rec, e);
+      Data_Get_Struct(encoder, HpdfEncoder, e);
    }
 
    s = StringValuePtr(text);
@@ -1286,7 +1286,7 @@ static VALUE
 {
    HpdfDoc *pdf;
    HPDF_Image image;
-   const char *s;
+   char const *s;
 
    s = StringValuePtr(file_name);
    Data_Get_Struct(obj, HPDF_Doc_Rec, pdf);
@@ -1306,7 +1306,7 @@ static VALUE
 {
    HpdfDoc *pdf;
    HPDF_Image image;
-   const char *s;
+   char const *s;
 
    s = StringValuePtr(file_name);
    Data_Get_Struct(obj, HPDF_Doc_Rec, pdf);
@@ -1392,7 +1392,7 @@ hpdf_image_get_bits_per_component(VALUE obj)
 static VALUE
 hpdf_image_get_color_space(VALUE obj)
 {
-   const char* ret;
+   char const* ret;
    HPDF_Image image;
 
    Data_Get_Struct(obj, HPDF_Dict_Rec, image);
@@ -1460,7 +1460,7 @@ static VALUE
       VALUE value)
 {
    HpdfDoc *pdf;
-   const char *s;
+   char const *s;
    HpdfInt i;
    HpdfStatus ret;
 
@@ -1482,7 +1482,7 @@ static VALUE
 {
    HpdfDoc *pdf;
    HpdfInt i;
-   const char *ret;
+   char const *ret;
 
    i = NUM2INT(type);
    Data_Get_Struct(obj, HPDF_Doc_Rec, pdf);
@@ -1509,7 +1509,7 @@ static VALUE
       VALUE off_minuttes)
 {
    HpdfDoc *pdf;
-   const char *s;
+   char const *s;
    HpdfInt tp;
    HPDF_Date dt;
    HpdfStatus ret;
@@ -1545,8 +1545,8 @@ static VALUE
       VALUE user_passwd)
 {
    HpdfDoc *pdf;
-   const char *s1;
-   const char *s2;
+   char const *s1;
+   char const *s2;
    HpdfStatus ret;
 
    Data_Get_Struct(obj, HPDF_Doc_Rec, pdf);
@@ -1626,7 +1626,7 @@ hpdf_page_text_width(VALUE obj, VALUE text)
 {
    HPDF_Page page;
    HpdfReal f;
-   const char *s;
+   char const *s;
 
    Data_Get_Struct(obj, HPDF_Dict_Rec, page);
    s = StringValuePtr(text);
@@ -1642,7 +1642,7 @@ static VALUE
 hpdf_page_measure_text(VALUE obj, VALUE text, VALUE width, VALUE wordwrap)
 {
    HPDF_Page page;
-   const char *s;
+   char const *s;
    HpdfInt i1;
    HpdfInt i2;
    HpdfInt ret;
@@ -1863,7 +1863,7 @@ static VALUE
 hpdf_font_get_font_name(VALUE obj)
 {
    HPDF_Font font;
-   const char* font_name;
+   char const* font_name;
 
    Data_Get_Struct(obj, HPDF_Dict_Rec, font);
 
@@ -1878,7 +1878,7 @@ static VALUE
 hpdf_font_get_encoding_name(VALUE obj)
 {
    HPDF_Font font;
-   const char* encoding_name;
+   char const* encoding_name;
 
    Data_Get_Struct(obj, HPDF_Dict_Rec, font);
 
@@ -3215,7 +3215,7 @@ hpdf_page_show_text(VALUE obj, VALUE text)
 {
    HPDF_Page page;
    HpdfStatus ret;
-   const char *s;
+   char const *s;
 
    Data_Get_Struct(obj, HPDF_Dict_Rec, page);
    s = StringValuePtr(text);
@@ -3232,7 +3232,7 @@ hpdf_page_show_text_next_line(VALUE obj, VALUE text)
 {
    HPDF_Page page;
    HpdfStatus ret;
-   const char *s;
+   char const *s;
 
    Data_Get_Struct(obj, HPDF_Dict_Rec, page);
    s = StringValuePtr(text);
@@ -3249,7 +3249,7 @@ hpdf_page_show_text_next_line_ex(VALUE obj, VALUE char_space, VALUE word_space, 
 {
    HPDF_Page page;
    HpdfStatus ret;
-   const char *s;
+   char const *s;
    HpdfReal f1;
    HpdfReal f2;
 
@@ -3514,7 +3514,7 @@ hpdf_page_text_out(VALUE obj, VALUE xpos, VALUE ypos, VALUE text)
 {
    HPDF_Page page;
    HpdfStatus ret;
-   const char *s;
+   char const *s;
    HpdfReal x;
    HpdfReal y;
 
@@ -3536,7 +3536,7 @@ hpdf_page_text_rect(VALUE obj, VALUE left, VALUE top, VALUE right, VALUE bottom,
 {
    HPDF_Page page;
    HpdfStatus ret;
-   const char *s;
+   char const *s;
    HpdfReal f1;
    HpdfReal f2;
    HpdfReal f3;

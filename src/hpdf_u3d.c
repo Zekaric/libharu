@@ -27,10 +27,10 @@
 
 HPDF_U3D HPDF_U3D_LoadU3D( HpdfMemMgr * const mmgr, HPDF_Stream      u3d_data, HPDF_Xref        xref);
 
-static HpdfStatus Get3DStreamType(HPDF_Stream  stream, const char **type)
+static HpdfStatus Get3DStreamType(HPDF_Stream  stream, char const **type)
 {
-   static const char sign_u3d[] = "U3D";
-   static const char sign_prc[] = "PRC";
+   static char const sign_u3d[] = "U3D";
+   static char const sign_prc[] = "PRC";
 
    HpdfByte tag[4];
    HpdfUInt len;
@@ -108,7 +108,7 @@ HPDF_LoadU3DFromFile(
 HPDF_EXPORT(HPDF_Image)
 HPDF_LoadU3DFromFileW(
    HpdfDoc * const doc,
-   const wchar_t *filename)
+   wchar_t const  *filename)
 {
    HPDF_Stream imagedata;
    HPDF_Image image;
@@ -205,7 +205,7 @@ HPDF_U3D
       HPDF_Xref        xref)
 {
    HPDF_Dict u3d;
-   const char *type = NULL;
+   char const *type = NULL;
 
    HPDF_PTRACE((" HPDF_U3D_LoadU3D\n"));
 
@@ -265,35 +265,40 @@ HPDF_U3D
 HPDF_EXPORT(HPDF_Dict) 
    HPDF_Create3DView(
       HpdfMemMgr * const mmgr, 
-      const char *name)
+      char const        *name)
 {
    HpdfStatus ret = HPDF_OK;
-   HPDF_Dict view;
+   HPDF_Dict  view;
 
    HPDF_PTRACE((" HPDF_Create3DView\n"));
 
-   if (name == NULL || name[0] == '\0') {
+   if (name    == NULL || 
+       name[0] == '\0') 
+   {
       return NULL;
    }
 
    view = HPDF_Dict_New(mmgr);
-   if (!view) {
+   if (!view) 
+   {
       return NULL;
    }
 
    ret = HPDF_Dict_AddName(view, "TYPE", "3DView");
-   if (ret != HPDF_OK) {
+   if (ret != HPDF_OK) 
+   {
       HPDF_Dict_Free(view);
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(view, "XN", HPDF_String_New(mmgr, name, NULL));
-   if (ret != HPDF_OK) {
+   ret = HPDF_Dict_Add(view, "XN", HpdfValueStringCreate(mmgr, name, NULL));
+   if (ret != HPDF_OK) 
+   {
       HPDF_Dict_Free(view);
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(view, "IN", HPDF_String_New(mmgr, name, NULL));
+   ret = HPDF_Dict_Add(view, "IN", HpdfValueStringCreate(mmgr, name, NULL));
    if (ret != HPDF_OK) {
       HPDF_Dict_Free(view);
       return NULL;
@@ -354,18 +359,20 @@ HPDF_EXPORT(HpdfStatus) HPDF_U3D_AddOnInstanciate(HPDF_U3D u3d, HPDF_JavaScript 
    return ret;
 }
 
-
-HPDF_EXPORT(HpdfStatus) HPDF_U3D_SetDefault3DView(HPDF_U3D u3d, const char *name)
+HPDF_EXPORT(HpdfStatus) HPDF_U3D_SetDefault3DView(HPDF_U3D u3d, char const *name)
 {
    HpdfStatus ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_U3D_SetDefault3DView\n"));
 
-   if (u3d == NULL || name == NULL || name[0] == '\0') {
+   if (u3d     == NULL || 
+       name    == NULL || 
+       name[0] == '\0') 
+   {
       return HPDF_INVALID_U3D_DATA;
    }
 
-   ret = HPDF_Dict_Add(u3d, "DV", HPDF_String_New(u3d->mmgr, name, NULL));
+   ret = HPDF_Dict_Add(u3d, "DV", HpdfValueStringCreate(u3d->mmgr, name, NULL));
    return ret;
 }
 
@@ -404,7 +411,7 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_AddNode(HPDF_Dict view, HPDF_Dict node)
    return ret;
 }
 
-HPDF_EXPORT(HPDF_Dict) HPDF_3DView_CreateNode(HPDF_Dict view, const char *name)
+HPDF_EXPORT(HPDF_Dict) HPDF_3DView_CreateNode(HPDF_Dict view, char const *name)
 {
    HPDF_Dict  node;
    HpdfStatus ret = HPDF_OK;
@@ -412,18 +419,21 @@ HPDF_EXPORT(HPDF_Dict) HPDF_3DView_CreateNode(HPDF_Dict view, const char *name)
    HPDF_PTRACE((" HPDF_3DView_CreateNode\n"));
 
    node = HPDF_Dict_New(view->mmgr);
-   if (!node) {
+   if (!node) 
+   {
       return NULL;
    }
 
    ret = HPDF_Dict_AddName(node, "Type", "3DNode");
-   if (ret != HPDF_OK) {
+   if (ret != HPDF_OK) 
+   {
       HPDF_Dict_Free(node);
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(node, "N", HPDF_String_New(view->mmgr, name, NULL));
-   if (ret != HPDF_OK) {
+   ret = HPDF_Dict_Add(node, "N", HpdfValueStringCreate(view->mmgr, name, NULL));
+   if (ret != HPDF_OK) 
+   {
       HPDF_Dict_Free(node);
       return NULL;
    }
@@ -498,12 +508,12 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DViewNode_SetMatrix(HPDF_Dict node, HPDF_3DMatrix 
    return ret;
 }
 
-HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetLighting(HPDF_Dict view, const char *scheme)
+HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetLighting(HPDF_Dict view, char const *scheme)
 {
    HpdfStatus ret = HPDF_OK;
    HPDF_Dict lighting;
    int i;
-   static const char * const schemes[] =
+   static char const * const schemes[] =
    { "Artwork", "None", "White", "Day", "Night", "Hard", "Primary", "Blue", "Red", "Cube", "CAD", "Headlamp" };
 
    HPDF_PTRACE((" HPDF_3DView_SetLighting\n"));
@@ -1071,54 +1081,62 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCrossSectionOff(HPDF_Dict view)
 HPDF_Dict 
    HPDF_3DView_New(
       HpdfMemMgr * const mmgr, 
-      HPDF_Xref  xref, 
-      HPDF_U3D u3d, 
-      const char *name)
+      HPDF_Xref          xref, 
+      HPDF_U3D           u3d, 
+      char const        *name)
 {
    HpdfStatus ret = HPDF_OK;
-   HPDF_Dict view;
+   HPDF_Dict  view;
 
    HPDF_PTRACE((" HPDF_3DView_New\n"));
 
-   if (name == NULL || name[0] == '\0') {
+   if (name    == NULL || 
+       name[0] == '\0') 
+   {
       return NULL;
    }
 
    view = HPDF_Dict_New(mmgr);
-   if (!view) {
+   if (!view) 
+   {
       return NULL;
    }
 
    if (HPDF_Xref_Add(xref, view) != HPDF_OK)
+   {
       return NULL;
+   }
 
    ret = HPDF_Dict_AddName(view, "TYPE", "3DView");
-   if (ret != HPDF_OK) {
+   if (ret != HPDF_OK) 
+   {
       HPDF_Dict_Free(view);
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(view, "XN", HPDF_String_New(mmgr, name, NULL));
-   if (ret != HPDF_OK) {
+   ret = HPDF_Dict_Add(view, "XN", HpdfValueStringCreate(mmgr, name, NULL));
+   if (ret != HPDF_OK) 
+   {
       HPDF_Dict_Free(view);
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(view, "IN", HPDF_String_New(mmgr, name, NULL));
-   if (ret != HPDF_OK) {
+   ret = HPDF_Dict_Add(view, "IN", HpdfValueStringCreate(mmgr, name, NULL));
+   if (ret != HPDF_OK) 
+   {
       HPDF_Dict_Free(view);
       return NULL;
    }
 
    ret = HPDF_U3D_Add3DView(u3d, view);
-   if (ret != HPDF_OK) {
+   if (ret != HPDF_OK) 
+   {
       HPDF_Dict_Free(view);
       return NULL;
    }
 
    return view;
 }
-
 
 HPDF_EXPORT(HpdfStatus)
 HPDF_3DView_Add3DC3DMeasure(HPDF_Dict       view,
@@ -1154,7 +1172,7 @@ HPDF_3DView_Add3DC3DMeasure(HPDF_Dict       view,
 HPDF_EXPORT(HPDF_JavaScript)
 HPDF_CreateJavaScript(
    HpdfDoc const * const doc,
-   const char *code)
+   char const *code)
 {
    HPDF_JavaScript javaScript;
    HpdfUInt len;
@@ -1182,7 +1200,7 @@ HPDF_CreateJavaScript(
 HPDF_EXPORT(HPDF_JavaScript)
 HPDF_LoadJSFromFile(
    HpdfDoc * const doc,
-   const char *filename)
+   char const *filename)
 {
    HPDF_Stream js_data;
    HPDF_JavaScript js = NULL;
@@ -1260,7 +1278,7 @@ HPDF_LoadJSFromFile(
 HPDF_EXPORT(HPDF_JavaScript)
 HPDF_LoadJSFromFileW(
    HpdfDoc * const doc,
-   const wchar_t *filename)
+   wchar_t const  *filename)
 {
    HPDF_Stream js_data;
    HPDF_JavaScript js = NULL;

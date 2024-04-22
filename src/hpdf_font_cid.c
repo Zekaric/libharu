@@ -60,7 +60,7 @@ CidRangeToHex(char        *s,
    char        *eptr);
 
 static HPDF_Dict
-CreateCMap(HPDF_Encoder   encoder,
+CreateCMap(HpdfEncoder const * const   encoder,
    HPDF_Xref      xref);
 
 
@@ -78,7 +78,7 @@ HPDF_Font
    HPDF_Type0Font_New(
       HpdfMemMgr * const mmgr,
       HPDF_FontDef     fontdef,
-      HPDF_Encoder     encoder,
+      HpdfEncoder * const encoder,
       HPDF_Xref        xref)
 {
    HPDF_Dict font;
@@ -213,267 +213,352 @@ OnFree_Func(HPDF_Dict  obj)
 }
 
 static HPDF_Font
-CIDFontType0_New(HPDF_Font parent, HPDF_Xref xref)
+   CIDFontType0_New(
+      HPDF_Font parent, 
+      HPDF_Xref xref)
 {
-   HpdfStatus ret = HPDF_OK;
-   HPDF_FontAttr attr = (HPDF_FontAttr) parent->attr;
-   HPDF_FontDef fontdef = attr->fontdef;
-   HPDF_CIDFontDefAttr fontdef_attr = (HPDF_CIDFontDefAttr) fontdef->attr;
-   HPDF_Encoder encoder = attr->encoder;
-   HPDF_CMapEncoderAttr encoder_attr =
-      (HPDF_CMapEncoderAttr) encoder->attr;
-
-   HpdfUInt16 save_cid = 0;
-   HPDF_Font font;
-   HpdfArray *array;
-   HpdfArray *sub_array = NULL;
-   HpdfUInt i;
-
-   HPDF_Dict descriptor;
-   HPDF_Dict cid_system_info;
+   HpdfStatus                  ret           = HPDF_OK;
+   HPDF_FontAttr               attr          = (HPDF_FontAttr) parent->attr;
+   HPDF_FontDef                fontdef       = attr->fontdef;
+   HPDF_CIDFontDefAttr         fontdef_attr  = (HPDF_CIDFontDefAttr) fontdef->attr;
+   HpdfEncoder const * const   encoder       = attr->encoder;
+   HPDF_CMapEncoderAttr        encoder_attr  = (HPDF_CMapEncoderAttr) encoder->attr;
+   HpdfUInt16                  save_cid      = 0;
+   HPDF_Font                   font;
+   HpdfArray                  *array;
+   HpdfArray                  *sub_array = NULL;
+   HpdfUInt                    i;
+   HPDF_Dict                   descriptor;
+   HPDF_Dict                   cid_system_info;
 
    HPDF_PTRACE((" HPDF_CIDFontType0_New\n"));
 
    font = HPDF_Dict_New(parent->mmgr);
    if (!font)
+   {
       return NULL;
+   }
 
    if (HPDF_Xref_Add(xref, font) != HPDF_OK)
+   {
       return NULL;
+   }
 
-   ret += HPDF_Dict_AddName(font, "Type", "Font");
-   ret += HPDF_Dict_AddName(font, "Subtype", "CIDFontType0");
-   ret += HPDF_Dict_AddNumber(font, "DW", fontdef_attr->DW);
-   ret += HPDF_Dict_AddName(font, "BaseFont", fontdef->base_font);
+   ret += HPDF_Dict_AddName(  font, "Type",     "Font");
+   ret += HPDF_Dict_AddName(  font, "Subtype",  "CIDFontType0");
+   ret += HPDF_Dict_AddNumber(font, "DW",       fontdef_attr->DW);
+   ret += HPDF_Dict_AddName(  font, "BaseFont", fontdef->base_font);
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    /* add 'DW2' element */
    array = HPDF_Array_New(parent->mmgr);
    if (!array)
+   {
       return NULL;
+   }
 
    if (HPDF_Dict_Add(font, "DW2", array) != HPDF_OK)
+   {
       return NULL;
+   }
 
    ret += HPDF_Array_AddNumber(array, fontdef_attr->DW2[0]);
    ret += HPDF_Array_AddNumber(array, fontdef_attr->DW2[1]);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    /* add 'W' element */
    array = HPDF_Array_New(parent->mmgr);
    if (!array)
+   {
       return NULL;
+   }
 
    if (HPDF_Dict_Add(font, "W", array) != HPDF_OK)
+   {
       return NULL;
+   }
 
    /* Create W array. */
-   for (i = 0; i< fontdef_attr->widths->count; i++) {
-      HPDF_CID_Width *w =
-         (HPDF_CID_Width *) HPDF_List_ItemAt(fontdef_attr->widths, i);
+   for (i = 0; i< fontdef_attr->widths->count; i++) 
+   {
+      HPDF_CID_Width *w = (HPDF_CID_Width *) HPDF_List_ItemAt(fontdef_attr->widths, i);
 
-      if (w->cid != save_cid + 1 || !sub_array) {
+      if (w->cid != save_cid + 1 || 
+          !sub_array) 
+      {
          sub_array = HPDF_Array_New(parent->mmgr);
          if (!sub_array)
+         {
             return NULL;
+         }
 
          ret += HPDF_Array_AddNumber(array, w->cid);
-         ret += HPDF_Array_Add(array, sub_array);
+         ret += HPDF_Array_Add(      array, sub_array);
       }
 
       ret += HPDF_Array_AddNumber(sub_array, w->width);
       save_cid = w->cid;
 
       if (ret != HPDF_OK)
+      {
          return NULL;
+      }
    }
 
    /* create descriptor */
    descriptor = HPDF_Dict_New(parent->mmgr);
    if (!descriptor)
+   {
       return NULL;
+   }
 
    if (HPDF_Xref_Add(xref, descriptor) != HPDF_OK)
+   {
       return NULL;
+   }
 
    if (HPDF_Dict_Add(font, "FontDescriptor", descriptor) != HPDF_OK)
+   {
       return NULL;
+   }
 
-   ret += HPDF_Dict_AddName(descriptor, "Type", "FontDescriptor");
-   ret += HPDF_Dict_AddName(descriptor, "FontName", fontdef->base_font);
-   ret += HPDF_Dict_AddNumber(descriptor, "Ascent", fontdef->ascent);
-   ret += HPDF_Dict_AddNumber(descriptor, "Descent", fontdef->descent);
-   ret += HPDF_Dict_AddNumber(descriptor, "CapHeight",
-      fontdef->cap_height);
-   ret += HPDF_Dict_AddNumber(descriptor, "MissingWidth",
-      fontdef->missing_width);
-   ret += HPDF_Dict_AddNumber(descriptor, "Flags", fontdef->flags);
+   ret += HPDF_Dict_AddName(  descriptor, "Type",         "FontDescriptor");
+   ret += HPDF_Dict_AddName(  descriptor, "FontName",     fontdef->base_font);
+   ret += HPDF_Dict_AddNumber(descriptor, "Ascent",       fontdef->ascent);
+   ret += HPDF_Dict_AddNumber(descriptor, "Descent",      fontdef->descent);
+   ret += HPDF_Dict_AddNumber(descriptor, "CapHeight",    fontdef->cap_height);
+   ret += HPDF_Dict_AddNumber(descriptor, "MissingWidth", fontdef->missing_width);
+   ret += HPDF_Dict_AddNumber(descriptor, "Flags",        fontdef->flags);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    array = HPDF_Box_Array_New(parent->mmgr, fontdef->font_bbox);
    if (!array)
+   {
       return NULL;
+   }
 
-   ret += HPDF_Dict_Add(descriptor, "FontBBox", array);
-   ret += HPDF_Dict_AddNumber(descriptor, "ItalicAngle",
-      fontdef->italic_angle);
-   ret += HPDF_Dict_AddNumber(descriptor, "StemV", fontdef->stemv);
+   ret += HPDF_Dict_Add(      descriptor, "FontBBox",    array);
+   ret += HPDF_Dict_AddNumber(descriptor, "ItalicAngle", fontdef->italic_angle);
+   ret += HPDF_Dict_AddNumber(descriptor, "StemV",       fontdef->stemv);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    /* create CIDSystemInfo dictionary */
    cid_system_info = HPDF_Dict_New(parent->mmgr);
    if (!cid_system_info)
+   {
       return NULL;
+   }
 
    if (HPDF_Dict_Add(font, "CIDSystemInfo", cid_system_info) != HPDF_OK)
+   {
       return NULL;
+   }
 
-   ret += HPDF_Dict_Add(cid_system_info, "Registry",
-      HPDF_String_New(parent->mmgr, encoder_attr->registry, NULL));
-   ret += HPDF_Dict_Add(cid_system_info, "Ordering",
-      HPDF_String_New(parent->mmgr, encoder_attr->ordering, NULL));
-   ret += HPDF_Dict_AddNumber(cid_system_info, "Supplement",
-      encoder_attr->suppliment);
+   ret += HPDF_Dict_Add(
+      cid_system_info, 
+      "Registry",
+      HpdfValueStringCreate(parent->mmgr, encoder_attr->registry, NULL));
+   ret += HPDF_Dict_Add(
+      cid_system_info, 
+      "Ordering",
+      HpdfValueStringCreate(parent->mmgr, encoder_attr->ordering, NULL));
+   ret += HPDF_Dict_AddNumber(cid_system_info, "Supplement", encoder_attr->suppliment);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    return font;
 }
 
 static HPDF_Font
-CIDFontType2_New(HPDF_Font parent, HPDF_Xref xref)
+   CIDFontType2_New(
+      HPDF_Font parent, 
+      HPDF_Xref xref)
 {
-   HpdfStatus ret = HPDF_OK;
-   HPDF_FontAttr attr = (HPDF_FontAttr) parent->attr;
-   HPDF_FontDef fontdef = attr->fontdef;
-   HPDF_TTFontDefAttr fontdef_attr = (HPDF_TTFontDefAttr) fontdef->attr;
-   HPDF_Encoder encoder = attr->encoder;
-   HPDF_CMapEncoderAttr encoder_attr =
-      (HPDF_CMapEncoderAttr) encoder->attr;
-
-   HPDF_Font font;
-   HpdfArray *array;
-   HpdfUInt i;
-   HpdfUnicode tmp_map[65536];
-   HPDF_Dict cid_system_info;
-
-   HpdfUInt16 max = 0;
+   HpdfStatus                  ret           = HPDF_OK;
+   HPDF_FontAttr               attr          = (HPDF_FontAttr) parent->attr;
+   HPDF_FontDef                fontdef       = attr->fontdef;
+   HPDF_TTFontDefAttr          fontdef_attr  = (HPDF_TTFontDefAttr) fontdef->attr;
+   HpdfEncoder const * const   encoder       = attr->encoder;
+   HPDF_CMapEncoderAttr        encoder_attr  = (HPDF_CMapEncoderAttr) encoder->attr;
+   HPDF_Font                   font;
+   HpdfArray                  *array;
+   HpdfUInt                    i;
+   HpdfUnicode                 tmp_map[65536];
+   HPDF_Dict                   cid_system_info;
+   HpdfUInt16                  max           = 0;
 
    HPDF_PTRACE((" HPDF_CIDFontType2_New\n"));
 
    font = HPDF_Dict_New(parent->mmgr);
    if (!font)
+   {
       return NULL;
+   }
 
    if (HPDF_Xref_Add(xref, font) != HPDF_OK)
+   {
       return NULL;
+   }
 
    parent->before_write_fn = CIDFontType2_BeforeWrite_Func;
 
-   ret += HPDF_Dict_AddName(font, "Type", "Font");
-   ret += HPDF_Dict_AddName(font, "Subtype", "CIDFontType2");
-   ret += HPDF_Dict_AddNumber(font, "DW", fontdef->missing_width);
+   ret += HPDF_Dict_AddName(  font, "Type",    "Font");
+   ret += HPDF_Dict_AddName(  font, "Subtype", "CIDFontType2");
+   ret += HPDF_Dict_AddNumber(font, "DW",      fontdef->missing_width);
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    /* add 'DW2' element */
    array = HPDF_Array_New(font->mmgr);
    if (!array)
+   {
       return NULL;
+   }
 
    if (HPDF_Dict_Add(font, "DW2", array) != HPDF_OK)
+   {
       return NULL;
+   }
 
    ret += HPDF_Array_AddNumber(array, (HpdfInt32) (fontdef->font_bbox.bottom));
-   ret += HPDF_Array_AddNumber(array, (HpdfInt32) (fontdef->font_bbox.bottom -
-      fontdef->font_bbox.top));
+   ret += HPDF_Array_AddNumber(
+      array, 
+      (HpdfInt32) (fontdef->font_bbox.bottom - fontdef->font_bbox.top));
 
    HpdfMemClearTypeArray(tmp_map, HpdfUnicode, 65536);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
-   for (i = 0; i < 256; i++) {
+   for (i = 0; i < 256; i++) 
+   {
       HpdfUInt j;
 
-      for (j = 0; j < 256; j++) {
-         if (encoder->to_unicode_fn == HPDF_CMapEncoder_ToUnicode) {
+      for (j = 0; j < 256; j++) 
+      {
+         if (encoder->to_unicode_fn == HPDF_CMapEncoder_ToUnicode) 
+         {
             HpdfUInt16 cid = encoder_attr->cid_map[i][j];
-            if (cid != 0) {
+            if (cid != 0) 
+            {
                HpdfUnicode unicode = encoder_attr->unicode_map[i][j];
-               HpdfUInt16 gid = HPDF_TTFontDef_GetGlyphid(fontdef,
-                  unicode);
+               HpdfUInt16  gid     = HPDF_TTFontDef_GetGlyphid(fontdef, unicode);
+               
                tmp_map[cid] = gid;
                if (max < cid)
+               {
                   max = cid;
+               }
             }
          }
-         else {
+         else 
+         {
             HpdfUnicode unicode = (HpdfUnicode) ((i << 8) | j);
-            HpdfUInt16 gid = HPDF_TTFontDef_GetGlyphid(fontdef,
-               unicode);
+            HpdfUInt16  gid     = HPDF_TTFontDef_GetGlyphid(fontdef, unicode);
+
             tmp_map[unicode] = gid;
             if (max < unicode)
+            {
                max = unicode;
+            }
          }
       }
    }
 
-   if (max > 0) {
-      HpdfInt16 dw = fontdef->missing_width;
-      HpdfUnicode *ptmp_map = tmp_map;
-      HpdfArray *tmp_array = NULL;
+   if (max > 0) 
+   {
+      HpdfInt16    dw         = fontdef->missing_width;
+      HpdfUnicode *ptmp_map   = tmp_map;
+      HpdfArray   *tmp_array  = NULL;
 
       /* add 'W' element */
       array = HPDF_Array_New(font->mmgr);
       if (!array)
+      {
          return NULL;
+      }
 
       if (HPDF_Dict_Add(font, "W", array) != HPDF_OK)
+      {
          return NULL;
+      }
 
-      for (i = 0; i < max; i++, ptmp_map++) {
+      for (i = 0; i < max; i++, ptmp_map++) 
+      {
          HpdfInt w = HPDF_TTFontDef_GetGidWidth(fontdef, *ptmp_map);
 
-         if (w != dw) {
-            if (!tmp_array) {
+         if (w != dw) 
+         {
+            if (!tmp_array) 
+            {
                if (HPDF_Array_AddNumber(array, i) != HPDF_OK)
+               {
                   return NULL;
+               }
 
                tmp_array = HPDF_Array_New(font->mmgr);
                if (!tmp_array)
+               {
                   return NULL;
+               }
 
                if (HPDF_Array_Add(array, tmp_array) != HPDF_OK)
+               {
                   return NULL;
+               }
             }
 
-            if ((ret = HPDF_Array_AddNumber(tmp_array, w)) != HPDF_OK)
+            ret = HPDF_Array_AddNumber(tmp_array, w);
+            if (ret != HPDF_OK)
+            {
                return NULL;
+            }
          }
          else
+         {
             tmp_array = NULL;
+         }
       }
 
       /* create "CIDToGIDMap" data */
-      if (fontdef_attr->embedding) {
+      if (fontdef_attr->embedding) 
+      {
          attr->map_stream = HPDF_DictStream_New(font->mmgr, xref);
          if (!attr->map_stream)
+         {
             return NULL;
+         }
 
          if (HPDF_Dict_Add(font, "CIDToGIDMap", attr->map_stream) != HPDF_OK)
+         {
             return NULL;
+         }
 
-         for (i = 0; i < max; i++) {
-            HpdfByte u[2];
+         for (i = 0; i < max; i++) 
+         {
+            HpdfByte   u[2];
             HpdfUInt16 gid = tmp_map[i];
 
             u[0] = (HpdfByte) (gid >> 8);
@@ -482,12 +567,15 @@ CIDFontType2_New(HPDF_Font parent, HPDF_Xref xref)
             HPDF_MemCpy((HpdfByte *) (tmp_map + i), u, 2);
          }
 
-         if ((ret = HPDF_Stream_Write(attr->map_stream->stream,
-            (HpdfByte *) tmp_map, max * 2)) != HPDF_OK)
+         ret = HPDF_Stream_Write(attr->map_stream->stream, (HpdfByte *) tmp_map, max * 2);
+         if (ret != HPDF_OK)
+         {
             return NULL;
+         }
       }
    }
-   else {
+   else 
+   {
       HPDF_SetError(font->error, HPDF_INVALID_FONTDEF_DATA, 0);
       return 0;
    }
@@ -495,24 +583,32 @@ CIDFontType2_New(HPDF_Font parent, HPDF_Xref xref)
    /* create CIDSystemInfo dictionary */
    cid_system_info = HPDF_Dict_New(parent->mmgr);
    if (!cid_system_info)
+   {
       return NULL;
+   }
 
    if (HPDF_Dict_Add(font, "CIDSystemInfo", cid_system_info) != HPDF_OK)
+   {
       return NULL;
+   }
 
-   ret += HPDF_Dict_Add(cid_system_info, "Registry",
-      HPDF_String_New(parent->mmgr, encoder_attr->registry, NULL));
-   ret += HPDF_Dict_Add(cid_system_info, "Ordering",
-      HPDF_String_New(parent->mmgr, encoder_attr->ordering, NULL));
-   ret += HPDF_Dict_AddNumber(cid_system_info, "Supplement",
-      encoder_attr->suppliment);
+   ret += HPDF_Dict_Add(
+      cid_system_info, 
+      "Registry",
+      HpdfValueStringCreate(parent->mmgr, encoder_attr->registry, NULL));
+   ret += HPDF_Dict_Add(
+      cid_system_info, 
+      "Ordering",
+      HpdfValueStringCreate(parent->mmgr, encoder_attr->ordering, NULL));
+   ret += HPDF_Dict_AddNumber(cid_system_info, "Supplement", encoder_attr->suppliment);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    return font;
 }
-
 
 static HpdfStatus
 CIDFontType2_BeforeWrite_Func(HPDF_Dict obj)
@@ -603,7 +699,7 @@ TextWidth(HPDF_Font         font,
    HPDF_TextWidth tw = { 0, 0, 0, 0 };
    HPDF_FontAttr attr = (HPDF_FontAttr) font->attr;
    HpdfParseText parse_state;
-   HPDF_Encoder encoder = attr->encoder;
+   HpdfEncoder const * const encoder = attr->encoder;
    HpdfUInt i = 0;
    HpdfInt dw2;
    HpdfByte b = 0;
@@ -693,7 +789,7 @@ MeasureText(HPDF_Font          font,
    HpdfUInt i;
    HPDF_FontAttr attr = (HPDF_FontAttr) font->attr;
    HPDF_ByteType last_btype = HPDF_BYTE_TYPE_TRAIL;
-   HPDF_Encoder encoder = attr->encoder;
+   HpdfEncoder const * const encoder = attr->encoder;
    HpdfParseText parse_state;
    HpdfInt dw2;
    HpdfByte const *textTemp = text;
@@ -885,132 +981,138 @@ CidRangeToHex(char        *s,
 }
 
 static HPDF_Dict
-CreateCMap(HPDF_Encoder   encoder,
-   HPDF_Xref      xref)
+   CreateCMap(
+      HpdfEncoder const * const   encoder,
+      HPDF_Xref                   xref)
 {
-   HpdfStatus ret = HPDF_OK;
-   HPDF_Dict cmap = HPDF_DictStream_New(encoder->mmgr, xref);
-   HPDF_CMapEncoderAttr attr = (HPDF_CMapEncoderAttr) encoder->attr;
-   char buf[HPDF_TMP_BUF_SIZ];
-   char *pbuf;
-   char *eptr = buf + HPDF_TMP_BUF_SIZ - 1;
-   HpdfUInt i;
-   HpdfUInt phase, odd;
-   HPDF_Dict sysinfo;
+   HpdfStatus            ret  = HPDF_OK;
+   HPDF_Dict             cmap = HPDF_DictStream_New(encoder->mmgr, xref);
+   HPDF_CMapEncoderAttr  attr = (HPDF_CMapEncoderAttr) encoder->attr;
+   char                  buf[HPDF_TMP_BUF_SIZ];
+   char                 *pbuf;
+   char                 *eptr = buf + HPDF_TMP_BUF_SIZ - 1;
+   HpdfUInt              i,
+                         phase,
+                         odd;
+   HPDF_Dict             sysinfo;
 
    if (!cmap)
+   {
       return NULL;
+   }
 
-   ret += HPDF_Dict_AddName(cmap, "Type", "CMap");
+   ret += HPDF_Dict_AddName(cmap, "Type",     "CMap");
    ret += HPDF_Dict_AddName(cmap, "CMapName", encoder->name);
 
    sysinfo = HPDF_Dict_New(encoder->mmgr);
    if (!sysinfo)
+   {
       return NULL;
+   }
 
    if (HPDF_Dict_Add(cmap, "CIDSystemInfo", sysinfo) != HPDF_OK)
+   {
       return NULL;
+   }
 
-   ret += HPDF_Dict_Add(sysinfo, "Registry", HPDF_String_New(encoder->mmgr,
-      attr->registry, NULL));
-   ret += HPDF_Dict_Add(sysinfo, "Ordering", HPDF_String_New(encoder->mmgr,
-      attr->ordering, NULL));
+   ret += HPDF_Dict_Add(
+      sysinfo, 
+      "Registry",
+      HpdfValueStringCreate(encoder->mmgr, attr->registry, NULL));
+   ret += HPDF_Dict_Add(
+      sysinfo,
+      "Ordering",
+      HpdfValueStringCreate(encoder->mmgr, attr->ordering, NULL));
    ret += HPDF_Dict_AddNumber(sysinfo, "Supplement", attr->suppliment);
-   ret += HPDF_Dict_AddNumber(cmap, "WMode",
-      (HpdfUInt32) attr->writing_mode);
+   ret += HPDF_Dict_AddNumber(cmap,    "WMode",      (HpdfUInt32) attr->writing_mode);
 
    /* create cmap data from encoding data */
-   ret += HPDF_Stream_WriteStr(cmap->stream,
-      "%!PS-Adobe-3.0 Resource-CMap\r\n");
-   ret += HPDF_Stream_WriteStr(cmap->stream,
-      "%%DocumentNeededResources: ProcSet (CIDInit)\r\n");
-   ret += HPDF_Stream_WriteStr(cmap->stream,
-      "%%IncludeResource: ProcSet (CIDInit)\r\n");
+   ret += HPDF_Stream_WriteStr(cmap->stream, "%!PS-Adobe-3.0 Resource-CMap\r\n");
+   ret += HPDF_Stream_WriteStr(cmap->stream, "%%DocumentNeededResources: ProcSet (CIDInit)\r\n");
+   ret += HPDF_Stream_WriteStr(cmap->stream, "%%IncludeResource: ProcSet (CIDInit)\r\n");
 
    pbuf = (char *) HPDF_StrCpy(buf, "%%BeginResource: CMap (", eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, encoder->name, eptr);
-   HPDF_StrCpy(pbuf, ")\r\n", eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, encoder->name,            eptr);
+                   HPDF_StrCpy(pbuf, ")\r\n",                  eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
-   pbuf = (char *) HPDF_StrCpy(buf, "%%Title: (", eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, encoder->name, eptr);
+   pbuf = (char *) HPDF_StrCpy(buf, "%%Title: (",              eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, encoder->name,            eptr);
    *pbuf++ = ' ';
-   pbuf = (char *) HPDF_StrCpy(pbuf, attr->registry, eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, attr->registry,           eptr);
    *pbuf++ = ' ';
-   pbuf = (char *) HPDF_StrCpy(pbuf, attr->ordering, eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, attr->ordering,           eptr);
    *pbuf++ = ' ';
-   pbuf = HPDF_IToA(pbuf, attr->suppliment, eptr);
-   HPDF_StrCpy(pbuf, ")\r\n", eptr);
+   pbuf =          HPDF_IToA(  pbuf, attr->suppliment,         eptr);
+                   HPDF_StrCpy(pbuf, ")\r\n",                  eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
    ret += HPDF_Stream_WriteStr(cmap->stream, "%%Version: 1.0\r\n");
    ret += HPDF_Stream_WriteStr(cmap->stream, "%%EndComments\r\n");
 
-   ret += HPDF_Stream_WriteStr(cmap->stream,
-      "/CIDInit /ProcSet findresource begin\r\n\r\n");
+   ret += HPDF_Stream_WriteStr(cmap->stream, "/CIDInit /ProcSet findresource begin\r\n\r\n");
 
    /* Adobe CMap and CIDFont Files Specification recommends to allocate
-    * five more elements to this dictionary than existing elements.
-    */
+   ** five more elements to this dictionary than existing elements. */
    ret += HPDF_Stream_WriteStr(cmap->stream, "12 dict begin\r\n\r\n");
 
    ret += HPDF_Stream_WriteStr(cmap->stream, "begincmap\r\n\r\n");
-   ret += HPDF_Stream_WriteStr(cmap->stream,
-      "/CIDSystemInfo 3 dict dup begin\r\n");
+   ret += HPDF_Stream_WriteStr(cmap->stream, "/CIDSystemInfo 3 dict dup begin\r\n");
 
-   pbuf = (char *) HPDF_StrCpy(buf, "  /Registry (", eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, attr->registry, eptr);
-   HPDF_StrCpy(pbuf, ") def\r\n", eptr);
+   pbuf = (char *) HPDF_StrCpy(buf,  "  /Registry (",   eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, attr->registry,    eptr);
+                   HPDF_StrCpy(pbuf, ") def\r\n",       eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
-   pbuf = (char *) HPDF_StrCpy(buf, "  /Ordering (", eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, attr->ordering, eptr);
-   HPDF_StrCpy(pbuf, ") def\r\n", eptr);
+   pbuf = (char *) HPDF_StrCpy(buf,  "  /Ordering (",   eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, attr->ordering,    eptr);
+                   HPDF_StrCpy(pbuf, ") def\r\n",       eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
-   pbuf = (char *) HPDF_StrCpy(buf, "  /Supplement ", eptr);
-   pbuf = HPDF_IToA(pbuf, attr->suppliment, eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, " def\r\n", eptr);
-   HPDF_StrCpy(pbuf, "end def\r\n\r\n", eptr);
+   pbuf = (char *) HPDF_StrCpy(buf,  "  /Supplement ",  eptr);
+   pbuf =          HPDF_IToA(  pbuf, attr->suppliment,  eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, " def\r\n",        eptr);
+                   HPDF_StrCpy(pbuf, "end def\r\n\r\n", eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
-   pbuf = (char *) HPDF_StrCpy(buf, "/CMapName /", eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, encoder->name, eptr);
-   HPDF_StrCpy(pbuf, " def\r\n", eptr);
+   pbuf = (char *) HPDF_StrCpy(buf,  "/CMapName /",     eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, encoder->name,     eptr);
+                   HPDF_StrCpy(pbuf, " def\r\n",        eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
    ret += HPDF_Stream_WriteStr(cmap->stream, "/CMapVersion 1.0 def\r\n");
    ret += HPDF_Stream_WriteStr(cmap->stream, "/CMapType 1 def\r\n\r\n");
 
-   if (attr->uid_offset >= 0) {
-      pbuf = (char *) HPDF_StrCpy(buf, "/UIDOffset ", eptr);
-      pbuf = HPDF_IToA(pbuf, attr->uid_offset, eptr);
-      HPDF_StrCpy(pbuf, " def\r\n\r\n", eptr);
+   if (attr->uid_offset >= 0) 
+   {
+      pbuf = (char *) HPDF_StrCpy(buf,  "/UIDOffset ",    eptr);
+      pbuf =          HPDF_IToA(  pbuf, attr->uid_offset, eptr);
+                      HPDF_StrCpy(pbuf, " def\r\n\r\n",   eptr);
       ret += HPDF_Stream_WriteStr(cmap->stream, buf);
    }
 
-   pbuf = (char *) HPDF_StrCpy(buf, "/XUID [", eptr);
-   pbuf = HPDF_IToA(pbuf, attr->xuid[0], eptr);
+   pbuf = (char *) HPDF_StrCpy(buf,  "/XUID [",           eptr);
+   pbuf =          HPDF_IToA(  pbuf, attr->xuid[0],       eptr);
    *pbuf++ = ' ';
-   pbuf = HPDF_IToA(pbuf, attr->xuid[1], eptr);
+   pbuf =          HPDF_IToA(  pbuf, attr->xuid[1],       eptr);
    *pbuf++ = ' ';
-   pbuf = HPDF_IToA(pbuf, attr->xuid[2], eptr);
-   HPDF_StrCpy(pbuf, "] def\r\n\r\n", eptr);
+   pbuf =          HPDF_IToA(  pbuf, attr->xuid[2],       eptr);
+                   HPDF_StrCpy(pbuf, "] def\r\n\r\n",     eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
-   pbuf = (char *) HPDF_StrCpy(buf, "/WMode ", eptr);
-   pbuf = HPDF_IToA(pbuf, (HpdfUInt32) attr->writing_mode, eptr);
-   HPDF_StrCpy(pbuf, " def\r\n\r\n", eptr);
+   pbuf = (char *) HPDF_StrCpy(buf,  "/WMode ",                       eptr);
+   pbuf =          HPDF_IToA(  pbuf, (HpdfUInt32) attr->writing_mode, eptr);
+                   HPDF_StrCpy(pbuf, " def\r\n\r\n",                  eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
    /* add code-space-range */
-   pbuf = HPDF_IToA(buf, attr->code_space_range->count, eptr);
-   HPDF_StrCpy(pbuf, " begincodespacerange\r\n", eptr);
+   pbuf = HPDF_IToA(  buf,  attr->code_space_range->count, eptr);
+          HPDF_StrCpy(pbuf, " begincodespacerange\r\n",    eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
-   for (i = 0; i < attr->code_space_range->count; i++) {
-      HPDF_CidRange_Rec *range = HPDF_List_ItemAt(attr->code_space_range,
-         i);
+   for (i = 0; i < attr->code_space_range->count; i++) 
+   {
+      HPDF_CidRange_Rec *range = HPDF_List_ItemAt(attr->code_space_range, i);
 
       pbuf = CidRangeToHex(buf, range->from, range->to, eptr);
 
@@ -1019,66 +1121,86 @@ CreateCMap(HPDF_Encoder   encoder,
       ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
       if (ret != HPDF_OK)
+      {
          return NULL;
+      }
    }
 
    HPDF_StrCpy(buf, "endcodespacerange\r\n\r\n", eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    /* add not-def-range */
-   pbuf = HPDF_IToA(buf, attr->notdef_range->count, eptr);
-   HPDF_StrCpy(pbuf, " beginnotdefrange\r\n", eptr);
+   pbuf = HPDF_IToA(  buf,  attr->notdef_range->count, eptr);
+          HPDF_StrCpy(pbuf, " beginnotdefrange\r\n",   eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
-   for (i = 0; i < attr->notdef_range->count; i++) {
+   for (i = 0; i < attr->notdef_range->count; i++) 
+   {
       HPDF_CidRange_Rec *range = HPDF_List_ItemAt(attr->notdef_range, i);
 
-      pbuf = CidRangeToHex(buf, range->from, range->to, eptr);
+      pbuf = CidRangeToHex(buf,  range->from, range->to, eptr);
       *pbuf++ = ' ';
-      pbuf = HPDF_IToA(pbuf, range->cid, eptr);
-      HPDF_StrCpy(pbuf, "\r\n", eptr);
+      pbuf = HPDF_IToA(    pbuf, range->cid,             eptr);
+             HPDF_StrCpy(  pbuf, "\r\n",                 eptr);
 
       ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
       if (ret != HPDF_OK)
+      {
          return NULL;
+      }
    }
 
    HPDF_StrCpy(buf, "endnotdefrange\r\n\r\n", eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    /* add cid-range */
    phase = attr->cmap_range->count / 100;
-   odd = attr->cmap_range->count % 100;
+   odd   = attr->cmap_range->count % 100;
    if (phase > 0)
+   {
       pbuf = HPDF_IToA(buf, 100, eptr);
+   }
    else
+   {
       pbuf = HPDF_IToA(buf, odd, eptr);
+   }
+
    HPDF_StrCpy(pbuf, " begincidrange\r\n", eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
-   for (i = 0; i < attr->cmap_range->count; i++) {
+   for (i = 0; i < attr->cmap_range->count; i++) 
+   {
       HPDF_CidRange_Rec *range = HPDF_List_ItemAt(attr->cmap_range, i);
 
-      pbuf = CidRangeToHex(buf, range->from, range->to, eptr);
+      pbuf = CidRangeToHex(buf,  range->from, range->to, eptr);
       *pbuf++ = ' ';
-      pbuf = HPDF_IToA(pbuf, range->cid, eptr);
-      HPDF_StrCpy(pbuf, "\r\n", eptr);
+      pbuf = HPDF_IToA(    pbuf, range->cid,             eptr);
+             HPDF_StrCpy(  pbuf, "\r\n",                 eptr);
 
       ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
-      if ((i + 1) %100 == 0) {
+      if ((i + 1) %100 == 0) 
+      {
          phase--;
          pbuf = (char *) HPDF_StrCpy(buf, "endcidrange\r\n\r\n", eptr);
 
          if (phase > 0)
+         {
             pbuf = HPDF_IToA(pbuf, 100, eptr);
+         }
          else
+         {
             pbuf = HPDF_IToA(pbuf, odd, eptr);
+         }
 
          HPDF_StrCpy(pbuf, " begincidrange\r\n", eptr);
 
@@ -1086,23 +1208,28 @@ CreateCMap(HPDF_Encoder   encoder,
       }
 
       if (ret != HPDF_OK)
+      {
          return NULL;
+      }
    }
 
    if (odd > 0)
+   {
       pbuf = (char *) HPDF_StrCpy(buf, "endcidrange\r\n", eptr);
+   }
 
-   pbuf = (char *) HPDF_StrCpy(pbuf, "endcmap\r\n", eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, "CMapName currentdict /CMap "
-      "defineresource pop\r\n", eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, "end\r\n", eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, "end\r\n\r\n", eptr);
-   pbuf = (char *) HPDF_StrCpy(pbuf, "%%EndResource\r\n", eptr);
-   HPDF_StrCpy(pbuf, "%%EOF\r\n", eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, "endcmap\r\n",                                       eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, "CMapName currentdict /CMap defineresource pop\r\n", eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, "end\r\n",                                           eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, "end\r\n\r\n",                                       eptr);
+   pbuf = (char *) HPDF_StrCpy(pbuf, "%%EndResource\r\n",                                 eptr);
+                   HPDF_StrCpy(pbuf, "%%EOF\r\n",                                         eptr);
    ret += HPDF_Stream_WriteStr(cmap->stream, buf);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    return cmap;
 }

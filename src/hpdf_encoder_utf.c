@@ -36,10 +36,10 @@ static const HPDF_CidRange_Rec UTF8_CID_RANGE[] = {
   { 0xFFFF, 0xFFFF, 0x0 }
 };
 
-static HPDF_ByteType UTF8_Encoder_ByteType_Func(  HPDF_Encoder encoder, HpdfParseText * const state);
-static HpdfUnicode   UTF8_Encoder_ToUnicode_Func( HPDF_Encoder encoder, HpdfUInt16 code);
-static char         *UTF8_Encoder_EncodeText_Func(HPDF_Encoder encoder, char const *text, HpdfUInt len, HpdfUInt *length);
-static HpdfStatus    UTF8_Init(                   HPDF_Encoder encoder);
+static HPDF_ByteType UTF8_Encoder_ByteType_Func(  HpdfEncoder const * const encoder, HpdfParseText * const state);
+static HpdfUnicode   UTF8_Encoder_ToUnicode_Func( HpdfEncoder const * const encoder, HpdfUInt16 code);
+static char         *UTF8_Encoder_EncodeText_Func(HpdfEncoder const * const encoder, char const *text, HpdfUInt len, HpdfUInt *length);
+static HpdfStatus    UTF8_Init(                   HpdfEncoder       * const encoder);
 
 /*--------------------------------------------------------------------------*/
 
@@ -49,11 +49,11 @@ static HpdfStatus    UTF8_Init(                   HPDF_Encoder encoder);
  */
 static HPDF_ByteType
    UTF8_Encoder_ByteType_Func(
-      HPDF_Encoder encoder,
+      HpdfEncoder const * const encoder,
       HpdfParseText * const state)
 {
    // This function is supposed to increment state->index
-   // Not logical ! (look at function HPDF_String_Write in hpdf_string.c)
+   // Not logical ! (look at function HpdfValueStringWrite in hpdf_string.c)
 
    // When HPDF_BYTE_TYPE_SINGLE is returned, the current byte is the
    //   CODE argument in call ToUnicode_Func
@@ -118,7 +118,7 @@ static HPDF_ByteType
  * to libharu by 'Mirco'
  */
 static HpdfUnicode
-UTF8_Encoder_ToUnicode_Func(HPDF_Encoder   encoder,
+UTF8_Encoder_ToUnicode_Func(HpdfEncoder const * const   encoder,
    HpdfUInt16    code)
 {
    // Supposed to convert CODE to unicode.
@@ -163,7 +163,7 @@ UTF8_Encoder_ToUnicode_Func(HPDF_Encoder   encoder,
 }
 
 static char *
-UTF8_Encoder_EncodeText_Func(HPDF_Encoder        encoder,
+UTF8_Encoder_EncodeText_Func(HpdfEncoder const * const        encoder,
    char const        *text,
    HpdfUInt           len,
    HpdfUInt          *length)
@@ -194,7 +194,8 @@ UTF8_Encoder_EncodeText_Func(HPDF_Encoder        encoder,
 }
 
 static HpdfStatus
-UTF8_Init(HPDF_Encoder  encoder)
+   UTF8_Init(
+      HpdfEncoder * const  encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -248,7 +249,7 @@ HPDF_EXPORT(HpdfStatus)
    HPDF_UseUTFEncodings(
       HpdfDoc * const doc)
 {
-   HPDF_Encoder encoder;
+   HpdfEncoder *encoder;
    HpdfStatus ret;
 
    if (!HPDF_HasDoc(doc))

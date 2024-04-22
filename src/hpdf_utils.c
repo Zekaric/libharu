@@ -478,7 +478,7 @@ HpdfUInt
    return (HpdfUInt) len;
 }
 
-const char *
+char const *
    HPDF_StrStr(
       char const * const s1,
       char const * const s2,

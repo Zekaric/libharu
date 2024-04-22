@@ -46,7 +46,6 @@ HpdfArray *
    return obj;
 }
 
-
 HpdfArray *
    HPDF_Box_Array_New(
       HpdfMemMgr * const mmgr,
@@ -59,21 +58,23 @@ HpdfArray *
 
    obj = HPDF_Array_New(mmgr);
    if (!obj)
+   {
       return NULL;
+   }
 
-   ret += HPDF_Array_Add(obj, HPDF_Real_New(mmgr, box.left));
-   ret += HPDF_Array_Add(obj, HPDF_Real_New(mmgr, box.bottom));
-   ret += HPDF_Array_Add(obj, HPDF_Real_New(mmgr, box.right));
-   ret += HPDF_Array_Add(obj, HPDF_Real_New(mmgr, box.top));
+   ret += HPDF_Array_Add(obj, HpdfValueNumRealCreate(mmgr, box.left));
+   ret += HPDF_Array_Add(obj, HpdfValueNumRealCreate(mmgr, box.bottom));
+   ret += HPDF_Array_Add(obj, HpdfValueNumRealCreate(mmgr, box.right));
+   ret += HPDF_Array_Add(obj, HpdfValueNumRealCreate(mmgr, box.top));
 
-   if (ret != HPDF_OK) {
+   if (ret != HPDF_OK) 
+   {
       HPDF_Array_Free(obj);
       return NULL;
    }
 
    return obj;
 }
-
 
 void
    HPDF_Array_Free(
@@ -126,50 +127,54 @@ HpdfStatus
    return ret;
 }
 
-
 HpdfStatus
    HPDF_Array_AddNumber(
       HpdfArray * const array,
       HpdfInt32  value)
 {
-   HPDF_Number n = HPDF_Number_New(array->mmgr, value);
+   HpdfValueNumInt *n = HpdfValueNumIntCreate(array->mmgr, value);
 
    HPDF_PTRACE((" HPDF_Array_AddNumber\n"));
 
    if (!n)
+   {
       return HPDF_Error_GetCode(array->error);
-   else
-      return HPDF_Array_Add(array, n);
-}
+   }
 
+   return HPDF_Array_Add(array, n);
+}
 
 HpdfStatus
    HPDF_Array_AddReal(
       HpdfArray * const array,
       HpdfReal   value)
 {
-   HPDF_Real r = HPDF_Real_New(array->mmgr, value);
+   HpdfValueNumReal *r = HpdfValueNumRealCreate(array->mmgr, value);
 
    HPDF_PTRACE((" HPDF_Array_AddReal\n"));
 
    if (!r)
+   {
       return HPDF_Error_GetCode(array->error);
-   else
-      return HPDF_Array_Add(array, r);
+   }
+   
+   return HPDF_Array_Add(array, r);
 }
 
 HpdfStatus
    HPDF_Array_AddNull(  
       HpdfArray * const array)
 {
-   HPDF_Null n = HPDF_Null_New(array->mmgr);
+   HpdfValueNull *n = HpdfValueNullCreate(array->mmgr);
 
    HPDF_PTRACE((" HPDF_Array_AddNull\n"));
 
    if (!n)
+   {
       return HPDF_Error_GetCode(array->error);
-   else
-      return HPDF_Array_Add(array, n);
+   }
+
+   return HPDF_Array_Add(array, n);
 }
 
 HpdfStatus
@@ -177,14 +182,16 @@ HpdfStatus
       HpdfArray * const array,
       char const *value)
 {
-   HPDF_Name n = HPDF_Name_New(array->mmgr, value);
+   HpdfValueName *n = HpdfValueNameCreate(array->mmgr, value);
 
    HPDF_PTRACE((" HPDF_Array_AddName\n"));
 
    if (!n)
+   {
       return HPDF_Error_GetCode(array->error);
-   else
-      return HPDF_Array_Add(array, n);
+   }
+   
+   return HPDF_Array_Add(array, n);
 }
 
 HpdfStatus

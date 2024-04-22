@@ -28,7 +28,7 @@
 #include "hpdf.h"
 
 
-static const char * const HPDF_VERSION_STR[6] = {
+static char const * const HPDF_VERSION_STR[6] = {
                 "%PDF-1.2\012%\267\276\255\252\012",
                 "%PDF-1.3\012%\267\276\255\252\012",
                 "%PDF-1.4\012%\267\276\255\252\012",
@@ -53,7 +53,7 @@ static char const   *_LoadTTFontFromStream2(    HpdfDoc       * const doc, HPDF_
 /******************************************************************************
 func: HPDF_GetVersion
 ******************************************************************************/
-HPDF_EXPORT(const char *)
+HPDF_EXPORT(char const *)
    HPDF_GetVersion(
       void)
 {
@@ -204,7 +204,7 @@ HPDF_EXPORT(HpdfStatus)
    char buf[HPDF_TMP_BUF_SIZ];
    char *ptr = buf;
    char *eptr = buf + HPDF_TMP_BUF_SIZ - 1;
-   const char *version;
+   char const *version;
 
    HPDF_PTRACE((" HPDF_NewDoc\n"));
 
@@ -267,7 +267,7 @@ HPDF_EXPORT(HpdfStatus)
 
    doc->cur_pages = doc->root_pages;
 
-   ptr = (char *)HPDF_StrCpy(ptr, (const char *)"Haru Free PDF Library ", eptr);
+   ptr = (char *)HPDF_StrCpy(ptr, (char const *)"Haru Free PDF Library ", eptr);
    version = HPDF_GetVersion();
    HPDF_StrCpy(ptr, version, eptr);
 
@@ -605,7 +605,7 @@ HpdfStatus
       if (obj_id & HPDF_OTYPE_INDIRECT) 
       {
          HPDF_XrefEntry entry;
-         HPDF_Null null_obj;
+         HpdfValueNull *null_obj;
 
          HPDF_Dict_RemoveElement(doc->trailer, "Encrypt");
 
@@ -616,7 +616,7 @@ HpdfStatus
             return HPDF_SetError(&doc->error, HPDF_DOC_ENCRYPTDICT_NOT_FOUND, 0);
          }
 
-         null_obj = HPDF_Null_New(doc->mmgr);
+         null_obj = HpdfValueNullCreate(doc->mmgr);
          if (!null_obj)
          {
             return doc->error.error_no;
@@ -902,7 +902,7 @@ HPDF_EXPORT(HpdfStatus)
 HPDF_EXPORT(HpdfStatus)
    HPDF_SaveToFileW(
       HpdfDoc * const doc,
-      const wchar_t  *file_name)
+      wchar_t const  *file_name)
 {
    HPDF_Stream stream;
 
@@ -1209,7 +1209,7 @@ static void
    _FreeFontDefList(
       HpdfDoc * const doc)
 {
-   HPDF_List list = doc->fontdef_list;
+   HpdfList *list = doc->fontdef_list;
    HpdfUInt i;
 
    HPDF_PTRACE((" HPDF_Doc_FreeFontDefList\n"));
@@ -1230,7 +1230,7 @@ static void
    _CleanupFontDefList(
       HpdfDoc const * const doc)
 {
-   HPDF_List list = doc->fontdef_list;
+   HpdfList *list = doc->fontdef_list;
    HpdfUInt i;
 
    HPDF_PTRACE((" _CleanupFontDefList\n"));
@@ -1248,7 +1248,7 @@ HPDF_FontDef
       HpdfDoc const * const doc,
       char const *font_name)
 {
-   HPDF_List list = doc->fontdef_list;
+   HpdfList *list = doc->fontdef_list;
    HpdfUInt i;
 
    HPDF_PTRACE((" HPDF_Doc_FindFontDef\n"));
@@ -1343,19 +1343,19 @@ HPDF_FontDef
 
 /*----- encoder handling ----------------------------------------------------*/
 
-HPDF_Encoder
+HpdfEncoder *
    HPDF_Doc_FindEncoder(
       HpdfDoc const * const doc,
       char const *encoding_name)
 {
-   HPDF_List list = doc->encoder_list;
+   HpdfList *list = doc->encoder_list;
    HpdfUInt i;
 
    HPDF_PTRACE((" HPDF_Doc_FindEncoder\n"));
 
    for (i = 0; i < list->count; i++) 
    {
-      HPDF_Encoder encoder = (HPDF_Encoder)HPDF_List_ItemAt(list, i);
+      HpdfEncoder *encoder = (HpdfEncoder *)HPDF_List_ItemAt(list, i);
 
       if (HpdfStrIsEqual(encoding_name, encoder->name)) 
       {
@@ -1379,7 +1379,7 @@ HPDF_Encoder
 HpdfStatus
    HPDF_Doc_RegisterEncoder(
       HpdfDoc * const doc,
-      HPDF_Encoder   encoder)
+      HpdfEncoder * const encoder)
 {
    HpdfStatus ret;
 
@@ -1403,12 +1403,12 @@ HpdfStatus
    return HPDF_OK;
 }
 
-HPDF_EXPORT(HPDF_Encoder)
+HPDF_EXPORT(HpdfEncoder *)
    HPDF_GetEncoder(
       HpdfDoc * const doc,
       char const *encoding_name)
 {
-   HPDF_Encoder encoder;
+   HpdfEncoder *encoder;
    HpdfStatus ret;
 
    HPDF_PTRACE((" HPDF_GetEncoder\n"));
@@ -1441,7 +1441,7 @@ HPDF_EXPORT(HPDF_Encoder)
    return encoder;
 }
 
-HPDF_EXPORT(HPDF_Encoder)
+HPDF_EXPORT(HpdfEncoder *)
    HPDF_GetCurrentEncoder(
       HpdfDoc * const doc)
 {
@@ -1458,7 +1458,7 @@ HPDF_EXPORT(HpdfStatus)
       HpdfDoc * const doc,
       char const *encoding_name)
 {
-   HPDF_Encoder encoder;
+   HpdfEncoder *encoder;
 
    if (!HPDF_HasDoc(doc))
    {
@@ -1481,14 +1481,14 @@ static void
    _FreeEncoderList(
       HpdfDoc * const doc)
 {
-   HPDF_List list = doc->encoder_list;
+   HpdfList *list = doc->encoder_list;
    HpdfUInt i;
 
    HPDF_PTRACE((" _FreeEncoderList\n"));
 
    for (i = 0; i < list->count; i++) 
    {
-      HPDF_Encoder encoder = (HPDF_Encoder)HPDF_List_ItemAt(list, i);
+      HpdfEncoder *encoder = (HpdfEncoder *) HPDF_List_ItemAt(list, i);
 
       HPDF_Encoder_Free(encoder);
    }
@@ -1535,7 +1535,7 @@ HPDF_EXPORT(HPDF_Font)
       char const *encoding_name)
 {
    HPDF_FontDef fontdef = NULL;
-   HPDF_Encoder encoder = NULL;
+   HpdfEncoder *encoder = NULL;
    HPDF_Font font;
 
    HPDF_PTRACE((" HPDF_GetFont\n"));
@@ -1672,7 +1672,7 @@ HPDF_EXPORT(HPDF_Font)
    return font;
 }
 
-HPDF_EXPORT(const char*)
+HPDF_EXPORT(char const*)
    HPDF_LoadType1FontFromFile(
       HpdfDoc * const doc,
       char const *afm_file_name,
@@ -1680,7 +1680,7 @@ HPDF_EXPORT(const char*)
 {
    HPDF_Stream afm;
    HPDF_Stream pfm = NULL;
-   const char *ret;
+   char const *ret;
 
    HPDF_PTRACE((" HPDF_LoadType1FontFromFile\n"));
 
@@ -1728,15 +1728,15 @@ HPDF_EXPORT(const char*)
 }
 
 #if defined(WIN32)
-HPDF_EXPORT(const char*)
+HPDF_EXPORT(char const*)
    HPDF_LoadType1FontFromFileW(
       HpdfDoc * const doc,
-      const wchar_t  *afm_file_name,
-      const wchar_t  *data_file_name)
+      wchar_t const  *afm_file_name,
+      wchar_t const  *data_file_name)
 {
    HPDF_Stream afm;
    HPDF_Stream pfm = NULL;
-   const char *ret;
+   char const *ret;
 
    HPDF_PTRACE((" HPDF_LoadType1FontFromFileW\n"));
 
@@ -1784,7 +1784,7 @@ HPDF_EXPORT(const char*)
 }
 #endif
 
-static const char*
+static char const*
    _LoadType1FontFromStream(
       HpdfDoc * const doc,
       HPDF_Stream   afmdata,
@@ -1847,14 +1847,14 @@ HPDF_EXPORT(HPDF_FontDef)
    return def;
 }
 
-HPDF_EXPORT(const char*)
+HPDF_EXPORT(char const*)
    HPDF_LoadTTFontFromFile(
       HpdfDoc * const doc,
       char const     *file_name,
       HpdfBool        embedding)
 {
    HPDF_Stream font_data;
-   const char *ret;
+   char const *ret;
 
    HPDF_PTRACE((" HPDF_LoadTTFontFromFile\n"));
 
@@ -1887,8 +1887,8 @@ HPDF_EXPORT(const char*)
 HPDF_EXPORT(HPDF_FontDef)
    HPDF_GetTTFontDefFromFileW(
       HpdfDoc const * const doc,
-      const wchar_t *file_name,
-      HpdfBool      embedding)
+      wchar_t const        *file_name,
+      HpdfBool              embedding)
 {
    HPDF_Stream font_data;
    HPDF_FontDef def;
@@ -1911,14 +1911,14 @@ HPDF_EXPORT(HPDF_FontDef)
    return def;
 }
 
-HPDF_EXPORT(const char*)
+HPDF_EXPORT(char const*)
    HPDF_LoadTTFontFromFileW(
       HpdfDoc * const doc,
-      const wchar_t   *file_name,
+      wchar_t const  *file_name,
       HpdfBool        embedding)
 {
    HPDF_Stream font_data;
-   const char *ret;
+   char const *ret;
 
    HPDF_PTRACE((" HPDF_LoadTTFontFromFileW\n"));
 
@@ -1948,7 +1948,7 @@ HPDF_EXPORT(const char*)
 }
 #endif
 
-static const char*
+static char const*
    _LoadTTFontFromStream(
       HpdfDoc * const doc,
       HPDF_Stream      font_data,
@@ -2009,7 +2009,7 @@ static const char*
    return def->base_font;
 }
 
-HPDF_EXPORT(const char*)
+HPDF_EXPORT(char const*)
    HPDF_LoadTTFontFromFile2(
       HpdfDoc * const doc,
       char const     *file_name,
@@ -2017,7 +2017,7 @@ HPDF_EXPORT(const char*)
       HpdfBool        embedding)
 {
    HPDF_Stream font_data;
-   const char *ret;
+   char const *ret;
 
    HPDF_PTRACE((" HPDF_LoadTTFontFromFile2\n"));
 
@@ -2047,15 +2047,15 @@ HPDF_EXPORT(const char*)
 }
 
 #if defined(WIN32)
-HPDF_EXPORT(const char*)
+HPDF_EXPORT(char const*)
    HPDF_LoadTTFontFromFile2W(
       HpdfDoc * const doc,
-      const wchar_t   *file_name,
+      wchar_t const  *file_name,
       HpdfUInt        index,
       HpdfBool        embedding)
 {
    HPDF_Stream font_data;
-   const char *ret;
+   char const *ret;
 
    HPDF_PTRACE((" HPDF_LoadTTFontFromFile2\n"));
 
@@ -2085,7 +2085,7 @@ HPDF_EXPORT(const char*)
 }
 #endif
 
-static const char*
+static char const*
    _LoadTTFontFromStream2(
       HpdfDoc * const doc,
       HPDF_Stream      font_data,
@@ -2324,7 +2324,7 @@ HPDF_EXPORT(HPDF_Image)
 HPDF_EXPORT(HPDF_Image)
    HPDF_LoadJpegImageFromFileW(
       HpdfDoc * const doc,
-      const wchar_t *filename)
+      wchar_t const  *filename)
 {
    HPDF_Stream imagedata;
    HPDF_Image image;
@@ -2587,13 +2587,13 @@ HPDF_EXPORT(HpdfStatus)
 HPDF_EXPORT(HPDF_EmbeddedFile)
    HPDF_AttachFile(
       HpdfDoc * const doc,
-      const char *file)
+      char const     *file)
 {
-   HPDF_NameDict names;
-   HPDF_NameTree ntree;
-   HPDF_EmbeddedFile efile;
-   HPDF_String name;
-   HpdfStatus ret = HPDF_OK;
+   HpdfValueNameDict  names;
+   HpdfValueNameTree  ntree;
+   HPDF_EmbeddedFile  efile;
+   HpdfValueString   *name;
+   HpdfStatus         ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_AttachFile\n"));
 
@@ -2605,7 +2605,7 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
    names = HPDF_Catalog_GetNames(doc->catalog);
    if (!names) 
    {
-      names = HPDF_NameDict_New(doc->mmgr, doc->xref);
+      names = HpdfValueNameDict_New(doc->mmgr, doc->xref);
       if (!names)
       {
          return NULL;
@@ -2618,16 +2618,16 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       }
    }
 
-   ntree = HPDF_NameDict_GetNameTree(names, HPDF_NAME_EMBEDDED_FILES);
+   ntree = HpdfValueNameDict_GetNameTree(names, HPDF_NAME_EMBEDDED_FILES);
    if (!ntree) 
    {
-      ntree = HPDF_NameTree_New(doc->mmgr, doc->xref);
+      ntree = HpdfValueNameTree_New(doc->mmgr, doc->xref);
       if (!ntree)
       {
          return NULL;
       }
 
-      ret = HPDF_NameDict_SetNameTree(names, HPDF_NAME_EMBEDDED_FILES, ntree);
+      ret = HpdfValueNameDict_SetNameTree(names, HPDF_NAME_EMBEDDED_FILES, ntree);
       if (ret != HPDF_OK)
       {
          return NULL;
@@ -2640,13 +2640,13 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       return NULL;
    }
 
-   name = HPDF_String_New(doc->mmgr, file, NULL);
+   name = HpdfValueStringCreate(doc->mmgr, file, NULL);
    if (!name)
    {
       return NULL;
    }
 
-   ret += HPDF_NameTree_Add(ntree, name, efile);
+   ret += HpdfValueNameTree_Add(ntree, name, efile);
    if (ret != HPDF_OK)
    {
       return NULL;
@@ -2659,13 +2659,13 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
 HPDF_EXPORT(HPDF_EmbeddedFile)
    HPDF_AttachFileW(
       HpdfDoc * const doc,
-      const wchar_t *file)
+      wchar_t const  *file)
 {
-   HPDF_NameDict names;
-   HPDF_NameTree ntree;
-   HPDF_EmbeddedFile efile;
-   HPDF_String name;
-   HpdfStatus ret = HPDF_OK;
+   HpdfValueNameDict  names;
+   HpdfValueNameTree  ntree;
+   HPDF_EmbeddedFile  efile;
+   HpdfValueString   *name;
+   HpdfStatus         ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_AttachFileW\n"));
 
@@ -2677,7 +2677,7 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
    names = HPDF_Catalog_GetNames(doc->catalog);
    if (!names) 
    {
-      names = HPDF_NameDict_New(doc->mmgr, doc->xref);
+      names = HpdfValueNameDict_New(doc->mmgr, doc->xref);
       if (!names)
       {
          return NULL;
@@ -2690,16 +2690,16 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       }
    }
 
-   ntree = HPDF_NameDict_GetNameTree(names, HPDF_NAME_EMBEDDED_FILES);
+   ntree = HpdfValueNameDict_GetNameTree(names, HPDF_NAME_EMBEDDED_FILES);
    if (!ntree) 
    {
-      ntree = HPDF_NameTree_New(doc->mmgr, doc->xref);
+      ntree = HpdfValueNameTree_New(doc->mmgr, doc->xref);
       if (!ntree)
       {
          return NULL;
       }
 
-      ret = HPDF_NameDict_SetNameTree(names, HPDF_NAME_EMBEDDED_FILES, ntree);
+      ret = HpdfValueNameDict_SetNameTree(names, HPDF_NAME_EMBEDDED_FILES, ntree);
       if (ret != HPDF_OK)
       {
          return NULL;
@@ -2712,13 +2712,13 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       return NULL;
    }
 
-   name = HPDF_String_NewW(doc->mmgr, file, NULL);
+   name = HpdfValueStringCreateW(doc->mmgr, file, NULL);
    if (!name)
    {
       return NULL;
    }
 
-   ret += HPDF_NameTree_Add(ntree, name, efile);
+   ret += HpdfValueNameTree_Add(ntree, name, efile);
    if (ret != HPDF_OK)
    {
       return NULL;
@@ -2778,12 +2778,12 @@ HPDF_EXPORT(HpdfStatus)
    return ret;
 }
 
-HPDF_EXPORT(const char*)
+HPDF_EXPORT(char const*)
    HPDF_GetInfoAttr(
       HpdfDoc * const doc,
       HPDF_InfoType   type)
 {
-   const char *ret = NULL;
+   char const *ret = NULL;
    HPDF_Dict info = _GetInfo(doc);
 
    HPDF_PTRACE((" HPDF_GetInfoAttr\n"));
@@ -2830,7 +2830,7 @@ HPDF_EXPORT(HPDF_Outline)
       HpdfDoc * const doc,
       HPDF_Outline   parent,
       char const   *title,
-      HPDF_Encoder   encoder)
+      HpdfEncoder * const encoder)
 {
    HPDF_Outline outline;
 
@@ -2975,10 +2975,10 @@ HPDF_EXPORT(void)
 HPDF_EXPORT(HPDF_OutputIntent)
    HPDF_OutputIntent_New(
       HpdfDoc * const doc,
-      const char* identifier,
-      const char* condition,
-      const char* registry,
-      const char* info,
+      char const* identifier,
+      char const* condition,
+      char const* registry,
+      char const* info,
       HpdfArray * const outputprofile)
 {
    HPDF_OutputIntent intent;
@@ -3004,14 +3004,23 @@ HPDF_EXPORT(HPDF_OutputIntent)
    }
 
    ret += HPDF_Dict_AddName(intent, "Type", "OutputIntent");
-   ret += HPDF_Dict_AddName(intent, "S", "GTS_PDFX");
-   ret += HPDF_Dict_Add(intent, "OutputConditionIdentifier", HPDF_String_New(doc->mmgr, identifier, NULL));
-   ret += HPDF_Dict_Add(intent, "OutputCondition", HPDF_String_New(doc->mmgr, condition, NULL));
-   ret += HPDF_Dict_Add(intent, "RegistryName", HPDF_String_New(doc->mmgr, registry, NULL));
+   ret += HPDF_Dict_AddName(intent, "S",    "GTS_PDFX");
+   ret += HPDF_Dict_Add(    
+      intent, 
+      "OutputConditionIdentifier", 
+      HpdfValueStringCreate(doc->mmgr, identifier, NULL));
+   ret += HPDF_Dict_Add(    
+      intent, 
+      "OutputCondition", 
+      HpdfValueStringCreate(doc->mmgr, condition,  NULL));
+   ret += HPDF_Dict_Add(    
+      intent, 
+      "RegistryName", 
+      HpdfValueStringCreate(doc->mmgr, registry,   NULL));
 
    if (info != NULL) 
    {
-      ret += HPDF_Dict_Add(intent, "Info", HPDF_String_New(doc->mmgr, info, NULL));
+      ret += HPDF_Dict_Add(intent, "Info", HpdfValueStringCreate(doc->mmgr, info, NULL));
    }
 
    /* add ICC base stream */
@@ -3180,7 +3189,7 @@ HPDF_EXPORT(HpdfArray *)
 HPDF_EXPORT(HPDF_OutputIntent)
    HPDF_LoadIccProfileFromFile(
       HpdfDoc * const doc,
-      const char* icc_file_name,
+      char const* icc_file_name,
       int numcomponent)
 {
    HPDF_Stream iccdata;
@@ -3223,7 +3232,7 @@ HPDF_EXPORT(HPDF_OutputIntent)
 HPDF_EXPORT(HPDF_OutputIntent)
    HPDF_LoadIccProfileFromFileW(
       HpdfDoc * const doc,
-      const wchar_t * icc_file_name,
+      wchar_t const  *icc_file_name,
       int numcomponent)
 {
    HPDF_Stream iccdata;

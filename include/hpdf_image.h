@@ -39,7 +39,7 @@ HPDF_Image HPDF_Image_LoadRawImageFromMem  (HpdfMemMgr * const mmgr, HpdfByte co
 HpdfBool HPDF_Image_Validate (HPDF_Image  image);
 HpdfStatus HPDF_Image_SetMask (HPDF_Image   image, HpdfBool    mask);
 HpdfStatus HPDF_Image_SetColorSpace  (HPDF_Image   image, HpdfArray * const colorspace);
-HpdfStatus HPDF_Image_SetRenderingIntent  (HPDF_Image   image, const char* intent);
+HpdfStatus HPDF_Image_SetRenderingIntent  (HPDF_Image   image, char const* intent);
 
 #ifdef __cplusplus
 }

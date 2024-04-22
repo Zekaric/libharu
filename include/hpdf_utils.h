@@ -36,7 +36,7 @@ HpdfInt      HPDF_MemCmp(     HpdfByte const * const s1, HpdfByte const * const 
 HpdfInt      HPDF_StrCmp(     char const * const s1, char const * const s2);
 HpdfBool     HpdfMemIsEqual(  HpdfByte const * const buf1, HpdfByte const * const buf2, HpdfUInt count);
 HpdfBool     HpdfStrIsEqual(  char const * const s1, char const * const s2);
-const char  *HPDF_StrStr(     char const * const s1, char const * const s2, HpdfUInt maxlen);
+char const  *HPDF_StrStr(     char const * const s1, char const * const s2, HpdfUInt maxlen);
 void        *HPDF_MemSet(     void * const buffer, HpdfByte value, HpdfUInt count);
 HpdfUInt     HPDF_StrLen(     char const * const str, HpdfInt maxlen);
 HPDF_Box     HPDF_ToBox(      HpdfInt16 left, HpdfInt16 bottom, HpdfInt16 right, HpdfInt16 top);

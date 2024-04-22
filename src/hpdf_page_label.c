@@ -80,7 +80,8 @@ HPDF_Dict
 
    if (prefix && prefix[0] != 0)
    {
-      if (HPDF_Dict_Add(obj, "P", HPDF_String_New(doc->mmgr, prefix, doc->def_encoder)) != HPDF_OK)
+      if (HPDF_Dict_Add(obj, "P", HpdfValueStringCreate(doc->mmgr, prefix, doc->def_encoder)) != 
+            HPDF_OK)
       {
          goto Fail;
       }

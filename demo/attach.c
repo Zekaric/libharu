@@ -18,7 +18,7 @@
 #include <setjmp.h>
 #include "hpdf.h"
 
-const char *text = "This PDF should have an attachment named basn3p08.png";
+char const *text = "This PDF should have an attachment named basn3p08.png";
 
 jmp_buf env;
 

@@ -45,7 +45,7 @@ int main (int argc, char **argv)
     HpdfUInt page_width;
     HpdfReal pw;
     char SAMP_TXT[2048];
-    const char *detail_font_name;
+    char const *detail_font_name;
     FILE *f;
 
     if (argc < 2) {

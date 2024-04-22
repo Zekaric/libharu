@@ -57,7 +57,7 @@
  * Convert date in PDF specific format: D:YYYYMMDDHHmmSS
  * to XMP value in format YYYY-MM-DDTHH:mm:SS+offH:offMin
  */
-HpdfStatus ConvertDateToXMDate(HPDF_Stream stream, const char *pDate)
+HpdfStatus ConvertDateToXMDate(HPDF_Stream stream, char const *pDate)
 {
    HpdfStatus ret;
 
@@ -142,32 +142,32 @@ HPDF_PDFA_SetPDFAConformance(
    HPDF_OutputIntent xmp;
    HpdfStatus ret;
 
-   const char *dc_title       = NULL;
-   const char *dc_creator     = NULL;
-   const char *dc_description = NULL;
+   char const *dc_title       = NULL;
+   char const *dc_creator     = NULL;
+   char const *dc_description = NULL;
 
-   const char *xmp_CreatorTool = NULL;
-   const char *xmp_CreateDate  = NULL;
-   const char *xmp_ModifyDate  = NULL;
+   char const *xmp_CreatorTool = NULL;
+   char const *xmp_CreateDate  = NULL;
+   char const *xmp_ModifyDate  = NULL;
 
-   const char *pdf_Keywords    = NULL;
-   const char *pdf_Producer    = NULL;
+   char const *pdf_Keywords    = NULL;
+   char const *pdf_Producer    = NULL;
 
    if (!HPDF_HasDoc(doc))
    {
       return HPDF_INVALID_DOCUMENT;
    }
 
-   dc_title       = (const char *) HPDF_GetInfoAttr(doc, HPDF_INFO_TITLE);
-   dc_creator     = (const char *) HPDF_GetInfoAttr(doc, HPDF_INFO_AUTHOR);
-   dc_description = (const char *) HPDF_GetInfoAttr(doc, HPDF_INFO_SUBJECT);
+   dc_title       = (char const *) HPDF_GetInfoAttr(doc, HPDF_INFO_TITLE);
+   dc_creator     = (char const *) HPDF_GetInfoAttr(doc, HPDF_INFO_AUTHOR);
+   dc_description = (char const *) HPDF_GetInfoAttr(doc, HPDF_INFO_SUBJECT);
 
-   xmp_CreateDate  = (const char *) HPDF_GetInfoAttr(doc, HPDF_INFO_CREATION_DATE);
-   xmp_ModifyDate  = (const char *) HPDF_GetInfoAttr(doc, HPDF_INFO_MOD_DATE);
-   xmp_CreatorTool = (const char *) HPDF_GetInfoAttr(doc, HPDF_INFO_CREATOR);
+   xmp_CreateDate  = (char const *) HPDF_GetInfoAttr(doc, HPDF_INFO_CREATION_DATE);
+   xmp_ModifyDate  = (char const *) HPDF_GetInfoAttr(doc, HPDF_INFO_MOD_DATE);
+   xmp_CreatorTool = (char const *) HPDF_GetInfoAttr(doc, HPDF_INFO_CREATOR);
 
-   pdf_Keywords = (const char *) HPDF_GetInfoAttr(doc, HPDF_INFO_KEYWORDS);
-   pdf_Producer = (const char *) HPDF_GetInfoAttr(doc, HPDF_INFO_PRODUCER);
+   pdf_Keywords = (char const *) HPDF_GetInfoAttr(doc, HPDF_INFO_KEYWORDS);
+   pdf_Producer = (char const *) HPDF_GetInfoAttr(doc, HPDF_INFO_PRODUCER);
 
    if ((dc_title        != NULL) ||
       (dc_creator      != NULL) ||
@@ -337,7 +337,7 @@ HPDF_PDFA_GenerateID(
 
       HPDF_MD5Init(&md5_ctx);
       HPDF_MD5Update(&md5_ctx, (HpdfByte *) "libHaru", sizeof("libHaru") - 1);
-      HPDF_MD5Update(&md5_ctx, currentTime, HPDF_StrLen((const char *) currentTime, -1));
+      HPDF_MD5Update(&md5_ctx, currentTime, HPDF_StrLen((char const *) currentTime, -1));
       HPDF_MD5Final(idkey, &md5_ctx);
 
       if (HPDF_Array_Add(id, HPDF_Binary_New(doc->mmgr, idkey, HPDF_MD5_KEY_LEN)) != HPDF_OK)
@@ -378,7 +378,7 @@ HPDF_PDFA_GenerateID(
 HpdfStatus
 HPDF_PDFA_AppendOutputIntents(
    HpdfDoc * const doc,
-   const char *iccname,
+   char const *iccname,
    HPDF_Dict iccdict)
 {
    HpdfArray *intents;
@@ -397,12 +397,21 @@ HPDF_PDFA_AppendOutputIntents(
       HPDF_Dict_Free(intent);
       return ret;
    }
-   ret += HPDF_Dict_AddName(intent, "Type", "OutputIntent");
-   ret += HPDF_Dict_AddName(intent, "S", "GTS_PDFA1");
-   ret += HPDF_Dict_Add(intent, "OutputConditionIdentifier", HPDF_String_New(doc->mmgr, iccname, NULL));
-   ret += HPDF_Dict_Add(intent, "OutputCondition", HPDF_String_New(doc->mmgr, iccname, NULL));
-   ret += HPDF_Dict_Add(intent, "Info", HPDF_String_New(doc->mmgr, iccname, NULL));
-   ret += HPDF_Dict_Add(intent, "DestOutputProfile ", iccdict);
+   ret += HPDF_Dict_AddName(intent, "Type",               "OutputIntent");
+   ret += HPDF_Dict_AddName(intent, "S",                  "GTS_PDFA1");
+   ret += HPDF_Dict_Add(
+      intent, 
+      "OutputConditionIdentifier", 
+      HpdfValueStringCreate(doc->mmgr, iccname, NULL));
+   ret += HPDF_Dict_Add(
+      intent, 
+      "OutputCondition", 
+      HpdfValueStringCreate(doc->mmgr, iccname, NULL));
+   ret += HPDF_Dict_Add(
+      intent, 
+      "Info",
+      HpdfValueStringCreate(doc->mmgr, iccname, NULL));
+   ret += HPDF_Dict_Add(    intent, "DestOutputProfile ", iccdict);
    if (ret != HPDF_OK)
    {
       HPDF_Dict_Free(intent);

@@ -25,27 +25,27 @@
 extern "C" {
 #endif
 
-typedef struct _HPDF_List_Rec  *HPDF_List;
+typedef struct _HpdfList HpdfList;
 
-typedef struct _HPDF_List_Rec 
+struct _HpdfList
 {
-      HpdfMemMgr        *mmgr;
-      HpdfError      *error;
-      HpdfUInt        block_siz;
-      HpdfUInt        items_per_block;
-      HpdfUInt        count;
-      void          **obj;
-} HPDF_List_Rec;
+   HpdfMemMgr  *mmgr;
+   HpdfError   *error;
+   HpdfUInt     block_siz;
+   HpdfUInt     items_per_block;
+   HpdfUInt     count;
+   void       **obj;
+};
 
-HPDF_List HPDF_List_New  (HpdfMemMgr * const mmgr, HpdfUInt  items_per_block);
-void HPDF_List_Free  (HPDF_List  list);
-HpdfStatus HPDF_List_Add  (HPDF_List  list, void       *item);
-HpdfStatus HPDF_List_Insert  (HPDF_List  list, void       *target, void       *item);
-HpdfStatus HPDF_List_Remove  (HPDF_List  list, void       *item);
-void *HPDF_List_RemoveByIndex  (HPDF_List  list, HpdfUInt  index);
-void *HPDF_List_ItemAt  (HPDF_List  list, HpdfUInt  index);
-HpdfInt32 HPDF_List_Find  (HPDF_List  list, void       *item);
-void HPDF_List_Clear  (HPDF_List  list);
+HpdfList    *HPDF_List_New(            HpdfMemMgr * const mmgr, HpdfUInt  items_per_block);
+void         HPDF_List_Free(           HpdfList       * const  list);
+HpdfStatus   HPDF_List_Add(            HpdfList       * const  list, void       *item);
+HpdfStatus   HPDF_List_Insert(         HpdfList       * const  list, void       *target, void       *item);
+HpdfStatus   HPDF_List_Remove(         HpdfList       * const  list, void       *item);
+void        *HPDF_List_RemoveByIndex(  HpdfList       * const  list, HpdfUInt  index);
+void        *HPDF_List_ItemAt(         HpdfList const * const  list, HpdfUInt  index);
+HpdfInt32    HPDF_List_Find(           HpdfList const * const  list, void       *item);
+void         HPDF_List_Clear(          HpdfList       * const  list);
 
 #ifdef __cplusplus
 }

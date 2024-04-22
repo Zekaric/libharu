@@ -54,7 +54,7 @@
 #include "hpdf_types.h"
 
 typedef void          HPDF_HANDLE;
-typedef HPDF_HANDLE   HPDF_Boolean;
+typedef HPDF_HANDLE   HpdfValueBool;
 typedef HPDF_HANDLE   HpdfDoc;
 typedef HPDF_HANDLE   HPDF_Page;
 typedef HPDF_HANDLE   HPDF_Pages;
@@ -62,7 +62,7 @@ typedef HPDF_HANDLE   HPDF_Stream;
 typedef HPDF_HANDLE   HPDF_Image;
 typedef HPDF_HANDLE   HPDF_Font;
 typedef HPDF_HANDLE   HPDF_Outline;
-typedef HPDF_HANDLE   HPDF_Encoder;
+typedef HPDF_HANDLE   HpdfEncoder;
 typedef HPDF_HANDLE   HPDF_3DMeasure;
 typedef HPDF_HANDLE   HPDF_ExData;
 typedef HPDF_HANDLE   HpdfDestination;
@@ -97,7 +97,7 @@ typedef HPDF_HANDLE   HPDF_Shading;
 extern "C" {
 #endif
 
-HPDF_EXPORT(const char *)           HPDF_GetVersion(                                void);
+HPDF_EXPORT(char const *)           HPDF_GetVersion(                                void);
 HPDF_EXPORT(HpdfDoc *)              HPDF_NewEx(                                     HPDF_Error_Handler   user_error_fn, HPDF_Alloc_Func      user_alloc_fn, HPDF_Free_Func       user_free_fn, HpdfUInt            mem_pool_buf_size, void                        *user_data);
 HPDF_EXPORT(HpdfDoc *)              HPDF_New(                                       HPDF_Error_Handler   user_error_fn, void                *user_data);
 HPDF_EXPORT(HpdfStatus)             HPDF_SetErrorHandler(                           HpdfDoc       * const doc, HPDF_Error_Handler  user_error_fn);
@@ -121,7 +121,7 @@ HPDF_EXPORT(HpdfStatus)             HPDF_SetPagesConfiguration(                 
 HPDF_EXPORT(HPDF_Page)              HPDF_GetPageByIndex(                            HpdfDoc       * const doc, HpdfUInt   index);
 
 #if defined(WIN32)
-HPDF_EXPORT(HpdfStatus)             HPDF_SaveToFileW(                               HpdfDoc       * const doc, const wchar_t  *file_name);
+HPDF_EXPORT(HpdfStatus)             HPDF_SaveToFileW(                               HpdfDoc       * const doc, wchar_t const *file_name);
 #endif
 
 /*---------------------------------------------------------------------------*/
@@ -153,10 +153,10 @@ HPDF_EXPORT(HpdfStatus)             HPDF_Page_SetZoom(                          
 /*----- font handling -------------------------------------------------------*/
 
 HPDF_EXPORT(HPDF_Font)              HPDF_GetFont(                                   HpdfDoc       * const doc, char const *font_name, char const *encoding_name);
-HPDF_EXPORT(const char*)            HPDF_LoadType1FontFromFile(                     HpdfDoc       * const doc, char const *afm_file_name, char const *data_file_name);
+HPDF_EXPORT(char const*)            HPDF_LoadType1FontFromFile(                     HpdfDoc       * const doc, char const *afm_file_name, char const *data_file_name);
 HPDF_EXPORT(HPDF_FontDef)           HPDF_GetTTFontDefFromFile(                      HpdfDoc const * const doc, char const *file_name, HpdfBool    embedding);
-HPDF_EXPORT(const char*)            HPDF_LoadTTFontFromFile(                        HpdfDoc       * const doc, char const *file_name, HpdfBool    embedding);
-HPDF_EXPORT(const char*)            HPDF_LoadTTFontFromFile2(                       HpdfDoc       * const doc, char const *file_name, HpdfUInt    index, HpdfBool    embedding);
+HPDF_EXPORT(char const*)            HPDF_LoadTTFontFromFile(                        HpdfDoc       * const doc, char const *file_name, HpdfBool    embedding);
+HPDF_EXPORT(char const*)            HPDF_LoadTTFontFromFile2(                       HpdfDoc       * const doc, char const *file_name, HpdfUInt    index, HpdfBool    embedding);
 HPDF_EXPORT(HpdfStatus)            HPDF_AddPageLabel(                              HpdfDoc       * const doc, HpdfUInt           page_num, HPDF_PageNumStyle   style, HpdfUInt           first_page, char const        *prefix);
 HPDF_EXPORT(HpdfStatus)            HPDF_UseJPFonts(                                HpdfDoc       * const doc);
 HPDF_EXPORT(HpdfStatus)            HPDF_UseKRFonts(                                HpdfDoc       * const doc);
@@ -164,16 +164,16 @@ HPDF_EXPORT(HpdfStatus)            HPDF_UseCNSFonts(                            
 HPDF_EXPORT(HpdfStatus)            HPDF_UseCNTFonts(                               HpdfDoc       * const doc);
 
 #if defined(WIN32)
-HPDF_EXPORT(const char*)            HPDF_LoadType1FontFromFileW(                    HpdfDoc       * const doc, const wchar_t  *afm_file_name, const wchar_t  *data_file_name);
-HPDF_EXPORT(HPDF_FontDef)           HPDF_GetTTFontDefFromFileW(                     HpdfDoc const * const doc, const wchar_t *file_name, HpdfBool      embedding);
-HPDF_EXPORT(const char*)            HPDF_LoadTTFontFromFileW(                       HpdfDoc       * const doc, const wchar_t *file_name, HpdfBool      embedding);
-HPDF_EXPORT(const char*)            HPDF_LoadTTFontFromFile2W(                      HpdfDoc       * const doc, const wchar_t *file_name, HpdfUInt      index, HpdfBool      embedding);
+HPDF_EXPORT(char const*)            HPDF_LoadType1FontFromFileW(                    HpdfDoc       * const doc, wchar_t const *afm_file_name, wchar_t const *data_file_name);
+HPDF_EXPORT(HPDF_FontDef)           HPDF_GetTTFontDefFromFileW(                     HpdfDoc const * const doc, wchar_t const *file_name, HpdfBool      embedding);
+HPDF_EXPORT(char const*)            HPDF_LoadTTFontFromFileW(                       HpdfDoc       * const doc, wchar_t const *file_name, HpdfBool      embedding);
+HPDF_EXPORT(char const*)            HPDF_LoadTTFontFromFile2W(                      HpdfDoc       * const doc, wchar_t const *file_name, HpdfUInt      index, HpdfBool      embedding);
 #endif
 
 /*--------------------------------------------------------------------------*/
 /*----- outline ------------------------------------------------------------*/
 
-HPDF_EXPORT(HPDF_Outline)           HPDF_CreateOutline(                             HpdfDoc       * const doc, HPDF_Outline   parent, char const   *title, HPDF_Encoder   encoder);
+HPDF_EXPORT(HPDF_Outline)           HPDF_CreateOutline(                             HpdfDoc       * const doc, HPDF_Outline   parent, char const *title, HpdfEncoder * const encoder);
 HPDF_EXPORT(HpdfStatus)            HPDF_Outline_SetOpened(                         HPDF_Outline  outline, HpdfBool     opened);
 HPDF_EXPORT(HpdfStatus)            HPDF_Outline_SetDestination(                    HPDF_Outline      outline, HpdfDestination * const dst);
 
@@ -193,13 +193,13 @@ HPDF_EXPORT(HpdfStatus)            HPDF_Destination_SetFitBV(                   
 /*--------------------------------------------------------------------------*/
 /*----- encoder ------------------------------------------------------------*/
 
-HPDF_EXPORT(HPDF_Encoder)           HPDF_GetEncoder(                                HpdfDoc       * const doc, char const *encoding_name);
-HPDF_EXPORT(HPDF_Encoder)           HPDF_GetCurrentEncoder(                         HpdfDoc       * const doc);
+HPDF_EXPORT(HpdfEncoder *)           HPDF_GetEncoder(                                HpdfDoc       * const doc, char const *encoding_name);
+HPDF_EXPORT(HpdfEncoder *)           HPDF_GetCurrentEncoder(                         HpdfDoc       * const doc);
 HPDF_EXPORT(HpdfStatus)            HPDF_SetCurrentEncoder(                         HpdfDoc       * const doc, char const *encoding_name);
-HPDF_EXPORT(HPDF_EncoderType)       HPDF_Encoder_GetType(                           HPDF_Encoder   encoder);
-HPDF_EXPORT(HPDF_ByteType)          HPDF_Encoder_GetByteType(                       HPDF_Encoder    encoder, char const    *text, HpdfUInt       index);
-HPDF_EXPORT(HpdfUnicode)           HPDF_Encoder_GetUnicode(                        HPDF_Encoder   encoder, HpdfUInt16    code);
-HPDF_EXPORT(HPDF_WritingMode)       HPDF_Encoder_GetWritingMode(                    HPDF_Encoder   encoder);
+HPDF_EXPORT(HpdfEncoderType)       HPDF_Encoder_GetType(                           HpdfEncoder const * const   encoder);
+HPDF_EXPORT(HPDF_ByteType)          HPDF_Encoder_GetByteType(                       HpdfEncoder const * const    encoder, char const    *text, HpdfUInt       index);
+HPDF_EXPORT(HpdfUnicode)           HPDF_Encoder_GetUnicode(                        HpdfEncoder const * const   encoder, HpdfUInt16    code);
+HPDF_EXPORT(HPDF_WritingMode)       HPDF_Encoder_GetWritingMode(                    HpdfEncoder const * const   encoder);
 HPDF_EXPORT(HpdfStatus)            HPDF_UseJPEncodings(                            HpdfDoc       * const doc);
 HPDF_EXPORT(HpdfStatus)            HPDF_UseKREncodings(                            HpdfDoc       * const doc);
 HPDF_EXPORT(HpdfStatus)            HPDF_UseCNSEncodings(                           HpdfDoc       * const doc);
@@ -216,23 +216,23 @@ HPDF_EXPORT(HPDF_XObject)           HPDF_Page_CreateXObjectAsWhiteRect(         
 /*----- annotation ---------------------------------------------------------*/
 
 HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_Create3DAnnot(                        HPDF_Page       page, HpdfRect const rect, HpdfBool const tb, HpdfBool const np, HPDF_U3D        u3d, HPDF_Image      ap);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateTextAnnot(                      HPDF_Page       page, HpdfRect const rect, char const    *text, HPDF_Encoder    encoder);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateFreeTextAnnot(                  HPDF_Page       page, HpdfRect const rect, char const    *text, HPDF_Encoder    encoder);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateLineAnnot(                      HPDF_Page       page, char const    *text, HPDF_Encoder    encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateTextAnnot(                      HPDF_Page       page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateFreeTextAnnot(                  HPDF_Page       page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateLineAnnot(                      HPDF_Page       page,                      char const *text, HpdfEncoder * const encoder);
 HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint(HpdfDoc const * const doc, HPDF_Page page, HpdfRect const rect);
 HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateWidgetAnnot(                    HPDF_Page  page, HpdfRect const rect);
 HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateLinkAnnot(                      HPDF_Page          page, HpdfRect const rect, HpdfDestination * const dst);
 HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateURILinkAnnot(                   HPDF_Page     page, HpdfRect const rect, char const  *uri);
-            HPDF_Annotation         HPDF_Page_CreateTextMarkupAnnot(                HPDF_Page     page, HpdfRect const rect, char const    *text, HPDF_Encoder   encoder, HPDF_AnnotType subType);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateHighlightAnnot(                 HPDF_Page   page, HpdfRect const rect, char const  *text, HPDF_Encoder encoder);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateUnderlineAnnot(                 HPDF_Page    page, HpdfRect const rect, char const  *text, HPDF_Encoder encoder);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateSquigglyAnnot(                  HPDF_Page    page, HpdfRect const rect, char const  *text, HPDF_Encoder encoder);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateStrikeOutAnnot(                 HPDF_Page   page, HpdfRect const rect, char const  *text, HPDF_Encoder encoder);
+            HPDF_Annotation         HPDF_Page_CreateTextMarkupAnnot(                HPDF_Page     page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder, HPDF_AnnotType subType);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateHighlightAnnot(                 HPDF_Page   page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateUnderlineAnnot(                 HPDF_Page    page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateSquigglyAnnot(                  HPDF_Page    page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateStrikeOutAnnot(                 HPDF_Page   page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder);
 HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreatePopupAnnot(                     HPDF_Page          page, HpdfRect const rect, HPDF_Annotation    parent);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateStampAnnot(                     HPDF_Page           page, HpdfRect const rect, HPDF_StampAnnotName name, const char*   text, HPDF_Encoder  encoder);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateProjectionAnnot(                HPDF_Page page, HpdfRect const rect, const char* text, HPDF_Encoder encoder);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateSquareAnnot(                    HPDF_Page          page, HpdfRect const rect, char const  *text, HPDF_Encoder       encoder);
-HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateCircleAnnot(                    HPDF_Page          page, HpdfRect const rect, char const  *text, HPDF_Encoder       encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateStampAnnot(                     HPDF_Page           page, HpdfRect const rect, HPDF_StampAnnotName name, char const *text, HpdfEncoder * const encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateProjectionAnnot(                HPDF_Page page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateSquareAnnot(                    HPDF_Page          page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder);
+HPDF_EXPORT(HPDF_Annotation)        HPDF_Page_CreateCircleAnnot(                    HPDF_Page          page, HpdfRect const rect, char const *text, HpdfEncoder * const encoder);
 HPDF_EXPORT(HpdfStatus)            HPDF_LinkAnnot_SetHighlightMode(                HPDF_Annotation           annot, HPDF_AnnotHighlightMode   mode);
 HPDF_EXPORT(HpdfStatus)            HPDF_LinkAnnot_SetJavaScript(                   HPDF_Annotation    annot, HPDF_JavaScript    javascript);
 HPDF_EXPORT(HpdfStatus)            HPDF_LinkAnnot_SetBorderStyle(                  HPDF_Annotation  annot, HpdfReal        width, HpdfUInt16      dash_on, HpdfUInt16      dash_off);
@@ -242,8 +242,8 @@ HPDF_EXPORT(HpdfStatus)            HPDF_Annot_SetRGBColor(                      
 HPDF_EXPORT(HpdfStatus)            HPDF_Annot_SetCMYKColor(                        HPDF_Annotation annot, HPDF_CMYKColor color);
 HPDF_EXPORT(HpdfStatus)            HPDF_Annot_SetGrayColor(                        HPDF_Annotation annot, HpdfReal color);
 HPDF_EXPORT(HpdfStatus)            HPDF_Annot_SetNoColor(                          HPDF_Annotation annot);
-HPDF_EXPORT(HpdfStatus)            HPDF_MarkupAnnot_SetTitle(                      HPDF_Annotation annot, const char* name);
-HPDF_EXPORT(HpdfStatus)            HPDF_MarkupAnnot_SetSubject(                    HPDF_Annotation annot, const char* name);
+HPDF_EXPORT(HpdfStatus)            HPDF_MarkupAnnot_SetTitle(                      HPDF_Annotation annot, char const* name);
+HPDF_EXPORT(HpdfStatus)            HPDF_MarkupAnnot_SetSubject(                    HPDF_Annotation annot, char const* name);
 HPDF_EXPORT(HpdfStatus)            HPDF_MarkupAnnot_SetCreationDate(               HPDF_Annotation annot, HPDF_Date value);
 HPDF_EXPORT(HpdfStatus)            HPDF_MarkupAnnot_SetTransparency(               HPDF_Annotation annot, HpdfReal value);
 HPDF_EXPORT(HpdfStatus)            HPDF_MarkupAnnot_SetIntent(                     HPDF_Annotation  annot, HPDF_AnnotIntent  intent);
@@ -260,7 +260,7 @@ HPDF_EXPORT(HpdfStatus)            HPDF_PopupAnnot_SetOpened(                   
 HPDF_EXPORT(HpdfStatus)            HPDF_FreeTextAnnot_SetLineEndingStyle(          HPDF_Annotation annot, HPDF_LineAnnotEndingStyle startStyle, HPDF_LineAnnotEndingStyle endStyle);
 HPDF_EXPORT(HpdfStatus)            HPDF_FreeTextAnnot_Set3PointCalloutLine(        HPDF_Annotation annot, HpdfPoint const startPoint, HpdfPoint const kneePoint, HpdfPoint const endPoint); /* Callout line will be in default user space */
 HPDF_EXPORT(HpdfStatus)            HPDF_FreeTextAnnot_Set2PointCalloutLine(        HPDF_Annotation annot, HpdfPoint const startPoint, HpdfPoint const endPoint); /* Callout line will be in default user space */
-HPDF_EXPORT(HpdfStatus)            HPDF_FreeTextAnnot_SetDefaultStyle(             HPDF_Annotation  annot, const char* style);
+HPDF_EXPORT(HpdfStatus)            HPDF_FreeTextAnnot_SetDefaultStyle(             HPDF_Annotation  annot, char const* style);
 HPDF_EXPORT(HpdfStatus)            HPDF_LineAnnot_SetPosition(                     HPDF_Annotation annot, HpdfPoint const startPoint, HPDF_LineAnnotEndingStyle startStyle, HpdfPoint const endPoint, HPDF_LineAnnotEndingStyle endStyle);
 HPDF_EXPORT(HpdfStatus)            HPDF_LineAnnot_SetLeader(                       HPDF_Annotation annot, HpdfInt leaderLen, HpdfInt leaderExtLen, HpdfInt leaderOffsetLen);
 HPDF_EXPORT(HpdfStatus)            HPDF_LineAnnot_SetCaption(                      HPDF_Annotation annot, HpdfBool showCaption, HPDF_LineAnnotCapPosition position, HpdfInt horzOffset, HpdfInt vertOffset);
@@ -271,12 +271,12 @@ HPDF_EXPORT(HpdfStatus)            HPDF_ProjectionAnnot_SetExData(              
 /*----- 3D Measure ---------------------------------------------------------*/
 
 HPDF_EXPORT(HPDF_3DMeasure)         HPDF_Page_Create3DC3DMeasure(                   HPDF_Page       page, HpdfPoint3D const firstanchorpoint, HpdfPoint3D const textanchorpoint);
-HPDF_EXPORT(HPDF_3DMeasure)         HPDF_Page_CreatePD33DMeasure(                   HPDF_Page       page, HpdfPoint3D const annotationPlaneNormal, HpdfPoint3D const firstAnchorPoint, HpdfPoint3D const secondAnchorPoint, HpdfPoint3D const leaderLinesDirection, HpdfPoint3D const measurementValuePoint, HpdfPoint3D const textYDirection, HpdfReal const value, const char*     unitsString);
-HPDF_EXPORT(HpdfStatus)            HPDF_3DMeasure_SetName(                         HPDF_3DMeasure measure, const char* name);
+HPDF_EXPORT(HPDF_3DMeasure)         HPDF_Page_CreatePD33DMeasure(                   HPDF_Page       page, HpdfPoint3D const annotationPlaneNormal, HpdfPoint3D const firstAnchorPoint, HpdfPoint3D const secondAnchorPoint, HpdfPoint3D const leaderLinesDirection, HpdfPoint3D const measurementValuePoint, HpdfPoint3D const textYDirection, HpdfReal const value, char const*     unitsString);
+HPDF_EXPORT(HpdfStatus)            HPDF_3DMeasure_SetName(                         HPDF_3DMeasure measure, char const* name);
 HPDF_EXPORT(HpdfStatus)            HPDF_3DMeasure_SetColor(                        HPDF_3DMeasure measure, HPDF_RGBColor color);
 HPDF_EXPORT(HpdfStatus)            HPDF_3DMeasure_SetTextSize(                     HPDF_3DMeasure measure, HpdfReal textsize);
 HPDF_EXPORT(HpdfStatus)            HPDF_3DC3DMeasure_SetTextBoxSize(               HPDF_3DMeasure measure, HpdfInt32 x, HpdfInt32 y);
-HPDF_EXPORT(HpdfStatus)            HPDF_3DC3DMeasure_SetText(                      HPDF_3DMeasure measure, const char* text, HPDF_Encoder encoder);
+HPDF_EXPORT(HpdfStatus)            HPDF_3DC3DMeasure_SetText(                      HPDF_3DMeasure measure, char const *text, HpdfEncoder * const encoder);
 HPDF_EXPORT(HpdfStatus)            HPDF_3DC3DMeasure_SetProjectionAnotation(       HPDF_3DMeasure measure, HPDF_Annotation projectionanotation);
 
 /*--------------------------------------------------------------------------*/
@@ -289,7 +289,7 @@ HPDF_EXPORT(HpdfStatus)            HPDF_3DAnnotExData_Set3DMeasurement(         
 /*--------------------------------------------------------------------------*/
 /*----- 3D View ---------------------------------------------------------*/
 
-HPDF_EXPORT(HPDF_Dict)              HPDF_Page_Create3DView(                         HPDF_Page       page, HPDF_U3D        u3d, HPDF_Annotation annot3d, const char *name);
+HPDF_EXPORT(HPDF_Dict)              HPDF_Page_Create3DView(                         HPDF_Page       page, HPDF_U3D        u3d, HPDF_Annotation annot3d, char const *name);
 HPDF_EXPORT(HpdfStatus)            HPDF_3DView_Add3DC3DMeasure(                    HPDF_Dict       view, HPDF_3DMeasure measure);
 
 /*--------------------------------------------------------------------------*/
@@ -311,7 +311,7 @@ HPDF_EXPORT(HpdfStatus)             HPDF_Image_GetSize2(                        
 HPDF_EXPORT(HpdfUInt)               HPDF_Image_GetWidth(                            HPDF_Image   image);
 HPDF_EXPORT(HpdfUInt)               HPDF_Image_GetHeight(                           HPDF_Image   image);
 HPDF_EXPORT(HpdfUInt)               HPDF_Image_GetBitsPerComponent(                 HPDF_Image  image);
-HPDF_EXPORT(const char*)            HPDF_Image_GetColorSpace(                       HPDF_Image  image);
+HPDF_EXPORT(char const*)            HPDF_Image_GetColorSpace(                       HPDF_Image  image);
 HPDF_EXPORT(HpdfStatus)             HPDF_Image_SetColorMask(                        HPDF_Image   image, HpdfUInt    rmin, HpdfUInt    rmax, HpdfUInt    gmin, HpdfUInt    gmax, HpdfUInt    bmin, HpdfUInt    bmax);
 HPDF_EXPORT(HpdfStatus)             HPDF_Image_SetMaskImage(                        HPDF_Image   image, HPDF_Image   mask_image);
 
@@ -327,7 +327,7 @@ HPDF_EXPORT(HPDF_Image)             HPDF_LoadRawImageFromFileW(                 
 /*----- info dictionary ----------------------------------------------------*/
 
 HPDF_EXPORT(HpdfStatus)            HPDF_SetInfoAttr(                               HpdfDoc       * const doc, HPDF_InfoType   type, char const    *value);
-HPDF_EXPORT(const char*)            HPDF_GetInfoAttr(                               HpdfDoc       * const doc, HPDF_InfoType   type);
+HPDF_EXPORT(char const*)            HPDF_GetInfoAttr(                               HpdfDoc       * const doc, HPDF_InfoType   type);
 HPDF_EXPORT(HpdfStatus)            HPDF_SetInfoDateAttr(                           HpdfDoc       * const doc, HPDF_InfoType   type, HPDF_Date       value);
 
 /*--------------------------------------------------------------------------*/
@@ -345,8 +345,8 @@ HPDF_EXPORT(HpdfStatus)            HPDF_SetCompressionMode(                     
 /*--------------------------------------------------------------------------*/
 /*----- font ---------------------------------------------------------------*/
 
-HPDF_EXPORT(const char*)            HPDF_Font_GetFontName(                          HPDF_Font    font);
-HPDF_EXPORT(const char*)            HPDF_Font_GetEncodingName(                      HPDF_Font    font);
+HPDF_EXPORT(char const*)            HPDF_Font_GetFontName(                          HPDF_Font    font);
+HPDF_EXPORT(char const*)            HPDF_Font_GetEncodingName(                      HPDF_Font    font);
 HPDF_EXPORT(HpdfInt)               HPDF_Font_GetUnicodeWidth(                      HPDF_Font       font, HpdfUnicode    code);
 HPDF_EXPORT(HPDF_Box)               HPDF_Font_GetBBox(                              HPDF_Font    font);
 HPDF_EXPORT(HpdfInt)               HPDF_Font_GetAscent(                            HPDF_Font  font);
@@ -359,10 +359,10 @@ HPDF_EXPORT(HpdfUInt)              HPDF_Font_MeasureText(                       
 /*--------------------------------------------------------------------------*/
 /*----- attachments -------------------------------------------------------*/
 
-HPDF_EXPORT(HPDF_EmbeddedFile)      HPDF_AttachFile(                                HpdfDoc       * const doc, const char *file);
+HPDF_EXPORT(HPDF_EmbeddedFile)      HPDF_AttachFile(                                HpdfDoc       * const doc, char const *file);
 
 #if defined(WIN32)
-HPDF_EXPORT(HPDF_EmbeddedFile)      HPDF_AttachFileW(                               HpdfDoc       * const doc, const wchar_t *file);
+HPDF_EXPORT(HPDF_EmbeddedFile)      HPDF_AttachFileW(                               HpdfDoc       * const doc, wchar_t const *file);
 #endif
 
 /*--------------------------------------------------------------------------*/
@@ -648,10 +648,10 @@ HPDF_EXPORT(HpdfStatus)            HPDF_Page_TextOut(                           
 HPDF_EXPORT(HpdfStatus)            HPDF_Page_TextRect(                             HPDF_Page            page, HpdfReal            left, HpdfReal            top, HpdfReal            right, HpdfReal            bottom, char const         *text, HPDF_TextAlignment   align, HpdfUInt           *len);
 HPDF_EXPORT(HpdfStatus)            HPDF_Page_SetSlideShow(                         HPDF_Page              page, HPDF_TransitionStyle   type, HpdfReal              disp_time, HpdfReal              trans_time);
 HPDF_EXPORT(HPDF_OutputIntent)      HPDF_ICC_LoadIccFromMem(                        HpdfDoc       * const doc, HpdfMemMgr * const mmgr, HPDF_Stream iccdata, HPDF_Xref   xref, int         numcomponent);
-HPDF_EXPORT(HPDF_OutputIntent)      HPDF_LoadIccProfileFromFile(                    HpdfDoc       * const doc, const char* icc_file_name, int  numcomponent);
+HPDF_EXPORT(HPDF_OutputIntent)      HPDF_LoadIccProfileFromFile(                    HpdfDoc       * const doc, char const* icc_file_name, int  numcomponent);
 
 #if defined(WIN32)
-HPDF_EXPORT(HPDF_OutputIntent)      HPDF_LoadIccProfileFromFileW(                   HpdfDoc       * const doc, const wchar_t *icc_file_name, int  numcomponent);
+HPDF_EXPORT(HPDF_OutputIntent)      HPDF_LoadIccProfileFromFileW(                   HpdfDoc       * const doc, wchar_t const *icc_file_name, int  numcomponent);
 #endif
 
 #ifdef __cplusplus

@@ -47,23 +47,29 @@ HPDF_Outline
       HPDF_Xref   xref)
 {
    HPDF_Outline outline;
-   HpdfStatus ret = HPDF_OK;
-   HPDF_Number open_flg;
+   HpdfStatus   ret = HPDF_OK;
+   HpdfValueNumInt  *open_flg;
 
    HPDF_PTRACE((" HPDF_OutlineRoot_New\n"));
 
    outline = HPDF_Dict_New(mmgr);
    if (!outline)
+   {
       return NULL;
+   }
 
    outline->before_write_fn = BeforeWrite;
 
    if (HPDF_Xref_Add(xref, outline) != HPDF_OK)
+   {
       return NULL;
+   }
 
-   open_flg = HPDF_Number_New(mmgr, HPDF_OUTLINE_OPENED);
+   open_flg = HpdfValueNumIntCreate(mmgr, HPDF_OUTLINE_OPENED);
    if (!open_flg)
+   {
       return NULL;
+   }
 
    open_flg->header.obj_id |= HPDF_OTYPE_HIDDEN;
 
@@ -71,50 +77,65 @@ HPDF_Outline
    ret += HPDF_Dict_AddName(outline, "Type", "Outlines");
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    outline->header.obj_class |= HPDF_OSUBCLASS_OUTLINE;
 
    return outline;
 }
 
-
 HPDF_Outline
    HPDF_Outline_New(
-      HpdfMemMgr * const mmgr,
-      HPDF_Outline       parent,
-      char const  *title,
-      HPDF_Encoder       encoder,
-      HPDF_Xref          xref)
+      HpdfMemMgr * const    mmgr,
+      HPDF_Outline          parent,
+      char const           *title,
+      HpdfEncoder * const   encoder,
+      HPDF_Xref             xref)
 {
-   HPDF_Outline outline;
-   HPDF_String s;
-   HpdfStatus ret = HPDF_OK;
-   HPDF_Number open_flg;
+   HPDF_Outline       outline;
+   HpdfValueString   *s;
+   HpdfStatus         ret = HPDF_OK;
+   HpdfValueNumInt   *open_flg;
 
    HPDF_PTRACE((" HPDF_Outline_New\n"));
 
-   if (!mmgr || !parent || !xref)
+   if (!mmgr   || 
+       !parent || 
+       !xref)
+   {
       return NULL;
+   }
 
    outline = HPDF_Dict_New(mmgr);
    if (!outline)
+   {
       return NULL;
+   }
 
    outline->before_write_fn = BeforeWrite;
 
    if (HPDF_Xref_Add(xref, outline) != HPDF_OK)
+   {
       return NULL;
+   }
 
-   s = HPDF_String_New(mmgr, title, encoder);
+   s = HpdfValueStringCreate(mmgr, title, encoder);
    if (!s)
+   {
       return NULL;
+   }
    else
+   {
       ret += HPDF_Dict_Add(outline, "Title", s);
+   }
 
-   open_flg = HPDF_Number_New(mmgr, HPDF_OUTLINE_OPENED);
+   open_flg = HpdfValueNumIntCreate(mmgr, HPDF_OUTLINE_OPENED);
    if (!open_flg)
+   {
       return NULL;
+   }
 
    open_flg->header.obj_id |= HPDF_OTYPE_HIDDEN;
    ret += HPDF_Dict_Add(outline, "_OPENED", open_flg);
@@ -123,14 +144,14 @@ HPDF_Outline
    ret += AddChild(parent, outline);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    outline->header.obj_class |= HPDF_OSUBCLASS_OUTLINE;
 
    return outline;
 }
-
-
 
 static HpdfStatus
 AddChild(HPDF_Outline  parent,
@@ -161,21 +182,21 @@ AddChild(HPDF_Outline  parent,
    return HPDF_OK;
 }
 
-
 HpdfBool
-HPDF_Outline_GetOpened(HPDF_Outline  outline)
+   HPDF_Outline_GetOpened(
+      HPDF_Outline  outline)
 {
-   HPDF_Number n = (HPDF_Number) HPDF_Dict_GetItem(outline, "_OPENED",
-      HPDF_OCLASS_NUMBER);
+   HpdfValueNumInt *n = (HpdfValueNumInt *) HPDF_Dict_GetItem(outline, "_OPENED", HPDF_OCLASS_NUMBER);
 
    HPDF_PTRACE((" HPDF_Outline_GetOpened\n"));
 
    if (!n)
+   {
       return HPDF_FALSE;
+   }
 
    return (HpdfBool) n->value;
 }
-
 
 HPDF_Outline
 HPDF_Outline_GetFirst(HPDF_Outline outline)
@@ -223,31 +244,40 @@ HPDF_Outline_GetParent(HPDF_Outline outline)
       HPDF_OCLASS_DICT);
 }
 
-
 static HpdfStatus
-BeforeWrite(HPDF_Dict obj)
+   BeforeWrite(
+      HPDF_Dict obj)
 {
-   HPDF_Number n = (HPDF_Number) HPDF_Dict_GetItem(obj, "Count",
-      HPDF_OCLASS_NUMBER);
-   HpdfUInt count = CountChild((HPDF_Outline) obj);
+   HpdfValueNumInt  *n     = (HpdfValueNumInt *) HPDF_Dict_GetItem(obj, "Count", HPDF_OCLASS_NUMBER);
+   HpdfUInt     count = CountChild((HPDF_Outline) obj);
 
    HPDF_PTRACE((" BeforeWrite\n"));
 
-   if (count == 0 && n)
+   if (count == 0 && 
+       n)
+   {
       return HPDF_Dict_RemoveElement(obj, "Count");
+   }
 
    if (!HPDF_Outline_GetOpened((HPDF_Outline) obj))
+   {
       count = count * -1;
+   }
 
    if (n)
+   {
       n->value = count;
+   }
    else
+   {
       if (count)
+      {
          return HPDF_Dict_AddNumber(obj, "Count", count);
+      }
+   }
 
    return HPDF_OK;
 }
-
 
 static HpdfUInt
 CountChild(HPDF_Outline  outline)
@@ -306,28 +336,35 @@ HPDF_Outline_SetDestination(HPDF_Outline      outline,
    return HPDF_OK;
 }
 
-
 HPDF_EXPORT(HpdfStatus)
-HPDF_Outline_SetOpened(HPDF_Outline  outline,
-   HpdfBool     opened)
+   HPDF_Outline_SetOpened(
+      HPDF_Outline outline,
+      HpdfBool     opened)
 {
-   HPDF_Number n;
+   HpdfValueNumInt *n;
 
    if (!HPDF_Outline_Validate(outline))
+   {
       return HPDF_INVALID_OUTLINE;
+   }
 
-   n = (HPDF_Number) HPDF_Dict_GetItem(outline, "_OPENED",
-      HPDF_OCLASS_NUMBER);
+   n = (HpdfValueNumInt *) HPDF_Dict_GetItem(outline, "_OPENED", HPDF_OCLASS_NUMBER);
 
    HPDF_PTRACE((" HPDF_Outline_SetOpened\n"));
 
-   if (!n) {
-      n = HPDF_Number_New(outline->mmgr, (HpdfInt) opened);
-      if (!n || HPDF_Dict_Add(outline, "_OPENED", n) != HPDF_OK)
+   if (!n) 
+   {
+      n = HpdfValueNumIntCreate(outline->mmgr, (HpdfInt) opened);
+      if (!n || 
+          HPDF_Dict_Add(outline, "_OPENED", n) != HPDF_OK)
+      {
          return HPDF_CheckError(outline->error);
+      }
    }
    else
+   {
       n->value = (HpdfInt) opened;
+   }
 
    return HPDF_OK;
 }

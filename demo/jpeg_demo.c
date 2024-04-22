@@ -42,9 +42,9 @@ draw_image (HpdfDoc *pdf,
             char const *text)
 {
 #ifdef __WIN32__
-    const char* FILE_SEPARATOR = "\\";
+    char const* FILE_SEPARATOR = "\\";
 #else
-    const char* FILE_SEPARATOR = "/";
+    char const* FILE_SEPARATOR = "/";
 #endif
     char filename1[255];
 

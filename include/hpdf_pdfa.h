@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-HpdfStatus HPDF_PDFA_AppendOutputIntents(HpdfDoc       * const doc, const char *iccname, HPDF_Dict iccdict);
+HpdfStatus HPDF_PDFA_AppendOutputIntents(HpdfDoc       * const doc, char const *iccname, HPDF_Dict iccdict);
 HpdfStatus HPDF_PDFA_GenerateID(         HpdfDoc const * const doc);
 HpdfStatus HPDF_PDFA_SetPDFAConformance( HpdfDoc       * const doc, HPDF_PDFAType pdfatype);
 

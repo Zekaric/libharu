@@ -27585,61 +27585,28 @@ static const HPDF_CidRange_Rec CMAP_ARRAY_KSC_EUC_V[] = {
 };
 
 
-static const HPDF_CidRange_Rec KSCms_UHC_NOTDEF_RANGE = { 0x00, 0x1F, 1 };
-
+static const HPDF_CidRange_Rec KSCms_UHC_NOTDEF_RANGE    = { 0x00, 0x1F, 1 };
 static const HPDF_CidRange_Rec KSCms_UHC_HW_NOTDEF_RANGE = { 0x00, 0x1F, 8094 };
-
-static const HPDF_CidRange_Rec KSC_EUC_NOTDEF_RANGE = { 0x00, 0x1F, 8094 };
-
-
-static HpdfBool
-KSCms_UHC_IsLeadByte(HPDF_Encoder    encoder,
-   HpdfByte       b);
+static const HPDF_CidRange_Rec KSC_EUC_NOTDEF_RANGE      = { 0x00, 0x1F, 8094 };
 
 
-static HpdfBool
-KSCms_UHC_IsTrialByte(HPDF_Encoder    encoder,
-   HpdfByte       b);
-
-
-static HpdfStatus
-KSCms_UHC_AddCodeSpaceRange(HPDF_Encoder    encoder);
-
-
-static HpdfStatus
-KSCms_UHC_H_Init(HPDF_Encoder  encoder);
-
-
-static HpdfStatus
-KSCms_UHC_HW_V_Init(HPDF_Encoder  encoder);
-
-
-static HpdfBool
-KSC_EUC_IsLeadByte(HPDF_Encoder    encoder,
-   HpdfByte       b);
-
-
-static HpdfBool
-KSC_EUC_IsTrialByte(HPDF_Encoder    encoder,
-   HpdfByte       b);
-
-
-static HpdfStatus
-KSC_EUC_AddCodeSpaceRange(HPDF_Encoder    encoder);
-
-
-static HpdfStatus
-KSC_EUC_H_Init(HPDF_Encoder  encoder);
-
-
-static HpdfStatus
-KSC_EUC_V_Init(HPDF_Encoder  encoder);
+static HpdfBool   KSCms_UHC_IsLeadByte(         HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfBool   KSCms_UHC_IsTrialByte(        HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfStatus KSCms_UHC_AddCodeSpaceRange(  HpdfEncoder const * const encoder);
+static HpdfStatus KSCms_UHC_H_Init(             HpdfEncoder       * const encoder);
+static HpdfStatus KSCms_UHC_HW_H_Init(          HpdfEncoder       * const encoder);
+static HpdfStatus KSCms_UHC_HW_V_Init(          HpdfEncoder       * const encoder);
+static HpdfBool   KSC_EUC_IsLeadByte(           HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfBool   KSC_EUC_IsTrialByte(          HpdfEncoder const * const encoder, HpdfByte b);
+static HpdfStatus KSC_EUC_AddCodeSpaceRange(    HpdfEncoder const * const encoder);
+static HpdfStatus KSC_EUC_H_Init(               HpdfEncoder       * const encoder);
+static HpdfStatus KSC_EUC_V_Init(               HpdfEncoder       * const encoder);
 
 
 /*--------------------------------------------------------------------------*/
 
 static HpdfBool
-KSCms_UHC_IsLeadByte(HPDF_Encoder    encoder,
+KSCms_UHC_IsLeadByte(HpdfEncoder const * const    encoder,
    HpdfByte       b)
 {
    HPDF_UNUSED(encoder);
@@ -27648,7 +27615,7 @@ KSCms_UHC_IsLeadByte(HPDF_Encoder    encoder,
 
 
 static HpdfBool
-KSCms_UHC_IsTrialByte(HPDF_Encoder    encoder,
+KSCms_UHC_IsTrialByte(HpdfEncoder const * const    encoder,
    HpdfByte       b)
 {
    HPDF_UNUSED(encoder);
@@ -27657,7 +27624,7 @@ KSCms_UHC_IsTrialByte(HPDF_Encoder    encoder,
 
 
 static HpdfStatus
-KSCms_UHC_AddCodeSpaceRange(HPDF_Encoder    encoder)
+KSCms_UHC_AddCodeSpaceRange(HpdfEncoder const * const    encoder)
 {
    HPDF_CidRange_Rec code_space_range1 = { 0x00, 0x80, 0 };
    HPDF_CidRange_Rec code_space_range2 = { 0x8141, 0xFEFE, 0 };
@@ -27675,7 +27642,8 @@ KSCms_UHC_AddCodeSpaceRange(HPDF_Encoder    encoder)
 
 
 static HpdfStatus
-KSCms_UHC_H_Init(HPDF_Encoder  encoder)
+   KSCms_UHC_H_Init(
+      HpdfEncoder * const  encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -27716,7 +27684,8 @@ KSCms_UHC_H_Init(HPDF_Encoder  encoder)
 
 
 static HpdfStatus
-KSCms_UHC_HW_H_Init(HPDF_Encoder  encoder)
+   KSCms_UHC_HW_H_Init(
+      HpdfEncoder * const  encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -27758,7 +27727,8 @@ KSCms_UHC_HW_H_Init(HPDF_Encoder  encoder)
 
 
 static HpdfStatus
-KSCms_UHC_HW_V_Init(HPDF_Encoder  encoder)
+   KSCms_UHC_HW_V_Init(
+      HpdfEncoder * const  encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -27806,7 +27776,7 @@ KSCms_UHC_HW_V_Init(HPDF_Encoder  encoder)
 
 
 static HpdfBool
-KSC_EUC_IsLeadByte(HPDF_Encoder    encoder,
+KSC_EUC_IsLeadByte(HpdfEncoder const * const    encoder,
    HpdfByte       b)
 {
    HPDF_UNUSED(encoder);
@@ -27815,7 +27785,7 @@ KSC_EUC_IsLeadByte(HPDF_Encoder    encoder,
 
 
 static HpdfBool
-KSC_EUC_IsTrialByte(HPDF_Encoder    encoder,
+KSC_EUC_IsTrialByte(HpdfEncoder const * const    encoder,
    HpdfByte       b)
 {
    HPDF_UNUSED(encoder);
@@ -27824,7 +27794,7 @@ KSC_EUC_IsTrialByte(HPDF_Encoder    encoder,
 
 
 static HpdfStatus
-KSC_EUC_AddCodeSpaceRange(HPDF_Encoder    encoder)
+KSC_EUC_AddCodeSpaceRange(HpdfEncoder const * const    encoder)
 {
    HPDF_CidRange_Rec code_space_range1 = { 0x00, 0x80, 0 };
    HPDF_CidRange_Rec code_space_range2 = { 0xA1A1, 0xFEFE, 0 };
@@ -27842,7 +27812,8 @@ KSC_EUC_AddCodeSpaceRange(HPDF_Encoder    encoder)
 
 
 static HpdfStatus
-KSC_EUC_H_Init(HPDF_Encoder  encoder)
+   KSC_EUC_H_Init(
+      HpdfEncoder * const  encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -27881,9 +27852,9 @@ KSC_EUC_H_Init(HPDF_Encoder  encoder)
    return HPDF_OK;
 }
 
-
 static HpdfStatus
-KSC_EUC_V_Init(HPDF_Encoder  encoder)
+   KSC_EUC_V_Init(
+      HpdfEncoder * const  encoder)
 {
    HPDF_CMapEncoderAttr attr;
    HpdfStatus ret;
@@ -27933,7 +27904,7 @@ HPDF_EXPORT(HpdfStatus)
    HPDF_UseKREncodings(
       HpdfDoc * const doc)
 {
-   HPDF_Encoder encoder;
+   HpdfEncoder *encoder;
    HpdfStatus ret;
 
    if (!HPDF_HasDoc(doc))

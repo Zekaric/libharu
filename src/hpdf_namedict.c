@@ -24,18 +24,18 @@
 #define HPDF_UNUSED(a) ((void)(a))
 #endif
 
-static const char * const HPDF_NAMEDICT_KEYS[] = {
+static char const * const HPDF_NAMEDICT_KEYS[] = {
                                         "EmbeddedFiles"
 };
 
-HPDF_NameDict
-   HPDF_NameDict_New(
+HpdfValueNameDict
+   HpdfValueNameDict_New(
       HpdfMemMgr * const mmgr,
       HPDF_Xref  xref)
 {
-   HPDF_NameDict ndict;
+   HpdfValueNameDict ndict;
 
-   HPDF_PTRACE((" HPDF_NameDict_New\n"));
+   HPDF_PTRACE((" HpdfValueNameDict_New\n"));
 
    ndict = HPDF_Dict_New(mmgr);
    if (!ndict)
@@ -49,9 +49,9 @@ HPDF_NameDict
    return ndict;
 }
 
-HPDF_NameTree
-HPDF_NameDict_GetNameTree(HPDF_NameDict     namedict,
-   HPDF_NameDictKey  key)
+HpdfValueNameTree
+HpdfValueNameDict_GetNameTree(HpdfValueNameDict     namedict,
+   HpdfValueNameDictKey  key)
 {
    if (!namedict)
       return NULL;
@@ -59,15 +59,15 @@ HPDF_NameDict_GetNameTree(HPDF_NameDict     namedict,
 }
 
 HpdfStatus
-HPDF_NameDict_SetNameTree(HPDF_NameDict     namedict,
-   HPDF_NameDictKey  key,
-   HPDF_NameTree     ntree)
+HpdfValueNameDict_SetNameTree(HpdfValueNameDict     namedict,
+   HpdfValueNameDictKey  key,
+   HpdfValueNameTree     ntree)
 {
    return HPDF_Dict_Add(namedict, HPDF_NAMEDICT_KEYS[key], ntree);
 }
 
 HpdfBool
-HPDF_NameDict_Validate(HPDF_NameDict  namedict)
+HpdfValueNameDict_Validate(HpdfValueNameDict  namedict)
 {
    if (!namedict)
       return HPDF_FALSE;
@@ -84,16 +84,16 @@ HPDF_NameDict_Validate(HPDF_NameDict  namedict)
 
 /*------- NameTree -------*/
 
-HPDF_NameTree
-   HPDF_NameTree_New(
+HpdfValueNameTree
+   HpdfValueNameTree_New(
       HpdfMemMgr * const mmgr,
       HPDF_Xref  xref)
 {
    HpdfStatus ret = HPDF_OK;
-   HPDF_NameTree ntree;
+   HpdfValueNameTree ntree;
    HpdfArray *items;
 
-   HPDF_PTRACE((" HPDF_NameTree_New\n"));
+   HPDF_PTRACE((" HpdfValueNameTree_New\n"));
 
    ntree = HPDF_Dict_New(mmgr);
    if (!ntree)
@@ -116,30 +116,38 @@ HPDF_NameTree
 }
 
 HpdfStatus
-HPDF_NameTree_Add(HPDF_NameTree  tree,
-   HPDF_String    name,
-   void          *obj)
+   HpdfValueNameTree_Add(
+      HpdfValueNameTree        tree,
+      HpdfValueString * const  name,
+      void                    *obj)
 {
-   HpdfArray *items;
-   HpdfInt32 i, icount;
+   HpdfArray   *items;
+   HpdfInt32    i, 
+                icount;
 
-   if (!tree || !name)
+   if (!tree ||
+       !name)
+   {
       return HPDF_INVALID_PARAMETER;
+   }
 
    items = HPDF_Dict_GetItem(tree, "Names", HPDF_OCLASS_ARRAY);
    if (!items)
+   {
       return HPDF_INVALID_OBJECT;
+   }
 
    /* "The keys shall be sorted in lexical order" -- 7.9.6, Name Trees.
-    * Since we store keys sorted, it's best to do a linear insertion sort
-    * Find the first element larger than 'key', and insert 'key' and then
-    * 'obj' into the items. */
-
+   ** Since we store keys sorted, it's best to do a linear insertion sort
+   ** Find the first element larger than 'key', and insert 'key' and then
+   ** 'obj' into the items. */
    icount = HPDF_Array_Items(items);
 
-   for (i = 0; i < icount; i += 2) {
-      HPDF_String elem = HPDF_Array_GetItem(items, i, HPDF_OCLASS_STRING);
-      if (HPDF_String_Cmp(name, elem) < 0) {
+   for (i = 0; i < icount; i += 2) 
+   {
+      HpdfValueString *elem = HPDF_Array_GetItem(items, i, HPDF_OCLASS_STRING);
+      if (HpdfValueStringCmp(name, elem) < 0) 
+      {
          HPDF_Array_Insert(items, elem, name);
          HPDF_Array_Insert(items, elem, obj);
          return HPDF_OK;
@@ -153,7 +161,7 @@ HPDF_NameTree_Add(HPDF_NameTree  tree,
 }
 
 HpdfBool
-HPDF_NameTree_Validate(HPDF_NameTree  nametree)
+HpdfValueNameTree_Validate(HpdfValueNameTree  nametree)
 {
    if (!nametree)
       return HPDF_FALSE;
@@ -173,39 +181,54 @@ HPDF_NameTree_Validate(HPDF_NameTree  nametree)
 HPDF_EmbeddedFile
    HPDF_EmbeddedFile_New(
       HpdfMemMgr * const mmgr,
-      HPDF_Xref  xref,
-      const char *file)
+      HPDF_Xref          xref,
+      char const        *file)
 {
-   HpdfStatus ret = HPDF_OK;
-   HPDF_Dict ef;               /* the dictionary for the embedded file: /Type /EF */
-   HPDF_String name;           /* the name of the file: /F (name) */
-   HPDF_Dict eff;              /* ef has an /EF <<blah>> key - this is it */
-   HPDF_Dict filestream;       /* the stream that /EF <</F _ _ R>> refers to */
-   HPDF_Stream stream;
+   HpdfStatus         ret = HPDF_OK;
+   HPDF_Dict          ef;            /* the dictionary for the embedded file: /Type /EF */
+   HpdfValueString   *name;          /* the name of the file: /F (name) */
+   HPDF_Dict          eff;           /* ef has an /EF <<blah>> key - this is it */
+   HPDF_Dict          filestream;    /* the stream that /EF <</F _ _ R>> refers to */
+   HPDF_Stream        stream;
 
    ef = HPDF_Dict_New(mmgr);
    if (!ef)
+   {
       return NULL;
+   }
+
    if (HPDF_Xref_Add(xref, ef) != HPDF_OK)
+   {
       return NULL;
+   }
 
    filestream = HPDF_DictStream_New(mmgr, xref);
    if (!filestream)
+   {
       return NULL;
+   }
+
    stream = HPDF_FileReader_New(mmgr, file);
    if (!stream)
+   {
       return NULL;
+   }
+
    HPDF_Stream_Free(filestream->stream);
    filestream->stream = stream;
    filestream->filter = HPDF_STREAM_FILTER_FLATE_DECODE;
 
    eff = HPDF_Dict_New(mmgr);
    if (!eff)
+   {
       return NULL;
+   }
 
-   name = HPDF_String_New(mmgr, file, NULL);
+   name = HpdfValueStringCreate(mmgr, file, NULL);
    if (!name)
+   {
       return NULL;
+   }
 
    ret += HPDF_Dict_AddName(ef, "Type", "F");
    ret += HPDF_Dict_Add(ef, "F", name);
@@ -213,62 +236,79 @@ HPDF_EmbeddedFile
    ret += HPDF_Dict_Add(eff, "F", filestream);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    return ef;
 }
-
 
 #if defined(WIN32)
 HPDF_EmbeddedFile
    HPDF_EmbeddedFile_NewW(
       HpdfMemMgr * const mmgr,
-      HPDF_Xref      xref,
-      const wchar_t *file)
+      HPDF_Xref          xref,
+      wchar_t const     *file)
 {
-   HpdfStatus ret = HPDF_OK;
-   HPDF_Dict ef;               /* the dictionary for the embedded file: /Type /EF */
-   HPDF_String name;           /* the name of the file: /F (name) */
-   HPDF_Dict eff;              /* ef has an /EF <<blah>> key - this is it */
-   HPDF_Dict filestream;       /* the stream that /EF <</F _ _ R>> refers to */
-   HPDF_Stream stream;
+   HpdfStatus         ret = HPDF_OK;
+   HPDF_Dict          ef;           /* the dictionary for the embedded file: /Type /EF */
+   HpdfValueString   *name;         /* the name of the file: /F (name) */
+   HPDF_Dict          eff;          /* ef has an /EF <<blah>> key - this is it */
+   HPDF_Dict          filestream;   /* the stream that /EF <</F _ _ R>> refers to */
+   HPDF_Stream        stream;
 
    ef = HPDF_Dict_New(mmgr);
    if (!ef)
+   {
       return NULL;
+   }
+
    if (HPDF_Xref_Add(xref, ef) != HPDF_OK)
+   {
       return NULL;
+   }
 
    filestream = HPDF_DictStream_New(mmgr, xref);
    if (!filestream)
+   {
       return NULL;
+   }
+
    stream = HPDF_FileReader_NewW(mmgr, file);
    if (!stream)
+   {
       return NULL;
+   }
+
    HPDF_Stream_Free(filestream->stream);
    filestream->stream = stream;
    filestream->filter = HPDF_STREAM_FILTER_FLATE_DECODE;
 
    eff = HPDF_Dict_New(mmgr);
    if (!eff)
+   {
       return NULL;
+   }
 
-   name = HPDF_String_NewW(mmgr, file, NULL);
+   name = HpdfValueStringCreateW(mmgr, file, NULL);
    if (!name)
+   {
       return NULL;
+   }
 
-   ret += HPDF_Dict_AddName(ef, "Type", "F");
-   ret += HPDF_Dict_Add(ef, "F", name);
-   ret += HPDF_Dict_Add(ef, "EF", eff);
-   ret += HPDF_Dict_Add(eff, "F", filestream);
+   ret += HPDF_Dict_AddName(ef,  "Type", "F");
+   ret += HPDF_Dict_Add(    ef,  "F",    name);
+   ret += HPDF_Dict_Add(    ef,  "EF",   eff);
+   ret += HPDF_Dict_Add(    eff, "F",    filestream);
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    return ef;
 }
 #endif
-
 
 HpdfBool
 HPDF_EmbeddedFile_Validate(HPDF_EmbeddedFile  emfile)

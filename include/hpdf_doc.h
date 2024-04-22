@@ -47,21 +47,21 @@ struct _HPDF_Doc
    HPDF_Pages         root_pages;
    HPDF_Pages         cur_pages;
    HPDF_Page          cur_page;
-   HPDF_List          page_list;
+   HpdfList          *page_list;
    HpdfError          error;
    HPDF_Dict          info;
    HPDF_Dict          trailer;
 
-   HPDF_List          font_mgr;
+   HpdfList          *font_mgr;
    HpdfByte           ttfont_tag[6];
 
    /* list for loaded fontdefs */
-   HPDF_List          fontdef_list;
+   HpdfList          *fontdef_list;
 
    /* list for loaded encodings */
-   HPDF_List          encoder_list;
+   HpdfList          *encoder_list;
 
-   HPDF_Encoder       cur_encoder;
+   HpdfEncoder       *cur_encoder;
 
    /* default compression mode */
    HpdfBool           compression_mode;
@@ -69,7 +69,7 @@ struct _HPDF_Doc
    HpdfBool           encrypt_on;
    HPDF_EncryptDict   encrypt_dict;
 
-   HPDF_Encoder       def_encoder;
+   HpdfEncoder       *def_encoder;
 
    HpdfUInt           page_per_pages;
    HpdfUInt           cur_page_num;
@@ -79,10 +79,10 @@ struct _HPDF_Doc
 };
 
 
-HPDF_Encoder   HPDF_Doc_FindEncoder(         HpdfDoc const * const pdf, char const * const encoding_name);
-HPDF_FontDef   HPDF_Doc_FindFontDef(         HpdfDoc const * const pdf, char const *font_name); 
-HPDF_Font      HPDF_Doc_FindFont(            HpdfDoc const * const pdf, char const *font_name, char const *encoding_name);
-HpdfBool      HPDF_Doc_Validate(            HpdfDoc const * const pdf);
+HpdfEncoder    *HPDF_Doc_FindEncoder(         HpdfDoc const * const pdf, char const * const encoding_name);
+HPDF_FontDef    HPDF_Doc_FindFontDef(         HpdfDoc const * const pdf, char const *font_name); 
+HPDF_Font       HPDF_Doc_FindFont(            HpdfDoc const * const pdf, char const *font_name, char const *encoding_name);
+HpdfBool        HPDF_Doc_Validate(            HpdfDoc const * const pdf);
 
 /*----- page handling -------------------------------------------------------*/
 
@@ -98,7 +98,7 @@ HpdfStatus    HPDF_Doc_RegisterFontDef(     HpdfDoc       * const pdf, HPDF_Font
 
 /*----- encoding handling ---------------------------------------------------*/
 
-HpdfStatus    HPDF_Doc_RegisterEncoder(     HpdfDoc       * const pdf, HPDF_Encoder   encoder);
+HpdfStatus    HPDF_Doc_RegisterEncoder(     HpdfDoc       * const pdf, HpdfEncoder * const   encoder);
 
 /*----- encryption ----------------------------------------------------------*/
 

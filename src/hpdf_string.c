@@ -30,30 +30,30 @@ static HpdfByte const UNICODE_HEADER[] =
    0xFE, 0xFF
 };
 
-
-HPDF_String
-   HPDF_String_New(
-      HpdfMemMgr * const mmgr,
-      char const *value,
-      HPDF_Encoder     encoder)
+HpdfValueString *
+   HpdfValueStringCreate(
+      HpdfMemMgr * const    mmgr,
+      char const           *value,
+      HpdfEncoder * const   encoder)
 {
-   HPDF_String obj;
+   HpdfValueString   *obj;
 
-   HPDF_PTRACE((" HPDF_String_New\n"));
+   HPDF_PTRACE((" HpdfValueStringCreate\n"));
 
-   obj = HpdfMemCreateType(mmgr, HPDF_String_Rec);
+   obj = HpdfMemCreateType(mmgr, HpdfValueString);
    if (obj) 
    {
       HpdfMemClearType(&obj->header, HPDF_Obj_Header);
+      
       obj->header.obj_class = HPDF_OCLASS_STRING;
+      obj->mmgr             = mmgr;
+      obj->error            = mmgr->error;
+      obj->encoder          = encoder;
+      obj->value            = NULL;
+      obj->len              = 0;
 
-      obj->mmgr = mmgr;
-      obj->error = mmgr->error;
-      obj->encoder = encoder;
-      obj->value = NULL;
-      obj->len = 0;
-
-      if (HPDF_String_SetValue(obj, value) != HPDF_OK) {
+      if (HpdfValueStringSet(obj, value) != HPDF_OK) 
+      {
          HpdfMemDestroy(obj->mmgr, obj);
          return NULL;
       }
@@ -62,20 +62,19 @@ HPDF_String
    return obj;
 }
 
-
 #if defined(WIN32)
-HPDF_String
-   HPDF_String_NewW(
-      HpdfMemMgr * const mmgr,
-      const wchar_t   *value,
-      HPDF_Encoder     encoder)
+HpdfValueString *
+   HpdfValueStringCreateW(
+      HpdfMemMgr * const    mmgr,
+      wchar_t const        *value,
+      HpdfEncoder * const   encoder)
 {
-   HPDF_String obj;
-   size_t      valueLen;
-   char       *utf8Value;
-   int         utf8ValueLen;
+   HpdfValueString   *obj;
+   size_t             valueLen;
+   char              *utf8Value;
+   int                utf8ValueLen;
 
-   HPDF_PTRACE((" HPDF_String_NewW\n"));
+   HPDF_PTRACE((" HpdfValueStringCreateW\n"));
 
    /* Convert the wchar_t to UTF8 char * */
    valueLen = wcslen(value);
@@ -89,7 +88,7 @@ HPDF_String
    }
 
    /* Use the existing function to get the string. */
-   obj = HPDF_String_New(mmgr, utf8Value, encoder);
+   obj = HpdfValueStringCreate(mmgr, utf8Value, encoder);
 
    /* Clean up */
    HpdfMemDestroy(mmgr, utf8Value);
@@ -99,15 +98,17 @@ HPDF_String
 #endif
 
 HpdfStatus
-HPDF_String_SetValue(HPDF_String      obj,
-   char const *value)
+   HpdfValueStringSet(
+      HpdfValueString * const  obj,
+      char const              *value)
 {
-   HpdfUInt len;
+   HpdfUInt   len;
    HpdfStatus ret = HPDF_OK;
 
-   HPDF_PTRACE((" HPDF_String_SetValue\n"));
+   HPDF_PTRACE((" HpdfValueStringSet\n"));
 
-   if (obj->value) {
+   if (obj->value) 
+   {
       HpdfMemDestroy(obj->mmgr, obj->value);
       obj->len = 0;
    }
@@ -115,7 +116,9 @@ HPDF_String_SetValue(HPDF_String      obj,
    len = HPDF_StrLen(value, HPDF_LIMIT_MAX_STRING_LEN + 1);
 
    if (len > HPDF_LIMIT_MAX_STRING_LEN)
+   {
       return HPDF_SetError(obj->error, HPDF_STRING_OUT_OF_RANGE, 0);
+   }
 
    obj->value = HpdfMemCreateTypeArray(obj->mmgr, HpdfByte, len + 1);
    if (!obj->value)
@@ -130,92 +133,110 @@ HPDF_String_SetValue(HPDF_String      obj,
 }
 
 void
-HPDF_String_Free(HPDF_String  obj)
+   HpdfValueStringDestroy(
+      HpdfValueString * const obj)
 {
    if (!obj)
+   {
       return;
+   }
 
-   HPDF_PTRACE((" HPDF_String_Free\n"));
+   HPDF_PTRACE((" HpdfValueStringDestroy\n"));
 
    HpdfMemDestroy(obj->mmgr, obj->value);
    HpdfMemDestroy(obj->mmgr, obj);
 }
 
-
 HpdfStatus
-HPDF_String_Write(HPDF_String   obj,
-   HPDF_Stream   stream,
-   HPDF_Encrypt  e)
+   HpdfValueStringWrite(
+      HpdfValueString const * const  obj,
+      HPDF_Stream                    stream,
+      HPDF_Encrypt                   e)
 {
    HpdfStatus ret;
 
-   /*
-    *  When encoder is not NULL, text is changed to unicode using encoder,
-    *  and it outputs by HPDF_write_binary method.
-    */
-
-   HPDF_PTRACE((" HPDF_String_Write\n"));
+   /*  When encoder is not NULL, text is changed to unicode using encoder,
+   **  and it outputs by HPDF_write_binary method. */
+   HPDF_PTRACE((" HpdfValueStringWrite\n"));
 
    if (e)
+   {
       HPDF_Encrypt_Reset(e);
+   }
 
-   if (obj->encoder == NULL) {
-      if (e) {
+   if (obj->encoder == NULL) 
+   {
+      if (e) 
+      {
          if ((ret = HPDF_Stream_WriteChar(stream, '<')) != HPDF_OK)
+         {
             return ret;
+         }
 
-         if ((ret = HPDF_Stream_WriteBinary(stream, obj->value,
-            HPDF_StrLen((char *) obj->value, -1), e)) != HPDF_OK)
+         ret = HPDF_Stream_WriteBinary(stream, obj->value, HPDF_StrLen((char *) obj->value, -1), e);
+         if (ret != HPDF_OK)
+         {
             return ret;
+         }
 
          return HPDF_Stream_WriteChar(stream, '>');
       }
-      else {
-         return HPDF_Stream_WriteEscapeText(stream, (char *) obj->value);
-      }
+
+      return HPDF_Stream_WriteEscapeText(stream, (char *) obj->value);
    }
-   else {
-      HpdfByte *src = obj->value;
-      HpdfByte buf[HPDF_TEXT_DEFAULT_LEN * 2];
-      HpdfUInt tmp_len = 0;
-      HpdfByte *pbuf = buf;
-      HpdfInt32 len = obj->len;
-      HpdfParseText parse_state;
-      HpdfUInt i;
+   else 
+   {
+      HpdfByte       *src           = obj->value;
+      HpdfByte        buf[HPDF_TEXT_DEFAULT_LEN * 2];
+      HpdfUInt        tmp_len       = 0;
+      HpdfByte       *pbuf          = buf;
+      HpdfInt32       len           = obj->len;
+      HpdfParseText   parse_state;
+      HpdfUInt        i;
 
-      if ((ret = HPDF_Stream_WriteChar(stream, '<')) != HPDF_OK)
+      ret = HPDF_Stream_WriteChar(stream, '<');
+      if (ret != HPDF_OK)
+      {
          return ret;
+      }
 
-      if ((ret = HPDF_Stream_WriteBinary(stream, UNICODE_HEADER, 2, e))
-         != HPDF_OK)
+      ret = HPDF_Stream_WriteBinary(stream, UNICODE_HEADER, 2, e);
+      if (ret != HPDF_OK)
+      {
          return ret;
+      }
 
       HPDF_Encoder_SetParseText(obj->encoder, &parse_state, src, len);
 
-      for (i = 0; (HpdfInt32) i < len; i++) {
-         HpdfByte b = src[i];
-         HpdfUnicode tmp_unicode;
-         HPDF_ByteType btype = HPDF_Encoder_ByteType(obj->encoder,
-            &parse_state);
+      for (i = 0; (HpdfInt32) i < len; i++) 
+      {
+         HpdfByte        b             = src[i];
+         HpdfUnicode     tmp_unicode;
+         HPDF_ByteType   btype         = HPDF_Encoder_ByteType(obj->encoder, &parse_state);
 
-         if (tmp_len >= HPDF_TEXT_DEFAULT_LEN - 1) {
-            if ((ret = HPDF_Stream_WriteBinary(stream, buf,
-               tmp_len * 2, e)) != HPDF_OK)
+         if (tmp_len >= HPDF_TEXT_DEFAULT_LEN - 1) 
+         {
+            ret = HPDF_Stream_WriteBinary(stream, buf, tmp_len * 2, e);
+            if (ret != HPDF_OK)
+            {
                return ret;
+            }
 
             tmp_len = 0;
             pbuf = buf;
          }
 
-         if (btype != HPDF_BYTE_TYPE_TRAIL) {
-            if (btype == HPDF_BYTE_TYPE_LEAD) {
-               HpdfByte b2 = src[i + 1];
-               HpdfUInt16 char_code = (HpdfUInt16) ((HpdfUInt) b * 256 + b2);
+         if (btype != HPDF_BYTE_TYPE_TRAIL) 
+         {
+            if (btype == HPDF_BYTE_TYPE_LEAD) 
+            {
+               HpdfByte     b2         = src[i + 1];
+               HpdfUInt16   char_code  = (HpdfUInt16) ((HpdfUInt) b * 256 + b2);
 
-               tmp_unicode = HPDF_Encoder_ToUnicode(obj->encoder,
-                  char_code);
+               tmp_unicode = HPDF_Encoder_ToUnicode(obj->encoder, char_code);
             }
-            else {
+            else 
+            {
                tmp_unicode = HPDF_Encoder_ToUnicode(obj->encoder, b);
             }
 
@@ -226,36 +247,51 @@ HPDF_String_Write(HPDF_String   obj,
          }
       }
 
-      if (tmp_len > 0) {
-         if ((ret = HPDF_Stream_WriteBinary(stream, buf, tmp_len * 2, e))
-            != HPDF_OK)
+      if (tmp_len > 0) 
+      {
+         ret = HPDF_Stream_WriteBinary(stream, buf, tmp_len * 2, e);
+         if (ret != HPDF_OK)
+         {
             return ret;
+         }
       }
 
-      if ((ret = HPDF_Stream_WriteChar(stream, '>')) != HPDF_OK)
+      ret = HPDF_Stream_WriteChar(stream, '>');
+      if (ret != HPDF_OK)
+      {
          return ret;
+      }
    }
 
    return HPDF_OK;
 }
 
-
 HpdfInt32
-HPDF_String_Cmp(HPDF_String s1,
-   HPDF_String s2)
+   HpdfValueStringCmp(
+      HpdfValueString const * const s1,
+      HpdfValueString const * const s2)
 {
    HpdfInt32 res;
    HpdfUInt  minLen;
 
    minLen = s1->len;
-   if (s1->len > s2->len) {
+   if (s1->len > s2->len) 
+   {
       minLen = s2->len;
    }
 
    res = memcmp(s1->value, s2->value, minLen);
-   if (res == 0) {
-      if (s1->len < s2->len) res = -1;
-      if (s1->len > s2->len) res = +1;
+   if (res == 0) 
+   {
+      if (s1->len < s2->len) 
+      {
+         res = -1;
+      }
+
+      if (s1->len > s2->len) 
+      {
+         res = +1;
+      }
    }
 
    return res;

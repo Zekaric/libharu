@@ -36,9 +36,9 @@ error_handler  (HpdfStatus   error_no,
 }
 
 #ifdef __WIN32__
-const char* FILE_SEPARATOR = "\\";
+char const* FILE_SEPARATOR = "\\";
 #else
-const char* FILE_SEPARATOR = "/";
+char const* FILE_SEPARATOR = "/";
 #endif
 
 int
@@ -50,8 +50,8 @@ main (int argc, char **argv)
     char buf[1024];
     FILE *cp932;
     FILE *cp936;
-    const char *fcp936_name;
-    const char *fcp932_name;
+    char const *fcp936_name;
+    char const *fcp932_name;
     HPDF_Font fcp936;
     HPDF_Font fcp932;
     int y;

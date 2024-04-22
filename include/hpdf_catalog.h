@@ -27,8 +27,8 @@ extern "C" {
 typedef HPDF_Dict HPDF_Catalog;
 
 HPDF_Catalog HPDF_Catalog_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref);
-HPDF_NameDict HPDF_Catalog_GetNames  (HPDF_Catalog  catalog);
-HpdfStatus HPDF_Catalog_SetNames  (HPDF_Catalog  catalog, HPDF_NameDict dict);
+HpdfValueNameDict HPDF_Catalog_GetNames  (HPDF_Catalog  catalog);
+HpdfStatus HPDF_Catalog_SetNames  (HPDF_Catalog  catalog, HpdfValueNameDict dict);
 HPDF_Pages HPDF_Catalog_GetRoot  (HPDF_Catalog  catalog); 
 HPDF_PageLayout HPDF_Catalog_GetPageLayout  (HPDF_Catalog  catalog);
 HpdfStatus HPDF_Catalog_SetPageLayout  (HPDF_Catalog      catalog, HPDF_PageLayout   layout);

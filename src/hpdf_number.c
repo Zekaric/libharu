@@ -18,36 +18,34 @@
 #include "hpdf_utils.h"
 #include "hpdf_objects.h"
 
-
-HPDF_Number
-   HPDF_Number_New(
+HpdfValueNumInt *
+   HpdfValueNumIntCreate(
       HpdfMemMgr * const mmgr,
       HpdfInt32  value)
 {
-   HPDF_Number obj = HpdfMemCreateType(mmgr, HPDF_Number_Rec);
+   HpdfValueNumInt *obj = HpdfMemCreateType(mmgr, HpdfValueNumInt);
    if (obj)
    {
       HpdfMemClearType(&obj->header, HPDF_Obj_Header);
       obj->header.obj_class = HPDF_OCLASS_NUMBER;
-      obj->value = value;
+      obj->value            = value;
    }
 
    return obj;
 }
 
-
 HpdfStatus
-HPDF_Number_Write(HPDF_Number  obj,
-   HPDF_Stream  stream)
+   HpdfValueNumIntWrite(
+      HpdfValueNumInt const * const  obj,
+      HPDF_Stream  stream)
 {
    return HPDF_Stream_WriteInt(stream, obj->value);
 }
 
-
-void
-HPDF_Number_SetValue(HPDF_Number  obj,
-   HpdfInt32   value)
+void 
+   HpdfValueNumIntSet(
+      HpdfValueNumInt * const obj,
+      HpdfInt32               value)
 {
-   obj->value =value;
+   obj->value = value;
 }
-

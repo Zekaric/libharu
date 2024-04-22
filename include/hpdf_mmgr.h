@@ -25,15 +25,15 @@
 extern "C" {
 #endif
 
-typedef struct  _HPDF_MPool_Node_Rec  *HPDF_MPool_Node;
+typedef struct _HpdfMemPoolNode HpdfMemPoolNode;
 
-typedef struct  _HPDF_MPool_Node_Rec
+struct _HpdfMemPoolNode
 {
-   HpdfByte         *buf;
-   HpdfUInt          size;
-   HpdfUInt          used_size;
-   HPDF_MPool_Node   next_node;
-} HPDF_MPool_Node_Rec;
+   HpdfByte          *buf;
+   HpdfUInt           size;
+   HpdfUInt           used_size;
+   HpdfMemPoolNode   *next_node;
+};
 
 
 typedef struct _HpdfMemMgr HpdfMemMgr;
@@ -43,7 +43,7 @@ struct _HpdfMemMgr
    HpdfError         *error;
    HPDF_Alloc_Func    alloc_fn;
    HPDF_Free_Func     free_fn;
-   HPDF_MPool_Node    mpool;
+   HpdfMemPoolNode   *mpool;
    HpdfUInt           buf_size;
 
 #ifdef HPDF_MEM_DEBUG

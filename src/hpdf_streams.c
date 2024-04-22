@@ -373,7 +373,7 @@ HPDF_Stream_WriteEscapeText2(HPDF_Stream    stream,
    char buf[HPDF_TEXT_DEFAULT_LEN];
    HpdfUInt idx = 0;
    HpdfInt i;
-   const char* p = text;
+   char const* p = text;
    HpdfStatus ret;
 
    HPDF_PTRACE((" HPDF_Stream_WriteEscapeText2\n"));
@@ -751,7 +751,7 @@ HPDF_Stream
 HPDF_Stream
    HPDF_FileReader_NewW(
       HpdfMemMgr * const mmgr,
-      const wchar_t  *fname)
+      wchar_t const     *fname)
 {
    HPDF_Stream stream;
    HPDF_FILEP fp = HPDF_FOPEN_W(fname, L"rb");
@@ -966,7 +966,7 @@ HPDF_Stream
 HPDF_Stream
    HPDF_FileWriter_NewW(
       HpdfMemMgr * const mmgr,
-      const wchar_t  *fname)
+      wchar_t const     *fname)
 {
    HPDF_Stream stream;
    HPDF_FILEP fp = HPDF_FOPEN_W(fname, L"wb");

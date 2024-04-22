@@ -33,7 +33,7 @@ error_handler (HpdfStatus   error_no,
     throw std::exception ();
 }
 
-const char *font_list[] = {
+char const *font_list[] = {
     "Courier",
     "Courier-Bold",
     "Courier-Oblique",
@@ -53,7 +53,7 @@ const char *font_list[] = {
 
 int main (int argc, char **argv)
 {
-    const char *page_title = "Font Demo";
+    char const *page_title = "Font Demo";
     HpdfDoc *pdf;
     char fname[256];
     HPDF_Page page;
@@ -106,7 +106,7 @@ int main (int argc, char **argv)
 
         i = 0;
         while (font_list[i]) {
-            const char* samp_text = "abcdefgABCDEFG12345!#$%&+-@?";
+            char const* samp_text = "abcdefgABCDEFG12345!#$%&+-@?";
             HPDF_Font font = HPDF_GetFont (pdf, font_list[i], NULL);
 
             /* print a label of text */

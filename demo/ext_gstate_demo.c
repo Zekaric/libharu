@@ -37,7 +37,7 @@ error_handler  (HpdfStatus   error_no,
 
 
 void
-draw_circles (HPDF_Page page, const char *description, HpdfReal x, HpdfReal y)
+draw_circles (HPDF_Page page, char const *description, HpdfReal x, HpdfReal y)
 {
     HPDF_Page_SetLineWidth (page, 1.0f);
     HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);

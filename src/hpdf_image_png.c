@@ -668,15 +668,15 @@ Exit:
    return image->error->error_no;
 }
 
-
 static HpdfStatus
-PngBeforeWrite(HPDF_Dict obj)
+   PngBeforeWrite(
+      HPDF_Dict obj)
 {
-   HpdfStatus ret;
-   png_byte header[HPDF_PNG_BYTES_TO_CHECK];
-   HpdfUInt len = HPDF_PNG_BYTES_TO_CHECK;
-   HPDF_Stream png_data;
-   HPDF_String s;
+   HpdfStatus         ret;
+   png_byte           header[HPDF_PNG_BYTES_TO_CHECK];
+   HpdfUInt           len = HPDF_PNG_BYTES_TO_CHECK;
+   HPDF_Stream        png_data;
+   HpdfValueString   *s;
 
    HPDF_PTRACE((" PngBeforeWrite\n"));
 
@@ -684,21 +684,27 @@ PngBeforeWrite(HPDF_Dict obj)
 
    s = HPDF_Dict_GetItem(obj, "_FILE_NAME", HPDF_OCLASS_STRING);
    if (!s)
+   {
       return HPDF_SetError(obj->error, HPDF_MISSING_FILE_NAME_ENTRY, 0);
+   }
 
-   png_data = HPDF_FileReader_New(obj->mmgr, (const char *) (s->value));
+   png_data = HPDF_FileReader_New(obj->mmgr, (char const *) (s->value));
    if (!HPDF_Stream_Validate(png_data))
+   {
       return obj->error->error_no;
+   }
 
    HpdfMemClear(header, HPDF_PNG_BYTES_TO_CHECK);
    ret = HPDF_Stream_Read(png_data, header, &len);
    if (ret != HPDF_OK ||
-      png_sig_cmp(header, (png_size_t) 0, HPDF_PNG_BYTES_TO_CHECK)) {
+       png_sig_cmp(header, (png_size_t) 0, HPDF_PNG_BYTES_TO_CHECK))
+   {
       HPDF_Stream_Free(png_data);
       return HPDF_SetError(obj->error, HPDF_INVALID_PNG_IMAGE, 0);
    }
 
-   if ((ret = LoadPngData(obj, NULL, png_data, HPDF_FALSE)) != HPDF_OK) {
+   if ((ret = LoadPngData(obj, NULL, png_data, HPDF_FALSE)) != HPDF_OK) 
+   {
       HPDF_Stream_Free(png_data);
       return ret;
    }
@@ -707,7 +713,6 @@ PngBeforeWrite(HPDF_Dict obj)
 
    return HPDF_OK;
 }
-
 
 static HpdfStatus
 PngAfterWrite(HPDF_Dict obj)

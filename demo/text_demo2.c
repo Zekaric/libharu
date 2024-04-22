@@ -69,7 +69,7 @@ int main(int argc, char **argv)
    HpdfRect    rect;
    int         i;
 
-   const char* SAMP_TXT = "The quick brown fox jumps over the lazy dog. ";
+   char const* SAMP_TXT = "The quick brown fox jumps over the lazy dog. ";
 
    strcpy(fname, argv[0]);
    strcat(fname, ".pdf");

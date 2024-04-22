@@ -166,7 +166,7 @@ main  (int      argc,
     HpdfUInt16 flg[256];
 
     HpdfDoc *pdf;
-    HPDF_Encoder encoder;
+    HpdfEncoder *encoder;
     HPDF_Font font;
     HPDF_Outline root;
 
@@ -204,7 +204,7 @@ main  (int      argc,
     HPDF_UseCNTFonts (pdf);
 
     encoder = HPDF_GetEncoder (pdf, argv[1]);
-    if (HPDF_Encoder_GetType (encoder) != HPDF_ENCODER_TYPE_DOUBLE_BYTE) {
+    if (HPDF_Encoder_GetType(encoder) != HPDF_ENCODER_TYPE_DOUBLE_BYTE) {
         printf ("error: %s is not cmap-encoder\n", argv[1]);
         HPDF_Free (pdf);
         return 1;
@@ -232,8 +232,8 @@ main  (int      argc,
             buf[1] = j;
             buf[2] = 0;
 
-            btype = HPDF_Encoder_GetByteType (encoder, buf, 0);
-            unicode = HPDF_Encoder_GetUnicode (encoder, code);
+            btype   = HPDF_Encoder_GetByteType(encoder, buf, 0);
+            unicode = HPDF_Encoder_GetUnicode( encoder, code);
 
             if (btype == HPDF_BYTE_TYPE_LEAD &&
                     unicode != 0x25A1) {

@@ -20,10 +20,7 @@
 #include "hpdf_consts.h"
 #include "hpdf_list.h"
 
-static HpdfStatus
-Resize(HPDF_List  list,
-   HpdfUInt  count);
-
+static HpdfStatus Resize(HpdfList * const list, HpdfUInt count);
 
 /*
  *  HPDF_List_new
@@ -36,28 +33,27 @@ Resize(HPDF_List  list,
  *
  */
 
-HPDF_List
+HpdfList *
    HPDF_List_New(
       HpdfMemMgr * const mmgr,
       HpdfUInt  items_per_block)
 {
-   HPDF_List list;
+   HpdfList *list;
 
    HPDF_PTRACE((" HPDF_List_New\n"));
 
    if (mmgr == NULL)
       return NULL;
 
-   list = HpdfMemCreateType(mmgr, HPDF_List_Rec);
+   list = HpdfMemCreateType(mmgr, HpdfList);
    if (list) 
    {
-      list->mmgr = mmgr;
-      list->error = mmgr->error;
-      list->block_siz = 0;
-      list->items_per_block =
-         (items_per_block <= 0 ? HPDF_DEF_ITEMS_PER_BLOCK : items_per_block);
-      list->count = 0;
-      list->obj = NULL;
+      list->mmgr            = mmgr;
+      list->error           = mmgr->error;
+      list->block_siz       = 0;
+      list->items_per_block = (items_per_block <= 0 ? HPDF_DEF_ITEMS_PER_BLOCK : items_per_block);
+      list->count           = 0;
+      list->obj             = NULL;
    }
 
    return list;
@@ -66,7 +62,7 @@ HPDF_List
 /*
  *  HPDF_List_add
  *
- *  list :  Pointer to a HPDF_List object.
+ *  list :  Pointer to a HpdfList const * const object.
  *  item :  Pointer to a object to be added.
  *
  *  return:  If HPDF_List_Add success, it returns HPDF_OK.
@@ -76,16 +72,18 @@ HPDF_List
  */
 
 HpdfStatus
-HPDF_List_Add(HPDF_List  list,
-   void       *item)
+   HPDF_List_Add(
+      HpdfList * const  list,
+      void       *item)
 {
    HPDF_PTRACE((" HPDF_List_Add\n"));
 
-   if (list->count >= list->block_siz) {
-      HpdfStatus ret = Resize(list,
-         list->block_siz + list->items_per_block);
+   if (list->count >= list->block_siz) 
+   {
+      HpdfStatus ret = Resize(list, list->block_siz + list->items_per_block);
 
-      if (ret != HPDF_OK) {
+      if (ret != HPDF_OK) 
+      {
          return ret;
       }
    }
@@ -98,7 +96,7 @@ HPDF_List_Add(HPDF_List  list,
 /*
  *  HPDF_List_Insert
  *
- *  list   :  Pointer to a HPDF_List object.
+ *  list   :  Pointer to a HpdfList const * const object.
  *  target :  Pointer to the target object.
  *  item   :  Pointer to a object to be inserted.
  *
@@ -113,22 +111,27 @@ HPDF_List_Add(HPDF_List  list,
  */
 
 HpdfStatus
-HPDF_List_Insert(HPDF_List  list,
-   void       *target,
-   void       *item)
+   HPDF_List_Insert(
+      HpdfList * const  list,
+      void       *target,
+      void       *item)
 {
    HpdfInt target_idx = HPDF_List_Find(list, target);
-   void      *last_item = list->obj[list->count - 1];
+   void   *last_item  = list->obj[list->count - 1];
    HpdfInt i;
 
    HPDF_PTRACE((" HPDF_List_Insert\n"));
 
    if (target_idx < 0)
+   {
       return HPDF_ITEM_NOT_FOUND;
+   }
 
    /* move the item of the list to behind one by one. */
    for (i = list->count - 2; i >= target_idx; i--)
+   {
       list->obj[i + 1] = list->obj[i];
+   }
 
    list->obj[target_idx] = item;
 
@@ -141,7 +144,7 @@ HPDF_List_Insert(HPDF_List  list,
  *  Remove the object specified by item parameter from the list object. The
  *  memory area that the object uses is not released.
  *
- *  list :  Pointer to a HPDF_List object.
+ *  list :  Pointer to a HpdfList const * const object.
  *  item :  Pointer to a object to be remove.
  *
  *  return:  If HPDF_List_Remove success, it returns HPDF_OK.
@@ -151,21 +154,26 @@ HPDF_List_Insert(HPDF_List  list,
  */
 
 HpdfStatus
-HPDF_List_Remove(HPDF_List  list,
-   void       *item)
+   HPDF_List_Remove(
+      HpdfList * const list,
+      void            *item)
 {
    HpdfUInt i;
    void **obj = list->obj;
 
    HPDF_PTRACE((" HPDF_List_Remove\n"));
 
-   for (i = 0; i < list->count; i++) {
-      if (*obj == item) {
+   for (i = 0; i < list->count; i++) 
+   {
+      if (*obj == item) 
+      {
          HPDF_List_RemoveByIndex(list, i);
          return HPDF_OK;
       }
       else
+      {
          obj++;
+      }
    }
 
    return HPDF_ITEM_NOT_FOUND;
@@ -176,7 +184,7 @@ HPDF_List_Remove(HPDF_List  list,
  *
  *  Remove the object by index number.
  *
- *  list :  Pointer to a HPDF_List object.
+ *  list :  Pointer to a HpdfList const * const object.
  *  index :  Index of a object to be remove.
  *
  *  return:  If HPDF_List_RemoveByIndex success, it returns HPDF_OK.
@@ -185,9 +193,10 @@ HPDF_List_Remove(HPDF_List  list,
  *
  */
 
-void*
-HPDF_List_RemoveByIndex(HPDF_List  list,
-   HpdfUInt  index)
+void *
+   HPDF_List_RemoveByIndex(
+      HpdfList * const list,
+      HpdfUInt  index)
 {
    void *tmp;
 
@@ -211,7 +220,7 @@ HPDF_List_RemoveByIndex(HPDF_List  list,
 /*
  *  HPDF_List_ItemAt
  *
- *  list :  Pointer to a HPDF_List object.
+ *  list :  Pointer to a HpdfList const * const object.
  *  index :  Index of a object.
  *
  *  return:  If HPDF_List_at success, it returns a pointer to the object.
@@ -219,9 +228,10 @@ HPDF_List_RemoveByIndex(HPDF_List  list,
  *
  */
 
-void*
-HPDF_List_ItemAt(HPDF_List  list,
-   HpdfUInt  index)
+void *
+   HPDF_List_ItemAt(
+      HpdfList const * const  list,
+      HpdfUInt  index)
 {
    HPDF_PTRACE((" HPDF_List_ItemAt\n"));
 
@@ -231,12 +241,13 @@ HPDF_List_ItemAt(HPDF_List  list,
 /*
  *  HPDF_List_free
  *
- *  list :  Pointer to a HPDF_List object.
+ *  list :  Pointer to a HpdfList const * const object.
  *
  */
 
 void
-HPDF_List_Free(HPDF_List  list)
+   HPDF_List_Free(
+      HpdfList * const  list)
 {
    HPDF_PTRACE((" HPDF_List_Free\n"));
 
@@ -250,12 +261,13 @@ HPDF_List_Free(HPDF_List  list)
 /*
  *  HPDF_List_Clear
  *
- *  list :  Pointer to a HPDF_List object.
+ *  list :  Pointer to a HpdfList const * const object.
  *
  */
 
 void
-HPDF_List_Clear(HPDF_List  list)
+   HPDF_List_Clear(
+      HpdfList * const list)
 {
    HPDF_PTRACE((" HPDF_List_Clear\n"));
 
@@ -270,7 +282,7 @@ HPDF_List_Clear(HPDF_List  list)
 /*
  *  Resize
  *
- *  list :  Pointer to a HPDF_List object.
+ *  list :  Pointer to a HpdfList const * const object.
  *  count : The size of array of pointers.
  *
  *  return:  If Resize success, it returns HPDF_OK.
@@ -279,18 +291,24 @@ HPDF_List_Clear(HPDF_List  list)
  */
 
 static HpdfStatus
-Resize(HPDF_List   list,
-   HpdfUInt   count)
+   Resize(
+      HpdfList * const list,
+      HpdfUInt         count)
 {
    void **new_obj;
 
    HPDF_PTRACE((" HPDF_List_Resize\n"));
 
-   if (list->count >= count) {
+   if (list->count >= count) 
+   {
       if (list->count == count)
+      {
          return HPDF_OK;
+      }
       else
+      {
          return HPDF_INVALID_PARAMETER;
+      }
    }
 
    new_obj = HpdfMemCreateTypeArray(list->mmgr, void *, count);
@@ -300,12 +318,15 @@ Resize(HPDF_List   list,
    }
 
    if (list->obj)
-      HPDF_MemCpy((HpdfByte *) new_obj, (HpdfByte *) list->obj,
-         list->block_siz * sizeof(void *));
+   {
+      HPDF_MemCpy((HpdfByte *) new_obj, (HpdfByte *) list->obj, list->block_siz * sizeof(void *));
+   }
 
    list->block_siz = count;
    if (list->obj)
+   {
       HpdfMemDestroy(list->mmgr, list->obj);
+   }
    list->obj = new_obj;
 
    return HPDF_OK;
@@ -314,7 +335,7 @@ Resize(HPDF_List   list,
 /*
  *  HPDF_List_Find
  *
- *  list :  Pointer to a HPDF_List object.
+ *  list :  Pointer to a HpdfList const * const object.
  *  count : the size of array of pointers.
  *
  *  return:  If HPDF_List_Find success, it returns index of the object.
@@ -323,16 +344,20 @@ Resize(HPDF_List   list,
  */
 
 HpdfInt32
-HPDF_List_Find(HPDF_List  list,
-   void       *item)
+   HPDF_List_Find(
+      HpdfList const * const list,
+      void                  *item)
 {
    HpdfUInt i;
 
    HPDF_PTRACE((" HPDF_List_Find\n"));
 
-   for (i = 0; i < list->count; i++) {
+   for (i = 0; i < list->count; i++) 
+   {
       if (list->obj[i] == item)
+      {
          return i;
+      }
    }
 
    return -1;

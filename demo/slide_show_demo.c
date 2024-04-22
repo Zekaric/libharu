@@ -38,7 +38,7 @@ error_handler  (HpdfStatus   error_no,
 void
    print_page(
       HPDF_Page  page, 
-      const char *caption, 
+      char const *caption, 
       HPDF_Font font, 
       HPDF_TransitionStyle style, 
       HPDF_Page prev, 

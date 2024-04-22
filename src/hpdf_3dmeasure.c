@@ -27,7 +27,7 @@
 HpdfStatus
    HPDF_Dict_AddPoint3D(
       HPDF_Dict dict, 
-      const char* key, 
+      char const* key, 
       HpdfPoint3D const point)
 {
    HpdfArray *array;
@@ -124,17 +124,19 @@ HPDF_3DMeasure_SetTextSize(HPDF_3DMeasure measure,
    return ret;
 }
 
-
 HPDF_EXPORT(HpdfStatus)
-HPDF_3DMeasure_SetName(HPDF_3DMeasure measure,
-   const char* name)
+   HPDF_3DMeasure_SetName(
+      HPDF_3DMeasure  measure,
+      char const     *name)
 {
-   HpdfStatus ret = HPDF_OK;
-   HPDF_String s;
+   HpdfStatus         ret = HPDF_OK;
+   HpdfValueString   *s;
 
-   s = HPDF_String_New(measure->mmgr, name, 0);
+   s = HpdfValueStringCreate(measure->mmgr, name, NULL);
    if (!s)
+   {
       return HPDF_Error_GetCode(measure->error);
+   }
 
    ret = HPDF_Dict_Add(measure, "TRL", s);
 
@@ -164,16 +166,19 @@ HPDF_3DC3DMeasure_SetTextBoxSize(HPDF_3DMeasure measure,
 }
 
 HPDF_EXPORT(HpdfStatus)
-HPDF_3DC3DMeasure_SetText(HPDF_3DMeasure measure,
-   const char* text,
-   HPDF_Encoder encoder)
+   HPDF_3DC3DMeasure_SetText(
+      HPDF_3DMeasure        measure,
+      char const           *text,
+      HpdfEncoder * const   encoder)
 {
-   HpdfStatus ret = HPDF_OK;
-   HPDF_String s;
+   HpdfStatus         ret = HPDF_OK;
+   HpdfValueString   *s;
 
-   s = HPDF_String_New(measure->mmgr, text, encoder);
+   s = HpdfValueStringCreate(measure->mmgr, text, encoder);
    if (!s)
+   {
       return HPDF_Error_GetCode(measure->error);
+   }
 
    ret = HPDF_Dict_Add(measure, "UT", s);
 
@@ -195,29 +200,33 @@ HPDF_3DC3DMeasure_SetProjectionAnotation(HPDF_3DMeasure measure,
 HPDF_3DMeasure
    HPDF_PD33DMeasure_New(
       HpdfMemMgr * const mmgr,
-      HPDF_Xref xref,
-      HpdfPoint3D    annotationPlaneNormal,
-      HpdfPoint3D    firstAnchorPoint,
-      HpdfPoint3D    secondAnchorPoint,
-      HpdfPoint3D    leaderLinesDirection,
-      HpdfPoint3D    measurementValuePoint,
-      HpdfPoint3D    textYDirection,
-      HpdfReal       value,
-      const char*     unitsString
+      HPDF_Xref          xref,
+      HpdfPoint3D        annotationPlaneNormal,
+      HpdfPoint3D        firstAnchorPoint,
+      HpdfPoint3D        secondAnchorPoint,
+      HpdfPoint3D        leaderLinesDirection,
+      HpdfPoint3D        measurementValuePoint,
+      HpdfPoint3D        textYDirection,
+      HpdfReal           value,
+      char const        *unitsString
 )
 {
-   HPDF_3DMeasure measure;
-   HpdfStatus ret = HPDF_OK;
-   HPDF_String s;
+   HPDF_3DMeasure     measure;
+   HpdfStatus         ret = HPDF_OK;
+   HpdfValueString   *s;
 
    HPDF_PTRACE((" HPDF_3DC3DMeasure_New\n"));
 
    measure = HPDF_Dict_New(mmgr);
    if (!measure)
+   {
       return NULL;
+   }
 
    if (HPDF_Xref_Add(xref, measure) != HPDF_OK)
+   {
       return NULL;
+   }
 
    ret += HPDF_Dict_AddPoint3D(measure, "AP", annotationPlaneNormal);
    ret += HPDF_Dict_AddPoint3D(measure, "A1", firstAnchorPoint);
@@ -228,9 +237,11 @@ HPDF_3DMeasure
 
    ret += HPDF_Dict_AddReal(measure, "V", value);
 
-   s = HPDF_String_New(measure->mmgr, unitsString, 0);
+   s = HpdfValueStringCreate(measure->mmgr, unitsString, NULL);
    if (!s)
+   {
       return NULL;
+   }
 
    ret = HPDF_Dict_Add(measure, "U", s);
 
@@ -238,8 +249,9 @@ HPDF_3DMeasure
    ret += HPDF_Dict_AddName(measure, "Subtype", "PD3");
 
    if (ret != HPDF_OK)
+   {
       return NULL;
+   }
 
    return measure;
 }
-

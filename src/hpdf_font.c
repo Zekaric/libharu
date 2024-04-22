@@ -86,7 +86,7 @@ HPDF_Font_MeasureText (HPDF_Font          font,
 }
 
 
-HPDF_EXPORT(const char*)
+HPDF_EXPORT(char const*)
 HPDF_Font_GetFontName  (HPDF_Font font)
 {
     HPDF_FontAttr attr;
@@ -102,7 +102,7 @@ HPDF_Font_GetFontName  (HPDF_Font font)
 }
 
 
-HPDF_EXPORT(const char*)
+HPDF_EXPORT(char const*)
 HPDF_Font_GetEncodingName  (HPDF_Font font)
 {
     HPDF_FontAttr attr;

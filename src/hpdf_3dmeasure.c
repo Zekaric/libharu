@@ -130,9 +130,9 @@ HPDF_EXPORT(HpdfStatus)
       char const     *name)
 {
    HpdfStatus         ret = HPDF_OK;
-   HpdfValueString   *s;
+   HpdfObjString   *s;
 
-   s = HpdfValueStringCreate(measure->mmgr, name, NULL);
+   s = HpdfObjStringCreate(measure->mmgr, name, NULL);
    if (!s)
    {
       return HPDF_Error_GetCode(measure->error);
@@ -172,9 +172,9 @@ HPDF_EXPORT(HpdfStatus)
       HpdfEncoder * const   encoder)
 {
    HpdfStatus         ret = HPDF_OK;
-   HpdfValueString   *s;
+   HpdfObjString   *s;
 
-   s = HpdfValueStringCreate(measure->mmgr, text, encoder);
+   s = HpdfObjStringCreate(measure->mmgr, text, encoder);
    if (!s)
    {
       return HPDF_Error_GetCode(measure->error);
@@ -213,7 +213,7 @@ HPDF_3DMeasure
 {
    HPDF_3DMeasure     measure;
    HpdfStatus         ret = HPDF_OK;
-   HpdfValueString   *s;
+   HpdfObjString   *s;
 
    HPDF_PTRACE((" HPDF_3DC3DMeasure_New\n"));
 
@@ -237,7 +237,7 @@ HPDF_3DMeasure
 
    ret += HPDF_Dict_AddReal(measure, "V", value);
 
-   s = HpdfValueStringCreate(measure->mmgr, unitsString, NULL);
+   s = HpdfObjStringCreate(measure->mmgr, unitsString, NULL);
    if (!s)
    {
       return NULL;

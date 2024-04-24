@@ -362,8 +362,9 @@ CreatePallet(HPDF_Dict    image,
    }
 
    array = HPDF_Array_New(image->mmgr);
-   if (array) {
-      HPDF_Binary b;
+   if (array) 
+   {
+      HpdfObjBinary *b;
 
       HPDF_Dict_Add(image, "ColorSpace", array);
 
@@ -371,7 +372,7 @@ CreatePallet(HPDF_Dict    image,
       HPDF_Array_AddName(array, "DeviceRGB");
       HPDF_Array_AddNumber(array, num_pl - 1);
 
-      b = HPDF_Binary_New(image->mmgr, ppallet, num_pl * 3);
+      b = HpdfObjBinaryCreate(image->mmgr, ppallet, num_pl * 3);
       if (b)
          HPDF_Array_Add(array, b);
    }
@@ -676,7 +677,7 @@ static HpdfStatus
    png_byte           header[HPDF_PNG_BYTES_TO_CHECK];
    HpdfUInt           len = HPDF_PNG_BYTES_TO_CHECK;
    HPDF_Stream        png_data;
-   HpdfValueString   *s;
+   HpdfObjString   *s;
 
    HPDF_PTRACE((" PngBeforeWrite\n"));
 

@@ -18,15 +18,15 @@
 #include "hpdf_utils.h"
 #include "hpdf_objects.h"
 
-HpdfValueBool *
-   HpdfValueBoolCreate(
+HpdfObjBool *
+   HpdfObjBoolCreate(
       HpdfMemMgr * const mmgr,
       HpdfBool  value)
 {
-   HpdfValueBool *obj = HpdfMemCreateType(mmgr, HpdfValueBool);
+   HpdfObjBool *obj = HpdfMemCreateType(mmgr, HpdfObjBool);
    if (obj)
    {
-      HpdfMemClearType(&obj->header, HPDF_Obj_Header);
+      HpdfMemClearType(&obj->header, HpdfObjHeader);
       obj->header.obj_class = HPDF_OCLASS_BOOLEAN;
       obj->value            = value;
    }
@@ -35,8 +35,8 @@ HpdfValueBool *
 }
 
 HpdfStatus
-   HpdfValueBoolWrite(
-      HpdfValueBool const * const obj,
+   HpdfObjBoolWrite(
+      HpdfObjBool const * const obj,
       HPDF_Stream                 stream)
 {
    HpdfStatus ret;

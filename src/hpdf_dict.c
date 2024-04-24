@@ -53,7 +53,7 @@ HPDF_Dict
       HPDF_Xref  xref)
 {
    HPDF_Dict    obj;
-   HpdfValueNumInt  *length;
+   HpdfObjNumInt  *length;
    HpdfStatus   ret = 0;
 
    obj = HPDF_Dict_New(mmgr);
@@ -69,7 +69,7 @@ HPDF_Dict
       return NULL;
    }
 
-   length = HpdfValueNumIntCreate(mmgr, 0);
+   length = HpdfObjNumIntCreate(mmgr, 0);
    if (!length)
    {
       return NULL;
@@ -231,7 +231,7 @@ HpdfStatus
    for (i = 0; i < dict->list->count; i++) 
    {
       HpdfDictElement *element = (HpdfDictElement *) HPDF_List_ItemAt(dict->list, i);
-      HPDF_Obj_Header *header  = (HPDF_Obj_Header *) element->value;
+      HpdfObjHeader *header  = (HpdfObjHeader *) element->value;
 
       if (!element->value)
       {
@@ -289,10 +289,10 @@ HpdfStatus
    if (dict->stream) 
    {
       HpdfUInt32   strptr;
-      HpdfValueNumInt  *length;
+      HpdfObjNumInt  *length;
 
       /* get "length" element */
-      length = (HpdfValueNumInt *) HPDF_Dict_GetItem(dict, "Length", HPDF_OCLASS_NUMBER);
+      length = (HpdfObjNumInt *) HPDF_Dict_GetItem(dict, "Length", HPDF_OCLASS_NUMBER);
       if (!length)
       {
          return HPDF_SetError(dict->error, HPDF_DICT_STREAM_LENGTH_NOT_FOUND, 0);
@@ -322,7 +322,7 @@ HpdfStatus
          return ret;
       }
 
-      HpdfValueNumIntSet(length, stream->size - strptr);
+      HpdfObjNumIntSet(length, stream->size - strptr);
 
       ret = HPDF_Stream_WriteStr(stream, "\012endstream");
    }
@@ -344,7 +344,7 @@ HPDF_Dict_Add(HPDF_Dict        dict,
    char const *key,
    void             *obj)
 {
-   HPDF_Obj_Header *header;
+   HpdfObjHeader *header;
    HpdfStatus       ret = HPDF_OK;
    HpdfDictElement *element;
 
@@ -355,7 +355,7 @@ HPDF_Dict_Add(HPDF_Dict        dict,
          return HPDF_INVALID_OBJECT;
    }
 
-   header = (HPDF_Obj_Header *) obj;
+   header = (HpdfObjHeader *) obj;
 
    if (header->obj_id & HPDF_OTYPE_DIRECT)
       return HPDF_SetError(dict->error, HPDF_INVALID_OBJECT, 0);
@@ -431,7 +431,7 @@ HpdfStatus
       char const *key,
       char const *value)
 {
-   HpdfValueName *name = HpdfValueNameCreate(dict->mmgr, value);
+   HpdfObjName *name = HpdfObjNameCreate(dict->mmgr, value);
    if (!name)
    {
       return HPDF_Error_GetCode(dict->error);
@@ -446,7 +446,7 @@ HpdfStatus
       char const *key,
       HpdfInt32   value)
 {
-   HpdfValueNumInt *number = HpdfValueNumIntCreate(dict->mmgr, value);
+   HpdfObjNumInt *number = HpdfObjNumIntCreate(dict->mmgr, value);
    if (!number)
    {
       return HPDF_Error_GetCode(dict->error);
@@ -460,7 +460,7 @@ HPDF_Dict_AddReal(HPDF_Dict        dict,
    char const *key,
    HpdfReal        value)
 {
-   HpdfValueNumReal *real = HpdfValueNumRealCreate(dict->mmgr, value);
+   HpdfObjNumReal *real = HpdfObjNumRealCreate(dict->mmgr, value);
 
    if (!real)
    {
@@ -476,7 +476,7 @@ HpdfStatus
       char const   *key,
       HpdfBool      value)
 {
-   HpdfValueBool *obj = HpdfValueBoolCreate(dict->mmgr, value);
+   HpdfObjBool *obj = HpdfObjBoolCreate(dict->mmgr, value);
 
    if (!obj)
    {
@@ -496,11 +496,11 @@ HPDF_Dict_GetItem(HPDF_Dict        dict,
 
    if (element && HpdfStrIsEqual(key, element->key))
    {
-      HPDF_Obj_Header *header = (HPDF_Obj_Header *) element->value;
+      HpdfObjHeader *header = (HpdfObjHeader *) element->value;
 
       if (header->obj_class == HPDF_OCLASS_PROXY) {
          HPDF_Proxy p = element->value;
-         header = (HPDF_Obj_Header *) p->obj;
+         header = (HpdfObjHeader *) p->obj;
          obj = p->obj;
       }
       else
@@ -573,10 +573,10 @@ HPDF_Dict_GetKeyByObj(HPDF_Dict  dict,
    HpdfUInt i;
 
    for (i = 0; i < dict->list->count; i++) {
-      HPDF_Obj_Header *header;
+      HpdfObjHeader *header;
       HpdfDictElement *element = (HpdfDictElement *) HPDF_List_ItemAt(dict->list, i);
 
-      header = (HPDF_Obj_Header *) (element->value);
+      header = (HpdfObjHeader *) (element->value);
       if (header->obj_class == HPDF_OCLASS_PROXY) {
          HPDF_Proxy p = element->value;
 

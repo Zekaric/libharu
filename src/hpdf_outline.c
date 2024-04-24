@@ -48,7 +48,7 @@ HPDF_Outline
 {
    HPDF_Outline outline;
    HpdfStatus   ret = HPDF_OK;
-   HpdfValueNumInt  *open_flg;
+   HpdfObjNumInt  *open_flg;
 
    HPDF_PTRACE((" HPDF_OutlineRoot_New\n"));
 
@@ -65,7 +65,7 @@ HPDF_Outline
       return NULL;
    }
 
-   open_flg = HpdfValueNumIntCreate(mmgr, HPDF_OUTLINE_OPENED);
+   open_flg = HpdfObjNumIntCreate(mmgr, HPDF_OUTLINE_OPENED);
    if (!open_flg)
    {
       return NULL;
@@ -95,9 +95,9 @@ HPDF_Outline
       HPDF_Xref             xref)
 {
    HPDF_Outline       outline;
-   HpdfValueString   *s;
+   HpdfObjString   *s;
    HpdfStatus         ret = HPDF_OK;
-   HpdfValueNumInt   *open_flg;
+   HpdfObjNumInt   *open_flg;
 
    HPDF_PTRACE((" HPDF_Outline_New\n"));
 
@@ -121,7 +121,7 @@ HPDF_Outline
       return NULL;
    }
 
-   s = HpdfValueStringCreate(mmgr, title, encoder);
+   s = HpdfObjStringCreate(mmgr, title, encoder);
    if (!s)
    {
       return NULL;
@@ -131,7 +131,7 @@ HPDF_Outline
       ret += HPDF_Dict_Add(outline, "Title", s);
    }
 
-   open_flg = HpdfValueNumIntCreate(mmgr, HPDF_OUTLINE_OPENED);
+   open_flg = HpdfObjNumIntCreate(mmgr, HPDF_OUTLINE_OPENED);
    if (!open_flg)
    {
       return NULL;
@@ -186,7 +186,7 @@ HpdfBool
    HPDF_Outline_GetOpened(
       HPDF_Outline  outline)
 {
-   HpdfValueNumInt *n = (HpdfValueNumInt *) HPDF_Dict_GetItem(outline, "_OPENED", HPDF_OCLASS_NUMBER);
+   HpdfObjNumInt *n = (HpdfObjNumInt *) HPDF_Dict_GetItem(outline, "_OPENED", HPDF_OCLASS_NUMBER);
 
    HPDF_PTRACE((" HPDF_Outline_GetOpened\n"));
 
@@ -248,7 +248,7 @@ static HpdfStatus
    BeforeWrite(
       HPDF_Dict obj)
 {
-   HpdfValueNumInt  *n     = (HpdfValueNumInt *) HPDF_Dict_GetItem(obj, "Count", HPDF_OCLASS_NUMBER);
+   HpdfObjNumInt  *n     = (HpdfObjNumInt *) HPDF_Dict_GetItem(obj, "Count", HPDF_OCLASS_NUMBER);
    HpdfUInt     count = CountChild((HPDF_Outline) obj);
 
    HPDF_PTRACE((" BeforeWrite\n"));
@@ -341,20 +341,20 @@ HPDF_EXPORT(HpdfStatus)
       HPDF_Outline outline,
       HpdfBool     opened)
 {
-   HpdfValueNumInt *n;
+   HpdfObjNumInt *n;
 
    if (!HPDF_Outline_Validate(outline))
    {
       return HPDF_INVALID_OUTLINE;
    }
 
-   n = (HpdfValueNumInt *) HPDF_Dict_GetItem(outline, "_OPENED", HPDF_OCLASS_NUMBER);
+   n = (HpdfObjNumInt *) HPDF_Dict_GetItem(outline, "_OPENED", HPDF_OCLASS_NUMBER);
 
    HPDF_PTRACE((" HPDF_Outline_SetOpened\n"));
 
    if (!n) 
    {
-      n = HpdfValueNumIntCreate(outline->mmgr, (HpdfInt) opened);
+      n = HpdfObjNumIntCreate(outline->mmgr, (HpdfInt) opened);
       if (!n || 
           HPDF_Dict_Add(outline, "_OPENED", n) != HPDF_OK)
       {

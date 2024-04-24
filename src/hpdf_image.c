@@ -163,14 +163,14 @@ static HpdfStatus
          return HPDF_Error_GetCode(stream->error);
       }
 
-      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 0));
-      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 0));
-      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 0));
-      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HpdfValueNumIntCreate(image->mmgr, 0));
+      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 1));
+      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 0));
+      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 1));
+      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 0));
+      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 1));
+      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 0));
+      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 1));
+      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 0));
 
       if (ret != HPDF_OK)
       {
@@ -185,13 +185,13 @@ static HpdfStatus
       return HPDF_SetError(image->error, HPDF_UNSUPPORTED_JPEG_FORMAT, 0);
    }
 
-   if (HPDF_Dict_Add(image, "ColorSpace", HpdfValueNameCreate(image->mmgr, color_space_name)) != 
+   if (HPDF_Dict_Add(image, "ColorSpace", HpdfObjNameCreate(image->mmgr, color_space_name)) != 
          HPDF_OK)
    {
       return HPDF_Error_GetCode(stream->error);
    }
 
-   if (HPDF_Dict_Add(image, "BitsPerComponent", HpdfValueNumIntCreate(image->mmgr, precision)) != 
+   if (HPDF_Dict_Add(image, "BitsPerComponent", HpdfObjNumIntCreate(image->mmgr, precision)) != 
          HPDF_OK)
    {
       return HPDF_Error_GetCode(stream->error);
@@ -437,7 +437,7 @@ HpdfBool
    HPDF_Image_Validate(
       HPDF_Image  image)
 {
-   HpdfValueName *subtype;
+   HpdfObjName *subtype;
 
    HPDF_PTRACE((" HPDF_Image_Validate\n"));
 
@@ -467,8 +467,8 @@ HPDF_EXPORT(HpdfPoint)
    HPDF_Image_GetSize(
       HPDF_Image image)
 {
-   HpdfValueNumInt *width;
-   HpdfValueNumInt *height;
+   HpdfObjNumInt *width;
+   HpdfObjNumInt *height;
    HpdfPoint   ret = { 0, 0 };
 
    HPDF_PTRACE((" HPDF_Image_GetSize\n"));
@@ -495,8 +495,8 @@ HPDF_EXPORT(HpdfStatus)
       HPDF_Image image,
       HpdfPoint * const size)
 {
-   HpdfValueNumInt *width;
-   HpdfValueNumInt *height;
+   HpdfObjNumInt *width;
+   HpdfObjNumInt *height;
    size->x = 0;
    size->y = 0;
 
@@ -524,7 +524,7 @@ HPDF_EXPORT(HpdfUInt)
    HPDF_Image_GetBitsPerComponent(
       HPDF_Image  image)
 {
-   HpdfValueNumInt *n;
+   HpdfObjNumInt *n;
 
    HPDF_PTRACE((" HPDF_Image_GetBitsPerComponent\n"));
 
@@ -543,7 +543,7 @@ HPDF_EXPORT(char const*)
    HPDF_Image_GetColorSpace(
       HPDF_Image  image)
 {
-   HpdfValueName *n;
+   HpdfObjName *n;
 
    HPDF_PTRACE((" HPDF_Image_GetColorSpace\n"));
 
@@ -589,7 +589,7 @@ HpdfStatus
       HPDF_Image   image,
       HpdfBool    mask)
 {
-   HpdfValueBool *image_mask;
+   HpdfObjBool *image_mask;
 
    if (!HPDF_Image_Validate(image))
    {
@@ -605,7 +605,7 @@ HpdfStatus
    if (!image_mask) 
    {
       HpdfStatus ret;
-      image_mask = HpdfValueBoolCreate(image->mmgr, HPDF_FALSE);
+      image_mask = HpdfObjBoolCreate(image->mmgr, HPDF_FALSE);
 
       if ((ret = HPDF_Dict_Add(image, "ImageMask", image_mask)) != HPDF_OK)
       {

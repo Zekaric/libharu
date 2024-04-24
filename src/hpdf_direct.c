@@ -14,7 +14,7 @@ HpdfDirect *
    obj = HpdfMemCreateType(mmgr, HpdfDirect);
    if (obj)
    {
-      HpdfMemClearType(&obj->header, HPDF_Obj_Header);
+      HpdfMemClearType(&obj->header, HpdfObjHeader);
       
       obj->header.obj_class = HPDF_OCLASS_DIRECT;
       obj->mmgr             = mmgr;

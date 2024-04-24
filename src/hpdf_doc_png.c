@@ -118,7 +118,7 @@ HPDF_EXPORT(HPDF_Image)
 {
    HPDF_Stream        imagedata;
    HPDF_Image         image;
-   HpdfValueString   *fname;
+   HpdfObjString   *fname;
 
    HPDF_PTRACE((" HPDF_LoadPngImageFromFile2\n"));
 
@@ -153,7 +153,7 @@ HPDF_EXPORT(HPDF_Image)
 
    /* add file-name to image dictionary as a hidden entry.
    ** it is used when the image data is needed. */
-   fname = HpdfValueStringCreate(doc->mmgr, filename, NULL);
+   fname = HpdfObjStringCreate(doc->mmgr, filename, NULL);
    if (!fname) 
    {
       HPDF_CheckError(&doc->error);
@@ -221,7 +221,7 @@ HPDF_EXPORT(HPDF_Image)
 {
    HPDF_Stream        imagedata;
    HPDF_Image         image;
-   HpdfValueString   *fname;
+   HpdfObjString   *fname;
 
    HPDF_PTRACE((" HPDF_LoadPngImageFromFile\n"));
 
@@ -256,7 +256,7 @@ HPDF_EXPORT(HPDF_Image)
 
    /* add file-name to image dictionary as a hidden entry.
    ** it is used when the image data is needed. */
-   fname = HpdfValueStringCreate(doc->mmgr, filename, NULL);
+   fname = HpdfObjStringCreate(doc->mmgr, filename, NULL);
    if (!fname) 
    {
       HPDF_CheckError(&doc->error);

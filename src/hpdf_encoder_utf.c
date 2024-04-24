@@ -53,7 +53,7 @@ static HPDF_ByteType
       HpdfParseText * const state)
 {
    // This function is supposed to increment state->index
-   // Not logical ! (look at function HpdfValueStringWrite in hpdf_string.c)
+   // Not logical ! (look at function HpdfObjStringWrite in hpdf_string.c)
 
    // When HPDF_BYTE_TYPE_SINGLE is returned, the current byte is the
    //   CODE argument in call ToUnicode_Func

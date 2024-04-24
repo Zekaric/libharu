@@ -605,7 +605,7 @@ HpdfStatus
       if (obj_id & HPDF_OTYPE_INDIRECT) 
       {
          HPDF_XrefEntry entry;
-         HpdfValueNull *null_obj;
+         HpdfObjNull *null_obj;
 
          HPDF_Dict_RemoveElement(doc->trailer, "Encrypt");
 
@@ -616,7 +616,7 @@ HpdfStatus
             return HPDF_SetError(&doc->error, HPDF_DOC_ENCRYPTDICT_NOT_FOUND, 0);
          }
 
-         null_obj = HpdfValueNullCreate(doc->mmgr);
+         null_obj = HpdfObjNullCreate(doc->mmgr);
          if (!null_obj)
          {
             return doc->error.error_no;
@@ -673,12 +673,12 @@ HpdfStatus
       HPDF_Array_Clear(id);
    }
 
-   if (HPDF_Array_Add(id, HPDF_Binary_New(doc->mmgr, e->encrypt_id, HPDF_ID_LEN)) != HPDF_OK)
+   if (HPDF_Array_Add(id, HpdfObjBinaryCreate(doc->mmgr, e->encrypt_id, HPDF_ID_LEN)) != HPDF_OK)
    {
       return doc->error.error_no;
    }
 
-   if (HPDF_Array_Add(id, HPDF_Binary_New(doc->mmgr, e->encrypt_id, HPDF_ID_LEN)) != HPDF_OK)
+   if (HPDF_Array_Add(id, HpdfObjBinaryCreate(doc->mmgr, e->encrypt_id, HPDF_ID_LEN)) != HPDF_OK)
    {
       return doc->error.error_no;
    }
@@ -2589,10 +2589,10 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       HpdfDoc * const doc,
       char const     *file)
 {
-   HpdfValueNameDict  names;
-   HpdfValueNameTree  ntree;
+   HpdfObjNameDict  names;
+   HpdfObjNameTree  ntree;
    HPDF_EmbeddedFile  efile;
-   HpdfValueString   *name;
+   HpdfObjString   *name;
    HpdfStatus         ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_AttachFile\n"));
@@ -2605,7 +2605,7 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
    names = HPDF_Catalog_GetNames(doc->catalog);
    if (!names) 
    {
-      names = HpdfValueNameDict_New(doc->mmgr, doc->xref);
+      names = HpdfObjNameDict_New(doc->mmgr, doc->xref);
       if (!names)
       {
          return NULL;
@@ -2618,16 +2618,16 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       }
    }
 
-   ntree = HpdfValueNameDict_GetNameTree(names, HPDF_NAME_EMBEDDED_FILES);
+   ntree = HpdfObjNameDict_GetNameTree(names, HPDF_NAME_EMBEDDED_FILES);
    if (!ntree) 
    {
-      ntree = HpdfValueNameTree_New(doc->mmgr, doc->xref);
+      ntree = HpdfObjNameTree_New(doc->mmgr, doc->xref);
       if (!ntree)
       {
          return NULL;
       }
 
-      ret = HpdfValueNameDict_SetNameTree(names, HPDF_NAME_EMBEDDED_FILES, ntree);
+      ret = HpdfObjNameDict_SetNameTree(names, HPDF_NAME_EMBEDDED_FILES, ntree);
       if (ret != HPDF_OK)
       {
          return NULL;
@@ -2640,13 +2640,13 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       return NULL;
    }
 
-   name = HpdfValueStringCreate(doc->mmgr, file, NULL);
+   name = HpdfObjStringCreate(doc->mmgr, file, NULL);
    if (!name)
    {
       return NULL;
    }
 
-   ret += HpdfValueNameTree_Add(ntree, name, efile);
+   ret += HpdfObjNameTree_Add(ntree, name, efile);
    if (ret != HPDF_OK)
    {
       return NULL;
@@ -2661,10 +2661,10 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       HpdfDoc * const doc,
       wchar_t const  *file)
 {
-   HpdfValueNameDict  names;
-   HpdfValueNameTree  ntree;
+   HpdfObjNameDict  names;
+   HpdfObjNameTree  ntree;
    HPDF_EmbeddedFile  efile;
-   HpdfValueString   *name;
+   HpdfObjString   *name;
    HpdfStatus         ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_AttachFileW\n"));
@@ -2677,7 +2677,7 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
    names = HPDF_Catalog_GetNames(doc->catalog);
    if (!names) 
    {
-      names = HpdfValueNameDict_New(doc->mmgr, doc->xref);
+      names = HpdfObjNameDict_New(doc->mmgr, doc->xref);
       if (!names)
       {
          return NULL;
@@ -2690,16 +2690,16 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       }
    }
 
-   ntree = HpdfValueNameDict_GetNameTree(names, HPDF_NAME_EMBEDDED_FILES);
+   ntree = HpdfObjNameDict_GetNameTree(names, HPDF_NAME_EMBEDDED_FILES);
    if (!ntree) 
    {
-      ntree = HpdfValueNameTree_New(doc->mmgr, doc->xref);
+      ntree = HpdfObjNameTree_New(doc->mmgr, doc->xref);
       if (!ntree)
       {
          return NULL;
       }
 
-      ret = HpdfValueNameDict_SetNameTree(names, HPDF_NAME_EMBEDDED_FILES, ntree);
+      ret = HpdfObjNameDict_SetNameTree(names, HPDF_NAME_EMBEDDED_FILES, ntree);
       if (ret != HPDF_OK)
       {
          return NULL;
@@ -2712,13 +2712,13 @@ HPDF_EXPORT(HPDF_EmbeddedFile)
       return NULL;
    }
 
-   name = HpdfValueStringCreateW(doc->mmgr, file, NULL);
+   name = HpdfObjStringCreateW(doc->mmgr, file, NULL);
    if (!name)
    {
       return NULL;
    }
 
-   ret += HpdfValueNameTree_Add(ntree, name, efile);
+   ret += HpdfObjNameTree_Add(ntree, name, efile);
    if (ret != HPDF_OK)
    {
       return NULL;
@@ -3008,19 +3008,19 @@ HPDF_EXPORT(HPDF_OutputIntent)
    ret += HPDF_Dict_Add(    
       intent, 
       "OutputConditionIdentifier", 
-      HpdfValueStringCreate(doc->mmgr, identifier, NULL));
+      HpdfObjStringCreate(doc->mmgr, identifier, NULL));
    ret += HPDF_Dict_Add(    
       intent, 
       "OutputCondition", 
-      HpdfValueStringCreate(doc->mmgr, condition,  NULL));
+      HpdfObjStringCreate(doc->mmgr, condition,  NULL));
    ret += HPDF_Dict_Add(    
       intent, 
       "RegistryName", 
-      HpdfValueStringCreate(doc->mmgr, registry,   NULL));
+      HpdfObjStringCreate(doc->mmgr, registry,   NULL));
 
    if (info != NULL) 
    {
-      ret += HPDF_Dict_Add(intent, "Info", HpdfValueStringCreate(doc->mmgr, info, NULL));
+      ret += HPDF_Dict_Add(intent, "Info", HpdfObjStringCreate(doc->mmgr, info, NULL));
    }
 
    /* add ICC base stream */

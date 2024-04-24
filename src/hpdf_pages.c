@@ -117,7 +117,7 @@ HPDF_Pages
    /* add required elements */
    ret += HPDF_Dict_AddName(pages, "Type", "Pages");
    ret += HPDF_Dict_Add(    pages, "Kids",  HPDF_Array_New(       pages->mmgr));
-   ret += HPDF_Dict_Add(    pages, "Count", HpdfValueNumIntCreate(pages->mmgr, 0));
+   ret += HPDF_Dict_Add(    pages, "Count", HpdfObjNumIntCreate(pages->mmgr, 0));
 
    if (ret == HPDF_OK && parent)
    {
@@ -206,7 +206,7 @@ HpdfStatus
       HPDF_Dict    obj)
 {
    HpdfArray       *kids  = (HpdfArray *)       HPDF_Dict_GetItem(obj, "Kids",  HPDF_OCLASS_ARRAY);
-   HpdfValueNumInt *count = (HpdfValueNumInt *) HPDF_Dict_GetItem(obj, "Count", HPDF_OCLASS_NUMBER);
+   HpdfObjNumInt *count = (HpdfObjNumInt *) HPDF_Dict_GetItem(obj, "Count", HPDF_OCLASS_NUMBER);
    HpdfStatus       ret;
 
    HPDF_PTRACE((" HPDF_Pages_BeforeWrite\n"));
@@ -222,7 +222,7 @@ HpdfStatus
    }
    else 
    {
-      count = HpdfValueNumIntCreate(obj->mmgr, GetPageCount(obj));
+      count = HpdfObjNumIntCreate(obj->mmgr, GetPageCount(obj));
       if (!count)
       {
          return HPDF_Error_GetCode(obj->error);
@@ -285,7 +285,7 @@ GetPageCount(HPDF_Dict    pages)
 
    for (i = 0; i < kids->list->count; i++) {
       void *obj = HPDF_Array_GetItem(kids, i, HPDF_OCLASS_DICT);
-      HPDF_Obj_Header *header = (HPDF_Obj_Header *) obj;
+      HpdfObjHeader *header = (HpdfObjHeader *) obj;
 
       if (header->obj_class == (HPDF_OCLASS_DICT | HPDF_OSUBCLASS_PAGES))
          count += GetPageCount((HPDF_Dict) obj);
@@ -300,7 +300,7 @@ GetPageCount(HPDF_Dict    pages)
 HpdfBool
 HPDF_Pages_Validate(HPDF_Pages  pages)
 {
-   HPDF_Obj_Header *header = (HPDF_Obj_Header *) pages;
+   HpdfObjHeader *header = (HpdfObjHeader *) pages;
 
    HPDF_PTRACE((" HPDF_Pages_Validate\n"));
 
@@ -493,11 +493,11 @@ AddResource(HPDF_Page  page)
    if (HPDF_Dict_Add(resource, "ProcSet", procset) != HPDF_OK)
       return HPDF_Error_GetCode(resource->error);
 
-   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "PDF"));
-   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "Text"));
-   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageB"));
-   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageC"));
-   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageI"));
+   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "PDF"));
+   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "Text"));
+   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageB"));
+   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageC"));
+   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageI"));
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(procset->error);
@@ -573,7 +573,7 @@ HPDF_Box
       HpdfArray *array = HPDF_Page_GetInheritableItem(page, "MediaBox", HPDF_OCLASS_ARRAY);
       if (array) 
       {
-         HpdfValueNumReal *r;
+         HpdfObjNumReal *r;
 
          r = HPDF_Array_GetItem(array, 0, HPDF_OCLASS_REAL);
          if (r)
@@ -657,8 +657,8 @@ HPDF_Page_CreateXObjectFromImage(
    }
 
    ret += HPDF_Dict_Add(resource, "ProcSet", procset);
-   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "PDF"));
-   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageC"));
+   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "PDF"));
+   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageC"));
 
    xobject = HPDF_Dict_New(page->mmgr);
    if (!xobject)
@@ -834,8 +834,8 @@ HPDF_Page_CreateXObjectAsWhiteRect(
    }
 
    ret += HPDF_Dict_Add(resource, "ProcSet", procset);
-   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "PDF"));
-   ret += HPDF_Array_Add(procset, HpdfValueNameCreate(page->mmgr, "ImageC"));
+   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "PDF"));
+   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageC"));
 
    xobject = HPDF_Dict_New(page->mmgr);
    if (!xobject)
@@ -1704,7 +1704,7 @@ HpdfStatus
       HpdfUInt          index,
       HpdfReal          value)
 {
-   HpdfValueNumReal *r;
+   HpdfObjNumReal *r;
    HpdfArray        *array;
 
    HPDF_PTRACE((" HPDF_Page_SetBoxValue\n"));
@@ -1736,7 +1736,7 @@ HPDF_EXPORT(HpdfStatus)
       HPDF_Page     page,
       HpdfUInt16    angle)
 {
-   HpdfValueNumInt  *n;
+   HpdfObjNumInt  *n;
    HpdfStatus   ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_Page_SetRotate\n"));
@@ -1859,7 +1859,7 @@ HPDF_Page_SetSize(HPDF_Page             page,
 HpdfBool
 HPDF_Page_Validate(HPDF_Page  page)
 {
-   HPDF_Obj_Header *header = (HPDF_Obj_Header *) page;
+   HpdfObjHeader *header = (HpdfObjHeader *) page;
 
    HPDF_PTRACE((" HPDF_Page_Validate\n"));
 
@@ -2174,7 +2174,7 @@ HPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint(
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(annot, "T", HpdfValueStringCreate(annot->mmgr, "Blind", NULL));
+   ret = HPDF_Dict_Add(annot, "T", HpdfObjStringCreate(annot->mmgr, "Blind", NULL));
    if (ret != HPDF_OK)
    {
       return NULL;

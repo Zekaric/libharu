@@ -25,16 +25,16 @@ extern "C" {
 #endif
 
 
-HpdfValueNameDict HpdfValueNameDict_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref);
-HpdfValueNameTree HpdfValueNameDict_GetNameTree  (HpdfValueNameDict     namedict, HpdfValueNameDictKey  key); 
-HpdfStatus HpdfValueNameDict_SetNameTree  (HpdfValueNameDict     namedict, HpdfValueNameDictKey  key, HpdfValueNameTree     tree);
-HpdfBool HpdfValueNameDict_Validate  (HpdfValueNameDict  namedict);
+HpdfObjNameDict HpdfObjNameDict_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref);
+HpdfObjNameTree HpdfObjNameDict_GetNameTree  (HpdfObjNameDict     namedict, HpdfObjNameDictKey  key); 
+HpdfStatus HpdfObjNameDict_SetNameTree  (HpdfObjNameDict     namedict, HpdfObjNameDictKey  key, HpdfObjNameTree     tree);
+HpdfBool HpdfObjNameDict_Validate  (HpdfObjNameDict  namedict);
 
 /*------- NameTree -------*/
 
-HpdfValueNameTree HpdfValueNameTree_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref);
-HpdfStatus HpdfValueNameTree_Add  (HpdfValueNameTree  tree, HpdfValueString * const name, void          *obj);
-HpdfBool HpdfValueNameTree_Validate  (HpdfValueNameTree  tree);
+HpdfObjNameTree HpdfObjNameTree_New  (HpdfMemMgr * const mmgr, HPDF_Xref  xref);
+HpdfStatus HpdfObjNameTree_Add  (HpdfObjNameTree  tree, HpdfObjString * const name, void          *obj);
+HpdfBool HpdfObjNameTree_Validate  (HpdfObjNameTree  tree);
 
 /*------- EmbeddedFile -------*/
 

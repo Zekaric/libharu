@@ -126,7 +126,7 @@ HPDF_Xref_Add(HPDF_Xref  xref,
    void       *obj)
 {
    HPDF_XrefEntry entry;
-   HPDF_Obj_Header *header;
+   HpdfObjHeader *header;
 
    HPDF_PTRACE((" HPDF_Xref_Add\n"));
 
@@ -137,7 +137,7 @@ HPDF_Xref_Add(HPDF_Xref  xref,
          return HPDF_INVALID_OBJECT;
    }
 
-   header = (HPDF_Obj_Header *) obj;
+   header = (HpdfObjHeader *) obj;
 
    if (header->obj_id & HPDF_OTYPE_DIRECT ||
       header->obj_id & HPDF_OTYPE_INDIRECT)

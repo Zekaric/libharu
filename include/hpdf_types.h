@@ -562,11 +562,11 @@ typedef enum _HPDF_TextAlignment
 /*----------------------------------------------------------------------------*/
 
 /* Name Dictionary values -- see PDF reference section 7.7.4 */
-typedef enum _HpdfValueNameDictKey 
+typedef enum _HpdfObjNameDictKey 
 {
    HPDF_NAME_EMBEDDED_FILES = 0,    /* TODO the rest */
    HPDF_NAME_EOF
-} HpdfValueNameDictKey;
+} HpdfObjNameDictKey;
 
 /*----------------------------------------------------------------------------*/
 

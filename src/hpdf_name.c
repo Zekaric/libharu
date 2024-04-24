@@ -19,21 +19,21 @@
 #include "hpdf_utils.h"
 #include "hpdf_objects.h"
 
-HpdfValueName *
-   HpdfValueNameCreate(
+HpdfObjName *
+   HpdfObjNameCreate(
       HpdfMemMgr * const mmgr,
       char const        *value)
 {
-   HpdfValueName *obj;
+   HpdfObjName *obj;
 
-   obj  = HpdfMemCreateType(mmgr, HpdfValueName);
+   obj  = HpdfMemCreateType(mmgr, HpdfObjName);
    if (obj)
    {
-      HpdfMemClearType(&obj->header, HPDF_Obj_Header);
+      HpdfMemClearType(&obj->header, HpdfObjHeader);
       obj->header.obj_class = HPDF_OCLASS_NAME;
       obj->error            = mmgr->error;
 
-      if (HpdfValueNameSet(obj, value) == HPDF_NAME_INVALID_VALUE) 
+      if (HpdfObjNameSet(obj, value) == HPDF_NAME_INVALID_VALUE) 
       {
          HpdfMemDestroy(mmgr, obj);
          return NULL;
@@ -44,16 +44,16 @@ HpdfValueName *
 }
 
 HpdfStatus
-   HpdfValueNameWrite(
-      HpdfValueName const * const obj,
+   HpdfObjNameWrite(
+      HpdfObjName const * const obj,
       HPDF_Stream                 stream)
 {
    return HPDF_Stream_WriteEscapeName(stream, obj->value);
 }
 
 HpdfStatus
-   HpdfValueNameSet(
-      HpdfValueName * const obj,
+   HpdfObjNameSet(
+      HpdfObjName * const obj,
       char const           *value)
 {
    if (!value || 
@@ -73,8 +73,8 @@ HpdfStatus
 }
 
 char const *
-   HpdfValueNameGet(
-      HpdfValueName const * const obj)
+   HpdfObjNameGet(
+      HpdfObjName const * const obj)
 {
    return (char const *) obj->value;
 }

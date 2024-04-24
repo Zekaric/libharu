@@ -38,7 +38,7 @@ static HpdfBool _GetDecodeArrayVertexValues(HPDF_Shading shading,
    HpdfReal *bbox)
 {
    HpdfArray         *decodeArray;
-   HpdfValueNumReal  *r;
+   HpdfObjNumReal  *r;
    int                i;
 
    if (!shading) 

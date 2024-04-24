@@ -314,7 +314,7 @@ HPDF_Annotation
 
    ret += HPDF_Dict_AddName(action, "Type", "Action");
    ret += HPDF_Dict_AddName(action, "S", "URI");
-   ret += HPDF_Dict_Add(    action, "URI", HpdfValueStringCreate(mmgr, uri, NULL));
+   ret += HPDF_Dict_Add(    action, "URI", HpdfObjStringCreate(mmgr, uri, NULL));
 
    if (ret != HPDF_OK)
    {
@@ -468,7 +468,7 @@ HPDF_Annotation
    //      The annotation may be displayed or printed (depending on the settings of the NoView and Print flags)
    //      but should not respond to mouse clicks or change its appearance in response to mouse motions.
 
-   HPDF_Dict_Add(annot, "Contents", HpdfValueStringCreate(mmgr, "3D Model", NULL));
+   HPDF_Dict_Add(annot, "Contents", HpdfObjStringCreate(mmgr, "3D Model", NULL));
 
    action = HPDF_Dict_New(mmgr);
    if (!action) 
@@ -554,7 +554,7 @@ HPDF_Annotation
       HPDF_AnnotType        subtype)
 {
    HPDF_Annotation    annot;
-   HpdfValueString   *s;
+   HpdfObjString   *s;
 
    HPDF_PTRACE((" HPDF_MarkupAnnot_New\n"));
 
@@ -564,7 +564,7 @@ HPDF_Annotation
       return NULL;
    }
 
-   s = HpdfValueStringCreate(mmgr, text, encoder);
+   s = HpdfObjStringCreate(mmgr, text, encoder);
    if (!s)
    {
       return NULL;
@@ -688,7 +688,7 @@ HPDF_EXPORT(HpdfStatus)
       HPDF_Annotation  annot,
       HpdfBool        opened)
 {
-   HpdfValueBool *b;
+   HpdfObjBool *b;
 
    HPDF_PTRACE((" HPDF_TextAnnot_SetOpend\n"));
 
@@ -697,7 +697,7 @@ HPDF_EXPORT(HpdfStatus)
       return HPDF_INVALID_ANNOTATION;
    }
 
-   b = HpdfValueBoolCreate(annot->mmgr, opened);
+   b = HpdfObjBoolCreate(annot->mmgr, opened);
    if (!b)
    {
       return HPDF_CheckError(annot->error);
@@ -711,7 +711,7 @@ HPDF_EXPORT(HpdfStatus)
       HPDF_Annotation  annot,
       HpdfBool        opened)
 {
-   HpdfValueBool *b;
+   HpdfObjBool *b;
 
    HPDF_PTRACE((" HPDF_TextAnnot_SetOpend\n"));
 
@@ -720,7 +720,7 @@ HPDF_EXPORT(HpdfStatus)
       return HPDF_INVALID_ANNOTATION;
    }
 
-   b = HpdfValueBoolCreate(annot->mmgr, opened);
+   b = HpdfObjBoolCreate(annot->mmgr, opened);
    if (!b)
    {
       return HPDF_CheckError(annot->error);
@@ -734,7 +734,7 @@ HPDF_MarkupAnnot_SetTitle(HPDF_Annotation   annot, char const* name)
 {
    HPDF_PTRACE((" HPDF_MarkupAnnot_SetTitle\n"));
 
-   return HPDF_Dict_Add(annot, "T", HpdfValueStringCreate(annot->mmgr, name, NULL));
+   return HPDF_Dict_Add(annot, "T", HpdfObjStringCreate(annot->mmgr, name, NULL));
 }
 
 HPDF_EXPORT(HpdfStatus)
@@ -742,7 +742,7 @@ HPDF_MarkupAnnot_SetSubject(HPDF_Annotation   annot, char const* name)
 {
    HPDF_PTRACE((" HPDF_MarkupAnnot_SetSubject\n"));
 
-   return HPDF_Dict_Add(annot, "Subj", HpdfValueStringCreate(annot->mmgr, name, NULL));
+   return HPDF_Dict_Add(annot, "Subj", HpdfObjStringCreate(annot->mmgr, name, NULL));
 }
 
 HPDF_EXPORT(HpdfStatus)
@@ -888,7 +888,7 @@ static HpdfBool
       HPDF_Annotation  annot,
       HPDF_AnnotType  type)
 {
-   HpdfValueName *subtype;
+   HpdfObjName *subtype;
 
    HPDF_PTRACE((" HPDF_Annotation_CheckSubType\n"));
 
@@ -966,7 +966,7 @@ HPDF_Annotation
       HpdfEncoder * const   encoder)
 {
    HPDF_Annotation    annot;
-   HpdfValueString   *s;
+   HpdfObjString   *s;
 
    HPDF_PTRACE((" HPDF_StampAnnot_New\n"));
 
@@ -981,7 +981,7 @@ HPDF_Annotation
       return NULL;
    }
 
-   s = HpdfValueStringCreate(mmgr, text, encoder);
+   s = HpdfObjStringCreate(mmgr, text, encoder);
    if (!s)
    {
       return NULL;
@@ -1004,7 +1004,7 @@ HPDF_Annotation
       HpdfEncoder * const   encoder)
 {
    HPDF_Annotation    annot;
-   HpdfValueString   *s;
+   HpdfObjString   *s;
 
    HPDF_PTRACE((" HPDF_StampAnnot_New\n"));
 
@@ -1014,7 +1014,7 @@ HPDF_Annotation
       return NULL;
    }
 
-   s = HpdfValueStringCreate(mmgr, text, encoder);
+   s = HpdfObjStringCreate(mmgr, text, encoder);
    if (!s)
    {
       return NULL;
@@ -1141,12 +1141,12 @@ HPDF_EXPORT(HpdfStatus)
       HPDF_Annotation annot,
       char const     *style)
 {
-   HpdfValueString   *s;
+   HpdfObjString   *s;
    HpdfStatus         ret = HPDF_OK;
 
    HPDF_PTRACE((" HPDF_FreeTextAnnot_SetDefaultStyle\n"));
 
-   s = HpdfValueStringCreate(annot->mmgr, style, NULL);
+   s = HpdfObjStringCreate(annot->mmgr, style, NULL);
    if (!s)
    {
       return HPDF_Error_GetCode(annot->error);

@@ -69,7 +69,7 @@ HpdfStatus
       return HPDF_Dict_AddName(info, name, value);
    }
 
-   return HPDF_Dict_Add(info, name, HpdfValueStringCreate(info->mmgr, value, encoder));
+   return HPDF_Dict_Add(info, name, HpdfObjStringCreate(info->mmgr, value, encoder));
 }
 
 char const *
@@ -78,7 +78,7 @@ char const *
       HPDF_InfoType  type)
 {
    char const        *name = InfoTypeToName(type);
-   HpdfValueString   *s;
+   HpdfObjString   *s;
 
    HPDF_PTRACE((" HPDF_Info_GetInfoAttr\n"));
 
@@ -186,5 +186,5 @@ HpdfStatus
    }
    *ptmp = 0;
 
-   return HPDF_Dict_Add(info, name, HpdfValueStringCreate(info->mmgr, tmp, NULL));
+   return HPDF_Dict_Add(info, name, HpdfObjStringCreate(info->mmgr, tmp, NULL));
 }

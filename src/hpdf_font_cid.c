@@ -372,11 +372,11 @@ static HPDF_Font
    ret += HPDF_Dict_Add(
       cid_system_info, 
       "Registry",
-      HpdfValueStringCreate(parent->mmgr, encoder_attr->registry, NULL));
+      HpdfObjStringCreate(parent->mmgr, encoder_attr->registry, NULL));
    ret += HPDF_Dict_Add(
       cid_system_info, 
       "Ordering",
-      HpdfValueStringCreate(parent->mmgr, encoder_attr->ordering, NULL));
+      HpdfObjStringCreate(parent->mmgr, encoder_attr->ordering, NULL));
    ret += HPDF_Dict_AddNumber(cid_system_info, "Supplement", encoder_attr->suppliment);
 
    if (ret != HPDF_OK)
@@ -595,11 +595,11 @@ static HPDF_Font
    ret += HPDF_Dict_Add(
       cid_system_info, 
       "Registry",
-      HpdfValueStringCreate(parent->mmgr, encoder_attr->registry, NULL));
+      HpdfObjStringCreate(parent->mmgr, encoder_attr->registry, NULL));
    ret += HPDF_Dict_Add(
       cid_system_info, 
       "Ordering",
-      HpdfValueStringCreate(parent->mmgr, encoder_attr->ordering, NULL));
+      HpdfObjStringCreate(parent->mmgr, encoder_attr->ordering, NULL));
    ret += HPDF_Dict_AddNumber(cid_system_info, "Supplement", encoder_attr->suppliment);
 
    if (ret != HPDF_OK)
@@ -1018,11 +1018,11 @@ static HPDF_Dict
    ret += HPDF_Dict_Add(
       sysinfo, 
       "Registry",
-      HpdfValueStringCreate(encoder->mmgr, attr->registry, NULL));
+      HpdfObjStringCreate(encoder->mmgr, attr->registry, NULL));
    ret += HPDF_Dict_Add(
       sysinfo,
       "Ordering",
-      HpdfValueStringCreate(encoder->mmgr, attr->ordering, NULL));
+      HpdfObjStringCreate(encoder->mmgr, attr->ordering, NULL));
    ret += HPDF_Dict_AddNumber(sysinfo, "Supplement", attr->suppliment);
    ret += HPDF_Dict_AddNumber(cmap,    "WMode",      (HpdfUInt32) attr->writing_mode);
 

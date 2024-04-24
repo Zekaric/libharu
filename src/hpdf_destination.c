@@ -76,7 +76,7 @@ HpdfBool
 HPDF_Destination_Validate(
    HpdfDestination * const dst)
 {
-   HPDF_Obj_Header *header = (HPDF_Obj_Header *) dst;
+   HpdfObjHeader *header = (HpdfObjHeader *) dst;
    HPDF_Page target;
 
    if (!dst || header->obj_class !=

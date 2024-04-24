@@ -28,14 +28,14 @@ static char const * const HPDF_NAMEDICT_KEYS[] = {
                                         "EmbeddedFiles"
 };
 
-HpdfValueNameDict
-   HpdfValueNameDict_New(
+HpdfObjNameDict
+   HpdfObjNameDict_New(
       HpdfMemMgr * const mmgr,
       HPDF_Xref  xref)
 {
-   HpdfValueNameDict ndict;
+   HpdfObjNameDict ndict;
 
-   HPDF_PTRACE((" HpdfValueNameDict_New\n"));
+   HPDF_PTRACE((" HpdfObjNameDict_New\n"));
 
    ndict = HPDF_Dict_New(mmgr);
    if (!ndict)
@@ -49,9 +49,9 @@ HpdfValueNameDict
    return ndict;
 }
 
-HpdfValueNameTree
-HpdfValueNameDict_GetNameTree(HpdfValueNameDict     namedict,
-   HpdfValueNameDictKey  key)
+HpdfObjNameTree
+HpdfObjNameDict_GetNameTree(HpdfObjNameDict     namedict,
+   HpdfObjNameDictKey  key)
 {
    if (!namedict)
       return NULL;
@@ -59,15 +59,15 @@ HpdfValueNameDict_GetNameTree(HpdfValueNameDict     namedict,
 }
 
 HpdfStatus
-HpdfValueNameDict_SetNameTree(HpdfValueNameDict     namedict,
-   HpdfValueNameDictKey  key,
-   HpdfValueNameTree     ntree)
+HpdfObjNameDict_SetNameTree(HpdfObjNameDict     namedict,
+   HpdfObjNameDictKey  key,
+   HpdfObjNameTree     ntree)
 {
    return HPDF_Dict_Add(namedict, HPDF_NAMEDICT_KEYS[key], ntree);
 }
 
 HpdfBool
-HpdfValueNameDict_Validate(HpdfValueNameDict  namedict)
+HpdfObjNameDict_Validate(HpdfObjNameDict  namedict)
 {
    if (!namedict)
       return HPDF_FALSE;
@@ -84,16 +84,16 @@ HpdfValueNameDict_Validate(HpdfValueNameDict  namedict)
 
 /*------- NameTree -------*/
 
-HpdfValueNameTree
-   HpdfValueNameTree_New(
+HpdfObjNameTree
+   HpdfObjNameTree_New(
       HpdfMemMgr * const mmgr,
       HPDF_Xref  xref)
 {
    HpdfStatus ret = HPDF_OK;
-   HpdfValueNameTree ntree;
+   HpdfObjNameTree ntree;
    HpdfArray *items;
 
-   HPDF_PTRACE((" HpdfValueNameTree_New\n"));
+   HPDF_PTRACE((" HpdfObjNameTree_New\n"));
 
    ntree = HPDF_Dict_New(mmgr);
    if (!ntree)
@@ -116,9 +116,9 @@ HpdfValueNameTree
 }
 
 HpdfStatus
-   HpdfValueNameTree_Add(
-      HpdfValueNameTree        tree,
-      HpdfValueString * const  name,
+   HpdfObjNameTree_Add(
+      HpdfObjNameTree        tree,
+      HpdfObjString * const  name,
       void                    *obj)
 {
    HpdfArray   *items;
@@ -145,8 +145,8 @@ HpdfStatus
 
    for (i = 0; i < icount; i += 2) 
    {
-      HpdfValueString *elem = HPDF_Array_GetItem(items, i, HPDF_OCLASS_STRING);
-      if (HpdfValueStringCmp(name, elem) < 0) 
+      HpdfObjString *elem = HPDF_Array_GetItem(items, i, HPDF_OCLASS_STRING);
+      if (HpdfObjStringCmp(name, elem) < 0) 
       {
          HPDF_Array_Insert(items, elem, name);
          HPDF_Array_Insert(items, elem, obj);
@@ -161,7 +161,7 @@ HpdfStatus
 }
 
 HpdfBool
-HpdfValueNameTree_Validate(HpdfValueNameTree  nametree)
+HpdfObjNameTree_Validate(HpdfObjNameTree  nametree)
 {
    if (!nametree)
       return HPDF_FALSE;
@@ -186,7 +186,7 @@ HPDF_EmbeddedFile
 {
    HpdfStatus         ret = HPDF_OK;
    HPDF_Dict          ef;            /* the dictionary for the embedded file: /Type /EF */
-   HpdfValueString   *name;          /* the name of the file: /F (name) */
+   HpdfObjString   *name;          /* the name of the file: /F (name) */
    HPDF_Dict          eff;           /* ef has an /EF <<blah>> key - this is it */
    HPDF_Dict          filestream;    /* the stream that /EF <</F _ _ R>> refers to */
    HPDF_Stream        stream;
@@ -224,7 +224,7 @@ HPDF_EmbeddedFile
       return NULL;
    }
 
-   name = HpdfValueStringCreate(mmgr, file, NULL);
+   name = HpdfObjStringCreate(mmgr, file, NULL);
    if (!name)
    {
       return NULL;
@@ -252,7 +252,7 @@ HPDF_EmbeddedFile
 {
    HpdfStatus         ret = HPDF_OK;
    HPDF_Dict          ef;           /* the dictionary for the embedded file: /Type /EF */
-   HpdfValueString   *name;         /* the name of the file: /F (name) */
+   HpdfObjString   *name;         /* the name of the file: /F (name) */
    HPDF_Dict          eff;          /* ef has an /EF <<blah>> key - this is it */
    HPDF_Dict          filestream;   /* the stream that /EF <</F _ _ R>> refers to */
    HPDF_Stream        stream;
@@ -290,7 +290,7 @@ HPDF_EmbeddedFile
       return NULL;
    }
 
-   name = HpdfValueStringCreateW(mmgr, file, NULL);
+   name = HpdfObjStringCreateW(mmgr, file, NULL);
    if (!name)
    {
       return NULL;

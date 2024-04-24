@@ -20,34 +20,34 @@
 #include "hpdf_objects.h"
 
 
-HpdfValueNumReal *
-   HpdfValueNumRealCreate(
+HpdfObjNumReal *
+   HpdfObjNumRealCreate(
       HpdfMemMgr * const mmgr,
       HpdfReal  value)
 {
-   HpdfValueNumReal *obj = HpdfMemCreateType(mmgr, HpdfValueNumReal);
+   HpdfObjNumReal *obj = HpdfMemCreateType(mmgr, HpdfObjNumReal);
    if (obj)
    {
-      HpdfMemClearType(&obj->header, HPDF_Obj_Header);
+      HpdfMemClearType(&obj->header, HpdfObjHeader);
       obj->header.obj_class = HPDF_OCLASS_REAL;
       obj->error = mmgr->error;
-      HpdfValueNumRealSet(obj, value);
+      HpdfObjNumRealSet(obj, value);
    }
 
    return obj;
 }
 
 HpdfStatus
-   HpdfValueNumRealWrite(
-      HpdfValueNumReal const * const obj,
+   HpdfObjNumRealWrite(
+      HpdfObjNumReal const * const obj,
       HPDF_Stream  stream)
 {
    return HPDF_Stream_WriteReal(stream, obj->value);
 }
 
 HpdfStatus
-   HpdfValueNumRealSet(
-      HpdfValueNumReal * const obj,
+   HpdfObjNumRealSet(
+      HpdfObjNumReal * const obj,
       HpdfReal                 value)
 {
    HpdfStatus ret = HPDF_OK;

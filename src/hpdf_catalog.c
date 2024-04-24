@@ -87,7 +87,7 @@ HPDF_Catalog_GetRoot(HPDF_Catalog  catalog)
 }
 
 
-HpdfValueNameDict
+HpdfObjNameDict
 HPDF_Catalog_GetNames(HPDF_Catalog catalog)
 {
    if (!catalog)
@@ -98,7 +98,7 @@ HPDF_Catalog_GetNames(HPDF_Catalog catalog)
 
 HpdfStatus
 HPDF_Catalog_SetNames(HPDF_Catalog catalog,
-   HpdfValueNameDict dict)
+   HpdfObjNameDict dict)
 {
    return HPDF_Dict_Add(catalog, "Names", dict);
 }
@@ -107,10 +107,10 @@ HPDF_PageLayout
    HPDF_Catalog_GetPageLayout(
       HPDF_Catalog  catalog)
 {
-   HpdfValueName  *layout;
+   HpdfObjName  *layout;
    HpdfUInt        i = 0;
 
-   layout = (HpdfValueName *) HPDF_Dict_GetItem(catalog, "PageLayout", HPDF_OCLASS_NAME);
+   layout = (HpdfObjName *) HPDF_Dict_GetItem(catalog, "PageLayout", HPDF_OCLASS_NAME);
    if (!layout)
    {
       return HPDF_PAGE_LAYOUT_EOF;
@@ -140,10 +140,10 @@ HPDF_PageMode
    HPDF_Catalog_GetPageMode(
       HPDF_Catalog  catalog)
 {
-   HpdfValueName  *mode;
+   HpdfObjName  *mode;
    HpdfUInt        i = 0;
 
-   mode = (HpdfValueName*) HPDF_Dict_GetItem(catalog, "PageMode", HPDF_OCLASS_NAME);
+   mode = (HpdfObjName*) HPDF_Dict_GetItem(catalog, "PageMode", HPDF_OCLASS_NAME);
    if (!mode)
    {
       return HPDF_PAGE_MODE_USE_NONE;
@@ -348,7 +348,7 @@ HpdfUInt
 {
    HPDF_Dict       preferences;
    HpdfUInt        value = 0;
-   HpdfValueBool  *obj;
+   HpdfObjBool  *obj;
 
    HPDF_PTRACE((" HPDF_Catalog_GetViewerPreference\n"));
 
@@ -360,7 +360,7 @@ HpdfUInt
       return 0;
    }
 
-   obj = (HpdfValueBool *) HPDF_Dict_GetItem(preferences, "HideToolbar", HPDF_OCLASS_BOOLEAN);
+   obj = (HpdfObjBool *) HPDF_Dict_GetItem(preferences, "HideToolbar", HPDF_OCLASS_BOOLEAN);
    if (obj) 
    {
       if (obj->value)
@@ -369,7 +369,7 @@ HpdfUInt
       }
    }
 
-   obj = (HpdfValueBool *) HPDF_Dict_GetItem(preferences, "HideMenubar", HPDF_OCLASS_BOOLEAN);
+   obj = (HpdfObjBool *) HPDF_Dict_GetItem(preferences, "HideMenubar", HPDF_OCLASS_BOOLEAN);
    if (obj) 
    {
       if (obj->value)
@@ -378,7 +378,7 @@ HpdfUInt
       }
    }
 
-   obj = (HpdfValueBool *) HPDF_Dict_GetItem(preferences, "HideWindowUI", HPDF_OCLASS_BOOLEAN);
+   obj = (HpdfObjBool *) HPDF_Dict_GetItem(preferences, "HideWindowUI", HPDF_OCLASS_BOOLEAN);
    if (obj) 
    {
       if (obj->value)
@@ -387,7 +387,7 @@ HpdfUInt
       }
    }
 
-   obj = (HpdfValueBool *) HPDF_Dict_GetItem(preferences, "FitWindow", HPDF_OCLASS_BOOLEAN);
+   obj = (HpdfObjBool *) HPDF_Dict_GetItem(preferences, "FitWindow", HPDF_OCLASS_BOOLEAN);
    if (obj) 
    {
       if (obj->value)
@@ -396,7 +396,7 @@ HpdfUInt
       }
    }
 
-   obj = (HpdfValueBool *) HPDF_Dict_GetItem(preferences, "CenterWindow", HPDF_OCLASS_BOOLEAN);
+   obj = (HpdfObjBool *) HPDF_Dict_GetItem(preferences, "CenterWindow", HPDF_OCLASS_BOOLEAN);
    if (obj) 
    {
       if (obj->value)

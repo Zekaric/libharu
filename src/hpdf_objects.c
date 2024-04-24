@@ -24,14 +24,14 @@ void
       HpdfMemMgr * const mmgr,
       void         *obj)
 {
-   HPDF_Obj_Header *header;
+   HpdfObjHeader *header;
 
    HPDF_PTRACE((" HPDF_Obj_Free\n"));
 
    if (!obj)
       return;
 
-   header = (HPDF_Obj_Header *) obj;
+   header = (HpdfObjHeader *) obj;
 
    if (!(header->obj_id & HPDF_OTYPE_INDIRECT))
       HPDF_Obj_ForceFree(mmgr, obj);
@@ -43,7 +43,7 @@ void
       HpdfMemMgr * const mmgr,
       void              *obj)
 {
-   HPDF_Obj_Header *header;
+   HpdfObjHeader *header;
 
    HPDF_PTRACE((" HPDF_Obj_ForceFree\n"));
 
@@ -52,7 +52,7 @@ void
       return;
    }
 
-   header = (HPDF_Obj_Header *) obj;
+   header = (HpdfObjHeader *) obj;
 
    HPDF_PTRACE(
       (" HPDF_Obj_ForceFree obj=0x%08X obj_id=0x%08X obj_class=0x%08X\n",
@@ -62,11 +62,11 @@ void
    switch (header->obj_class & HPDF_OCLASS_ANY) 
    {
    case HPDF_OCLASS_STRING:
-      HpdfValueStringDestroy(obj);
+      HpdfObjStringDestroy(obj);
       break;
 
    case HPDF_OCLASS_BINARY:
-      HPDF_Binary_Free(obj);
+      HpdfObjBinaryDestroy(obj);
       break;
 
    case HPDF_OCLASS_ARRAY:
@@ -91,7 +91,7 @@ HPDF_Obj_Write(void          *obj,
    HPDF_Stream   stream,
    HPDF_Encrypt  e)
 {
-   HPDF_Obj_Header *header = (HPDF_Obj_Header *) obj;
+   HpdfObjHeader *header = (HpdfObjHeader *) obj;
 
    HPDF_PTRACE((" HPDF_Obj_Write\n"));
 
@@ -106,7 +106,7 @@ HPDF_Obj_Write(void          *obj,
       char *eptr = buf + HPDF_SHORT_BUF_SIZ - 1;
       HPDF_Proxy p = obj;
 
-      header = (HPDF_Obj_Header*) p->obj;
+      header = (HpdfObjHeader*) p->obj;
 
       pbuf = HPDF_IToA(pbuf, header->obj_id & 0x00FFFFFF, eptr);
       *pbuf++ = ' ';
@@ -125,12 +125,12 @@ HpdfStatus
       HPDF_Stream     stream,
       HPDF_Encrypt    e)
 {
-   HPDF_Obj_Header   *header;
+   HpdfObjHeader   *header;
    HpdfStatus         ret;
 
    HPDF_PTRACE((" HPDF_Obj_WriteValue\n"));
 
-   header = (HPDF_Obj_Header *) obj;
+   header = (HpdfObjHeader *) obj;
 
    HPDF_PTRACE(
       (" HPDF_Obj_WriteValue obj=0x%08X obj_class=0x%04X\n",
@@ -140,23 +140,23 @@ HpdfStatus
    switch (header->obj_class & HPDF_OCLASS_ANY) 
    {
    case HPDF_OCLASS_NAME:
-      ret = HpdfValueNameWrite(obj, stream);
+      ret = HpdfObjNameWrite(obj, stream);
       break;
    
    case HPDF_OCLASS_NUMBER:
-      ret = HpdfValueNumIntWrite(obj, stream);
+      ret = HpdfObjNumIntWrite(obj, stream);
       break;
    
    case HPDF_OCLASS_REAL:
-      ret = HpdfValueNumRealWrite(obj, stream);
+      ret = HpdfObjNumRealWrite(obj, stream);
       break;
    
    case HPDF_OCLASS_STRING:
-      ret = HpdfValueStringWrite(obj, stream, e);
+      ret = HpdfObjStringWrite(obj, stream, e);
       break;
    
    case HPDF_OCLASS_BINARY:
-      ret = HPDF_Binary_Write(obj, stream, e);
+      ret = HpdfObjBinaryWrite(obj, stream, e);
       break;
    
    case HPDF_OCLASS_ARRAY:
@@ -168,7 +168,7 @@ HpdfStatus
       break;
    
    case HPDF_OCLASS_BOOLEAN:
-      ret = HpdfValueBoolWrite(obj, stream);
+      ret = HpdfObjBoolWrite(obj, stream);
       break;
 
    case HPDF_OCLASS_DIRECT:
@@ -197,7 +197,7 @@ HPDF_Proxy
 
    if (p)
    {
-      HpdfMemClearType(&p->header, HPDF_Obj_Header);
+      HpdfMemClearType(&p->header, HpdfObjHeader);
       p->header.obj_class = HPDF_OCLASS_PROXY;
       p->obj = obj;
    }

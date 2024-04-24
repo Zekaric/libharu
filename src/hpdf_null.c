@@ -18,14 +18,14 @@
 #include "hpdf_utils.h"
 #include "hpdf_objects.h"
 
-HpdfValueNull *
-   HpdfValueNullCreate(
+HpdfObjNull *
+   HpdfObjNullCreate(
       HpdfMemMgr * const mmgr)
 {
-   HpdfValueNull *obj = HpdfMemCreateType(mmgr, HpdfValueNull);
+   HpdfObjNull *obj = HpdfMemCreateType(mmgr, HpdfObjNull);
    if (obj)
    {
-      HpdfMemClearType(&obj->header, HPDF_Obj_Header);
+      HpdfMemClearType(&obj->header, HpdfObjHeader);
       obj->header.obj_class = HPDF_OCLASS_NULL;
    }
 

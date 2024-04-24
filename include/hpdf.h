@@ -54,7 +54,7 @@
 #include "hpdf_types.h"
 
 typedef void          HPDF_HANDLE;
-typedef HPDF_HANDLE   HpdfValueBool;
+typedef HPDF_HANDLE   HpdfObjBool;
 typedef HPDF_HANDLE   HpdfDoc;
 typedef HPDF_HANDLE   HPDF_Page;
 typedef HPDF_HANDLE   HPDF_Pages;

@@ -291,14 +291,14 @@ HPDF_EXPORT(HPDF_Dict)
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(view, "XN", HpdfValueStringCreate(mmgr, name, NULL));
+   ret = HPDF_Dict_Add(view, "XN", HpdfObjStringCreate(mmgr, name, NULL));
    if (ret != HPDF_OK) 
    {
       HPDF_Dict_Free(view);
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(view, "IN", HpdfValueStringCreate(mmgr, name, NULL));
+   ret = HPDF_Dict_Add(view, "IN", HpdfObjStringCreate(mmgr, name, NULL));
    if (ret != HPDF_OK) {
       HPDF_Dict_Free(view);
       return NULL;
@@ -372,7 +372,7 @@ HPDF_EXPORT(HpdfStatus) HPDF_U3D_SetDefault3DView(HPDF_U3D u3d, char const *name
       return HPDF_INVALID_U3D_DATA;
    }
 
-   ret = HPDF_Dict_Add(u3d, "DV", HpdfValueStringCreate(u3d->mmgr, name, NULL));
+   ret = HPDF_Dict_Add(u3d, "DV", HpdfObjStringCreate(u3d->mmgr, name, NULL));
    return ret;
 }
 
@@ -431,7 +431,7 @@ HPDF_EXPORT(HPDF_Dict) HPDF_3DView_CreateNode(HPDF_Dict view, char const *name)
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(node, "N", HpdfValueStringCreate(view->mmgr, name, NULL));
+   ret = HPDF_Dict_Add(node, "N", HpdfObjStringCreate(view->mmgr, name, NULL));
    if (ret != HPDF_OK) 
    {
       HPDF_Dict_Free(node);
@@ -1114,14 +1114,14 @@ HPDF_Dict
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(view, "XN", HpdfValueStringCreate(mmgr, name, NULL));
+   ret = HPDF_Dict_Add(view, "XN", HpdfObjStringCreate(mmgr, name, NULL));
    if (ret != HPDF_OK) 
    {
       HPDF_Dict_Free(view);
       return NULL;
    }
 
-   ret = HPDF_Dict_Add(view, "IN", HpdfValueStringCreate(mmgr, name, NULL));
+   ret = HPDF_Dict_Add(view, "IN", HpdfObjStringCreate(mmgr, name, NULL));
    if (ret != HPDF_OK) 
    {
       HPDF_Dict_Free(view);

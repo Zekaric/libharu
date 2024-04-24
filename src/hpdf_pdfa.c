@@ -340,12 +340,12 @@ HPDF_PDFA_GenerateID(
       HPDF_MD5Update(&md5_ctx, currentTime, HPDF_StrLen((char const *) currentTime, -1));
       HPDF_MD5Final(idkey, &md5_ctx);
 
-      if (HPDF_Array_Add(id, HPDF_Binary_New(doc->mmgr, idkey, HPDF_MD5_KEY_LEN)) != HPDF_OK)
+      if (HPDF_Array_Add(id, HpdfObjBinaryCreate(doc->mmgr, idkey, HPDF_MD5_KEY_LEN)) != HPDF_OK)
       {
          return doc->error.error_no;
       }
 
-      if (HPDF_Array_Add(id, HPDF_Binary_New(doc->mmgr, idkey, HPDF_MD5_KEY_LEN)) != HPDF_OK)
+      if (HPDF_Array_Add(id, HpdfObjBinaryCreate(doc->mmgr, idkey, HPDF_MD5_KEY_LEN)) != HPDF_OK)
       {
          return doc->error.error_no;
       }
@@ -402,15 +402,15 @@ HPDF_PDFA_AppendOutputIntents(
    ret += HPDF_Dict_Add(
       intent, 
       "OutputConditionIdentifier", 
-      HpdfValueStringCreate(doc->mmgr, iccname, NULL));
+      HpdfObjStringCreate(doc->mmgr, iccname, NULL));
    ret += HPDF_Dict_Add(
       intent, 
       "OutputCondition", 
-      HpdfValueStringCreate(doc->mmgr, iccname, NULL));
+      HpdfObjStringCreate(doc->mmgr, iccname, NULL));
    ret += HPDF_Dict_Add(
       intent, 
       "Info",
-      HpdfValueStringCreate(doc->mmgr, iccname, NULL));
+      HpdfObjStringCreate(doc->mmgr, iccname, NULL));
    ret += HPDF_Dict_Add(    intent, "DestOutputProfile ", iccdict);
    if (ret != HPDF_OK)
    {

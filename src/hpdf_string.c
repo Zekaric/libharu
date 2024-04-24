@@ -30,20 +30,20 @@ static HpdfByte const UNICODE_HEADER[] =
    0xFE, 0xFF
 };
 
-HpdfValueString *
-   HpdfValueStringCreate(
+HpdfObjString *
+   HpdfObjStringCreate(
       HpdfMemMgr * const    mmgr,
       char const           *value,
       HpdfEncoder * const   encoder)
 {
-   HpdfValueString   *obj;
+   HpdfObjString   *obj;
 
-   HPDF_PTRACE((" HpdfValueStringCreate\n"));
+   HPDF_PTRACE((" HpdfObjStringCreate\n"));
 
-   obj = HpdfMemCreateType(mmgr, HpdfValueString);
+   obj = HpdfMemCreateType(mmgr, HpdfObjString);
    if (obj) 
    {
-      HpdfMemClearType(&obj->header, HPDF_Obj_Header);
+      HpdfMemClearType(&obj->header, HpdfObjHeader);
       
       obj->header.obj_class = HPDF_OCLASS_STRING;
       obj->mmgr             = mmgr;
@@ -52,7 +52,7 @@ HpdfValueString *
       obj->value            = NULL;
       obj->len              = 0;
 
-      if (HpdfValueStringSet(obj, value) != HPDF_OK) 
+      if (HpdfObjStringSet(obj, value) != HPDF_OK) 
       {
          HpdfMemDestroy(obj->mmgr, obj);
          return NULL;
@@ -63,18 +63,18 @@ HpdfValueString *
 }
 
 #if defined(WIN32)
-HpdfValueString *
-   HpdfValueStringCreateW(
+HpdfObjString *
+   HpdfObjStringCreateW(
       HpdfMemMgr * const    mmgr,
       wchar_t const        *value,
       HpdfEncoder * const   encoder)
 {
-   HpdfValueString   *obj;
+   HpdfObjString   *obj;
    size_t             valueLen;
    char              *utf8Value;
    int                utf8ValueLen;
 
-   HPDF_PTRACE((" HpdfValueStringCreateW\n"));
+   HPDF_PTRACE((" HpdfObjStringCreateW\n"));
 
    /* Convert the wchar_t to UTF8 char * */
    valueLen = wcslen(value);
@@ -88,7 +88,7 @@ HpdfValueString *
    }
 
    /* Use the existing function to get the string. */
-   obj = HpdfValueStringCreate(mmgr, utf8Value, encoder);
+   obj = HpdfObjStringCreate(mmgr, utf8Value, encoder);
 
    /* Clean up */
    HpdfMemDestroy(mmgr, utf8Value);
@@ -98,14 +98,14 @@ HpdfValueString *
 #endif
 
 HpdfStatus
-   HpdfValueStringSet(
-      HpdfValueString * const  obj,
+   HpdfObjStringSet(
+      HpdfObjString * const  obj,
       char const              *value)
 {
    HpdfUInt   len;
    HpdfStatus ret = HPDF_OK;
 
-   HPDF_PTRACE((" HpdfValueStringSet\n"));
+   HPDF_PTRACE((" HpdfObjStringSet\n"));
 
    if (obj->value) 
    {
@@ -133,23 +133,23 @@ HpdfStatus
 }
 
 void
-   HpdfValueStringDestroy(
-      HpdfValueString * const obj)
+   HpdfObjStringDestroy(
+      HpdfObjString * const obj)
 {
    if (!obj)
    {
       return;
    }
 
-   HPDF_PTRACE((" HpdfValueStringDestroy\n"));
+   HPDF_PTRACE((" HpdfObjStringDestroy\n"));
 
    HpdfMemDestroy(obj->mmgr, obj->value);
    HpdfMemDestroy(obj->mmgr, obj);
 }
 
 HpdfStatus
-   HpdfValueStringWrite(
-      HpdfValueString const * const  obj,
+   HpdfObjStringWrite(
+      HpdfObjString const * const  obj,
       HPDF_Stream                    stream,
       HPDF_Encrypt                   e)
 {
@@ -157,7 +157,7 @@ HpdfStatus
 
    /*  When encoder is not NULL, text is changed to unicode using encoder,
    **  and it outputs by HPDF_write_binary method. */
-   HPDF_PTRACE((" HpdfValueStringWrite\n"));
+   HPDF_PTRACE((" HpdfObjStringWrite\n"));
 
    if (e)
    {
@@ -267,9 +267,9 @@ HpdfStatus
 }
 
 HpdfInt32
-   HpdfValueStringCmp(
-      HpdfValueString const * const s1,
-      HpdfValueString const * const s2)
+   HpdfObjStringCmp(
+      HpdfObjString const * const s1,
+      HpdfObjString const * const s2)
 {
    HpdfInt32 res;
    HpdfUInt  minLen;

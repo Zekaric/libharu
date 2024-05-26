@@ -32,7 +32,7 @@ HpdfStatus
 {
    HpdfArray *array;
    HpdfStatus ret = HPDF_OK;
-   array = HPDF_Array_New(dict->mmgr);
+   array = HpdfArrayCreate(dict->mmgr);
    if (!array)
    {
       return HPDF_Error_GetCode(dict->error);
@@ -43,9 +43,9 @@ HpdfStatus
       return HPDF_Error_GetCode(dict->error);
    }
 
-   ret += HPDF_Array_AddReal(array, point.x);
-   ret += HPDF_Array_AddReal(array, point.y);
-   ret += HPDF_Array_AddReal(array, point.z);
+   ret += HpdfArrayAddReal(array, point.x);
+   ret += HpdfArrayAddReal(array, point.y);
+   ret += HpdfArrayAddReal(array, point.z);
 
    return ret;
 }
@@ -90,24 +90,29 @@ HPDF_3DMeasure
 
 
 HPDF_EXPORT(HpdfStatus)
-HPDF_3DMeasure_SetColor(HPDF_3DMeasure measure,
-   HPDF_RGBColor color)
+   HPDF_3DMeasure_SetColor(
+      HPDF_3DMeasure measure,
+      HPDF_RGBColor color)
 {
    HpdfArray *array;
    HpdfStatus ret = HPDF_OK;
 
-   array = HPDF_Array_New(measure->mmgr);
+   array = HpdfArrayCreate(measure->mmgr);
    if (!array)
+   {
       return HPDF_Error_GetCode(measure->error);
+   }
 
    ret = HPDF_Dict_Add(measure, "C", array);
    if (ret != HPDF_OK)
+   {
       return ret;
+   }
 
-   ret += HPDF_Array_AddName(array, "DeviceRGB");
-   ret += HPDF_Array_AddReal(array, color.r);
-   ret += HPDF_Array_AddReal(array, color.g);
-   ret += HPDF_Array_AddReal(array, color.b);
+   ret += HpdfArrayAddName(array, "DeviceRGB");
+   ret += HpdfArrayAddReal(array, color.r);
+   ret += HpdfArrayAddReal(array, color.g);
+   ret += HpdfArrayAddReal(array, color.b);
 
    return ret;
 }
@@ -144,23 +149,28 @@ HPDF_EXPORT(HpdfStatus)
 }
 
 HPDF_EXPORT(HpdfStatus)
-HPDF_3DC3DMeasure_SetTextBoxSize(HPDF_3DMeasure measure,
-   HpdfInt32 x,
-   HpdfInt32 y)
+   HPDF_3DC3DMeasure_SetTextBoxSize(
+      HPDF_3DMeasure measure,
+      HpdfInt32 x,
+      HpdfInt32 y)
 {
    HpdfArray *array;
    HpdfStatus ret = HPDF_OK;
 
-   array = HPDF_Array_New(measure->mmgr);
+   array = HpdfArrayCreate(measure->mmgr);
    if (!array)
+   {
       return HPDF_Error_GetCode(measure->error);
+   }
 
    ret = HPDF_Dict_Add(measure, "TB", array);
    if (ret != HPDF_OK)
+   {
       return ret;
+   }
 
-   ret += HPDF_Array_AddNumber(array, x);
-   ret += HPDF_Array_AddNumber(array, y);
+   ret += HpdfArrayAddNumber(array, x);
+   ret += HpdfArrayAddNumber(array, y);
 
    return ret;
 }

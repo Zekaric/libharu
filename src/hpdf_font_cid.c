@@ -175,9 +175,11 @@ HPDF_Font
    if (ret != HPDF_OK)
       return NULL;
 
-   descendant_fonts = HPDF_Array_New(mmgr);
+   descendant_fonts = HpdfArrayCreate(mmgr);
    if (!descendant_fonts)
+   {
       return NULL;
+   }
 
    if (HPDF_Dict_Add(font, "DescendantFonts", descendant_fonts) != HPDF_OK)
       return NULL;
@@ -192,11 +194,16 @@ HPDF_Font
    }
 
    if (!attr->descendant_font)
+   {
       return NULL;
+   }
    else
-      if (HPDF_Array_Add(descendant_fonts, attr->descendant_font) !=
-         HPDF_OK)
+   {
+      if (HpdfArrayAdd(descendant_fonts, attr->descendant_font) != HPDF_OK)
+      {
          return NULL;
+      }
+   }
 
    return font;
 }
@@ -254,7 +261,7 @@ static HPDF_Font
    }
 
    /* add 'DW2' element */
-   array = HPDF_Array_New(parent->mmgr);
+   array = HpdfArrayCreate(parent->mmgr);
    if (!array)
    {
       return NULL;
@@ -265,8 +272,8 @@ static HPDF_Font
       return NULL;
    }
 
-   ret += HPDF_Array_AddNumber(array, fontdef_attr->DW2[0]);
-   ret += HPDF_Array_AddNumber(array, fontdef_attr->DW2[1]);
+   ret += HpdfArrayAddNumber(array, fontdef_attr->DW2[0]);
+   ret += HpdfArrayAddNumber(array, fontdef_attr->DW2[1]);
 
    if (ret != HPDF_OK)
    {
@@ -274,7 +281,7 @@ static HPDF_Font
    }
 
    /* add 'W' element */
-   array = HPDF_Array_New(parent->mmgr);
+   array = HpdfArrayCreate(parent->mmgr);
    if (!array)
    {
       return NULL;
@@ -293,17 +300,17 @@ static HPDF_Font
       if (w->cid != save_cid + 1 || 
           !sub_array) 
       {
-         sub_array = HPDF_Array_New(parent->mmgr);
+         sub_array = HpdfArrayCreate(parent->mmgr);
          if (!sub_array)
          {
             return NULL;
          }
 
-         ret += HPDF_Array_AddNumber(array, w->cid);
-         ret += HPDF_Array_Add(      array, sub_array);
+         ret += HpdfArrayAddNumber(array, w->cid);
+         ret += HpdfArrayAdd(      array, sub_array);
       }
 
-      ret += HPDF_Array_AddNumber(sub_array, w->width);
+      ret += HpdfArrayAddNumber(sub_array, w->width);
       save_cid = w->cid;
 
       if (ret != HPDF_OK)
@@ -342,7 +349,7 @@ static HPDF_Font
       return NULL;
    }
 
-   array = HPDF_Box_Array_New(parent->mmgr, fontdef->font_bbox);
+   array = HpdfBoxArrayCreate(parent->mmgr, fontdef->font_bbox);
    if (!array)
    {
       return NULL;
@@ -429,7 +436,7 @@ static HPDF_Font
    }
 
    /* add 'DW2' element */
-   array = HPDF_Array_New(font->mmgr);
+   array = HpdfArrayCreate(font->mmgr);
    if (!array)
    {
       return NULL;
@@ -440,8 +447,8 @@ static HPDF_Font
       return NULL;
    }
 
-   ret += HPDF_Array_AddNumber(array, (HpdfInt32) (fontdef->font_bbox.bottom));
-   ret += HPDF_Array_AddNumber(
+   ret += HpdfArrayAddNumber(array, (HpdfInt32) (fontdef->font_bbox.bottom));
+   ret += HpdfArrayAddNumber(
       array, 
       (HpdfInt32) (fontdef->font_bbox.bottom - fontdef->font_bbox.top));
 
@@ -494,7 +501,7 @@ static HPDF_Font
       HpdfArray   *tmp_array  = NULL;
 
       /* add 'W' element */
-      array = HPDF_Array_New(font->mmgr);
+      array = HpdfArrayCreate(font->mmgr);
       if (!array)
       {
          return NULL;
@@ -513,24 +520,24 @@ static HPDF_Font
          {
             if (!tmp_array) 
             {
-               if (HPDF_Array_AddNumber(array, i) != HPDF_OK)
+               if (HpdfArrayAddNumber(array, i) != HPDF_OK)
                {
                   return NULL;
                }
 
-               tmp_array = HPDF_Array_New(font->mmgr);
+               tmp_array = HpdfArrayCreate(font->mmgr);
                if (!tmp_array)
                {
                   return NULL;
                }
 
-               if (HPDF_Array_Add(array, tmp_array) != HPDF_OK)
+               if (HpdfArrayAdd(array, tmp_array) != HPDF_OK)
                {
                   return NULL;
                }
             }
 
-            ret = HPDF_Array_AddNumber(tmp_array, w);
+            ret = HpdfArrayAddNumber(tmp_array, w);
             if (ret != HPDF_OK)
             {
                return NULL;
@@ -663,7 +670,7 @@ CIDFontType2_BeforeWrite_Func(HPDF_Dict obj)
       ret += HPDF_Dict_AddNumber(descriptor, "CapHeight", def->cap_height);
       ret += HPDF_Dict_AddNumber(descriptor, "Flags", def->flags);
 
-      array = HPDF_Box_Array_New(obj->mmgr, def->font_bbox);
+      array = HpdfBoxArrayCreate(obj->mmgr, def->font_bbox);
       ret += HPDF_Dict_Add(descriptor, "FontBBox", array);
 
       ret += HPDF_Dict_AddName(descriptor, "FontName", def_attr->base_font);

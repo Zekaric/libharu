@@ -175,7 +175,7 @@ static HpdfStatus
       ret += HPDF_Dict_AddNumber(descriptor, "Descent", def->descent);
       ret += HPDF_Dict_AddNumber(descriptor, "Flags", def->flags);
 
-      array = HPDF_Box_Array_New(mmgr, def->font_bbox);
+      array = HpdfBoxArrayCreate(mmgr, def->font_bbox);
       ret += HPDF_Dict_Add(descriptor, "FontBBox", array);
 
       ret += HPDF_Dict_AddName(descriptor, "FontName",

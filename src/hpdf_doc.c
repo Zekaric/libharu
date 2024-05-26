@@ -660,8 +660,7 @@ HpdfStatus
    id = HPDF_Dict_GetItem(doc->trailer, "ID", HPDF_OCLASS_ARRAY);
    if (!id) 
    {
-      id = HPDF_Array_New(doc->mmgr);
-
+      id = HpdfArrayCreate(doc->mmgr);
       if (!id || 
           HPDF_Dict_Add(doc->trailer, "ID", id) != HPDF_OK)
       {
@@ -670,15 +669,15 @@ HpdfStatus
    }
    else
    {
-      HPDF_Array_Clear(id);
+      HpdfArrayClear(id);
    }
 
-   if (HPDF_Array_Add(id, HpdfObjBinaryCreate(doc->mmgr, e->encrypt_id, HPDF_ID_LEN)) != HPDF_OK)
+   if (HpdfArrayAdd(id, HpdfObjBinaryCreate(doc->mmgr, e->encrypt_id, HPDF_ID_LEN)) != HPDF_OK)
    {
       return doc->error.error_no;
    }
 
-   if (HPDF_Array_Add(id, HpdfObjBinaryCreate(doc->mmgr, e->encrypt_id, HPDF_ID_LEN)) != HPDF_OK)
+   if (HpdfArrayAdd(id, HpdfObjBinaryCreate(doc->mmgr, e->encrypt_id, HPDF_ID_LEN)) != HPDF_OK)
    {
       return doc->error.error_no;
    }
@@ -3054,7 +3053,7 @@ HPDF_EXPORT(HpdfStatus)
    intents = HPDF_Dict_GetItem(doc->catalog, "OutputIntents", HPDF_OCLASS_ARRAY);
    if (intents == NULL) 
    {
-      intents = HPDF_Array_New(doc->mmgr);
+      intents = HpdfArrayCreate(doc->mmgr);
       if (intents) 
       {
          HpdfStatus ret = HPDF_Dict_Add(doc->catalog, "OutputIntents", intents);
@@ -3066,7 +3065,7 @@ HPDF_EXPORT(HpdfStatus)
       }
    }
 
-   HPDF_Array_Add(intents, intent);
+   HpdfArrayAdd(intents, intent);
    return HPDF_Error_GetDetailCode(&doc->error);
 }
 
@@ -3163,24 +3162,24 @@ HPDF_EXPORT(HpdfArray *)
       return NULL;
    }
 
-   iccentry = HPDF_Array_New(doc->mmgr);
+   iccentry = HpdfArrayCreate(doc->mmgr);
    if (!iccentry)
    {
       return NULL;
    }
 
-   ret = HPDF_Array_AddName(iccentry, "ICCBased");
+   ret = HpdfArrayAddName(iccentry, "ICCBased");
    if (ret != HPDF_OK) 
    {
-      HPDF_Array_Free(iccentry);
+      HpdfArrayDestroy(iccentry);
       HPDF_CheckError(&doc->error);
       return NULL;
    }
 
-   ret = HPDF_Array_Add(iccentry, icc);
+   ret = HpdfArrayAdd(iccentry, icc);
    if (ret != HPDF_OK) 
    {
-      HPDF_Array_Free(iccentry);
+      HpdfArrayDestroy(iccentry);
       return NULL;
    }
    return iccentry;

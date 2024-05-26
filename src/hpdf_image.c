@@ -151,7 +151,7 @@ static HpdfStatus
       break;
    
    case 4:
-      array = HPDF_Array_New(image->mmgr);
+      array = HpdfArrayCreate(image->mmgr);
       if (!array)
       {
          return HPDF_Error_GetCode(stream->error);
@@ -163,14 +163,14 @@ static HpdfStatus
          return HPDF_Error_GetCode(stream->error);
       }
 
-      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 0));
-      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 0));
-      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 0));
-      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 1));
-      ret += HPDF_Array_Add(array, HpdfObjNumIntCreate(image->mmgr, 0));
+      ret += HpdfArrayAdd(array, HpdfObjNumIntCreate(image->mmgr, 1));
+      ret += HpdfArrayAdd(array, HpdfObjNumIntCreate(image->mmgr, 0));
+      ret += HpdfArrayAdd(array, HpdfObjNumIntCreate(image->mmgr, 1));
+      ret += HpdfArrayAdd(array, HpdfObjNumIntCreate(image->mmgr, 0));
+      ret += HpdfArrayAdd(array, HpdfObjNumIntCreate(image->mmgr, 1));
+      ret += HpdfArrayAdd(array, HpdfObjNumIntCreate(image->mmgr, 0));
+      ret += HpdfArrayAdd(array, HpdfObjNumIntCreate(image->mmgr, 1));
+      ret += HpdfArrayAdd(array, HpdfObjNumIntCreate(image->mmgr, 0));
 
       if (ret != HPDF_OK)
       {
@@ -559,7 +559,7 @@ HPDF_EXPORT(char const*)
 
       if (a) 
       {
-         n = HPDF_Array_GetItem(a, 0, HPDF_OCLASS_NAME);
+         n = HpdfArrayGetItem(a, 0, HPDF_OCLASS_NAME);
       }
    }
 
@@ -668,17 +668,19 @@ HPDF_Image_SetColorMask(HPDF_Image   image,
    if (rmax > 255 || gmax > 255 || bmax > 255)
       return HPDF_RaiseError(image->error, HPDF_INVALID_PARAMETER, 0);
 
-   array = HPDF_Array_New(image->mmgr);
+   array = HpdfArrayCreate(image->mmgr);
    if (!array)
+   {
       return HPDF_CheckError(image->error);
+   }
 
    ret += HPDF_Dict_Add(image, "Mask", array);
-   ret += HPDF_Array_AddNumber(array, rmin);
-   ret += HPDF_Array_AddNumber(array, rmax);
-   ret += HPDF_Array_AddNumber(array, gmin);
-   ret += HPDF_Array_AddNumber(array, gmax);
-   ret += HPDF_Array_AddNumber(array, bmin);
-   ret += HPDF_Array_AddNumber(array, bmax);
+   ret += HpdfArrayAddNumber(array, rmin);
+   ret += HpdfArrayAddNumber(array, rmax);
+   ret += HpdfArrayAddNumber(array, gmin);
+   ret += HpdfArrayAddNumber(array, gmax);
+   ret += HpdfArrayAddNumber(array, bmin);
+   ret += HpdfArrayAddNumber(array, bmax);
 
    if (ret != HPDF_OK)
       return HPDF_CheckError(image->error);

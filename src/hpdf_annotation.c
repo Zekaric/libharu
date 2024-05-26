@@ -131,7 +131,7 @@ HPDF_Annotation
       return NULL;
    }
 
-   array = HPDF_Array_New(mmgr);
+   array = HpdfArrayCreate(mmgr);
    if (!array)
    {
       return NULL;
@@ -149,10 +149,10 @@ HPDF_Annotation
       rectTemp.bottom = rect.top;
    }
 
-   ret += HPDF_Array_AddReal(array, rectTemp.left);
-   ret += HPDF_Array_AddReal(array, rectTemp.bottom);
-   ret += HPDF_Array_AddReal(array, rectTemp.right);
-   ret += HPDF_Array_AddReal(array, rectTemp.top);
+   ret += HpdfArrayAddReal(array, rectTemp.left);
+   ret += HpdfArrayAddReal(array, rectTemp.bottom);
+   ret += HpdfArrayAddReal(array, rectTemp.right);
+   ret += HpdfArrayAddReal(array, rectTemp.top);
 
    ret += HPDF_Dict_AddName(annot, "Type",    "Annot");
    ret += HPDF_Dict_AddName(annot, "Subtype", HPDF_ANNOT_TYPE_NAMES[(HpdfInt) type]);
@@ -168,7 +168,8 @@ HPDF_Annotation
 }
 
 HPDF_EXPORT(HpdfStatus)
-HPDF_Annotation_SetBorderStyle(HPDF_Annotation  annot,
+   HPDF_Annotation_SetBorderStyle(
+      HPDF_Annotation  annot,
    HPDF_BSSubtype   subtype,
    HpdfReal        width,
    HpdfUInt16      dash_on,
@@ -188,20 +189,25 @@ HPDF_Annotation_SetBorderStyle(HPDF_Annotation  annot,
    if ((ret = HPDF_Dict_Add(annot, "BS", bs)) != HPDF_OK)
       return ret;
 
-   if (subtype == HPDF_BS_DASHED) {
-      dash = HPDF_Array_New(annot->mmgr);
+   if (subtype == HPDF_BS_DASHED) 
+   {
+      dash = HpdfArrayCreate(annot->mmgr);
       if (!dash)
+      {
          return HPDF_Error_GetCode(annot->error);
+      }
 
       if ((ret = HPDF_Dict_Add(bs, "D", dash)) != HPDF_OK)
          return ret;
 
       ret += HPDF_Dict_AddName(bs, "Type", "Border");
-      ret += HPDF_Array_AddReal(dash, dash_on);
-      ret += HPDF_Array_AddReal(dash, dash_off);
+      ret += HpdfArrayAddReal(dash, dash_on);
+      ret += HpdfArrayAddReal(dash, dash_off);
 
       if (dash_phase  != 0)
-         ret += HPDF_Array_AddReal(dash, dash_off);
+      {
+         ret += HpdfArrayAddReal(dash, dash_off);
+      }
    }
 
    switch (subtype) {
@@ -370,31 +376,38 @@ HPDF_LinkAnnot_SetBorderStyle(HPDF_Annotation  annot,
    if (width < 0)
       return HPDF_RaiseError(annot->error, HPDF_INVALID_PARAMETER, 0);
 
-   array = HPDF_Array_New(annot->mmgr);
+   array = HpdfArrayCreate(annot->mmgr);
    if (!array)
+   {
       return HPDF_CheckError(annot->error);
+   }
 
    if ((ret = HPDF_Dict_Add(annot, "Border", array)) != HPDF_OK)
       return HPDF_CheckError(annot->error);
 
-   ret += HPDF_Array_AddNumber(array, 0);
-   ret += HPDF_Array_AddNumber(array, 0);
-   ret += HPDF_Array_AddReal(array, width);
+   ret += HpdfArrayAddNumber(array, 0);
+   ret += HpdfArrayAddNumber(array, 0);
+   ret += HpdfArrayAddReal(array, width);
 
    if (ret != HPDF_OK)
       return HPDF_CheckError(annot->error);
 
    if (dash_on && dash_off) 
    {
-      HpdfArray *dash = HPDF_Array_New(annot->mmgr);
+      HpdfArray *dash = HpdfArrayCreate(annot->mmgr);
       if (!dash)
+      {
          return HPDF_CheckError(annot->error);
+      }
 
-      if ((ret = HPDF_Array_Add(array, dash)) != HPDF_OK)
+      ret = HpdfArrayAdd(array, dash);
+      if (ret != HPDF_OK)
+      {
          return HPDF_CheckError(annot->error);
+      }
 
-      ret += HPDF_Array_AddNumber(dash, dash_on);
-      ret += HPDF_Array_AddNumber(dash, dash_off);
+      ret += HpdfArrayAddNumber(dash, dash_on);
+      ret += HpdfArrayAddNumber(dash, dash_off);
 
       if (ret != HPDF_OK)
          return HPDF_CheckError(annot->error);
@@ -586,14 +599,16 @@ HPDF_Annot_SetRGBColor(HPDF_Annotation annot, HPDF_RGBColor color)
 
    HPDF_PTRACE((" HPDF_Annot_SetRGBColor\n"));
 
-   cArray = HPDF_Array_New(annot->mmgr);
+   cArray = HpdfArrayCreate(annot->mmgr);
    if (!cArray)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    ret += HPDF_Dict_Add(annot, "C", cArray);
-   ret += HPDF_Array_AddReal(cArray, color.r);
-   ret += HPDF_Array_AddReal(cArray, color.g);
-   ret += HPDF_Array_AddReal(cArray, color.b);
+   ret += HpdfArrayAddReal(cArray, color.r);
+   ret += HpdfArrayAddReal(cArray, color.g);
+   ret += HpdfArrayAddReal(cArray, color.b);
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(annot->error);
@@ -609,15 +624,17 @@ HPDF_Annot_SetCMYKColor(HPDF_Annotation annot, HPDF_CMYKColor color)
 
    HPDF_PTRACE((" HPDF_Annot_SetCMYKColor\n"));
 
-   cArray = HPDF_Array_New(annot->mmgr);
+   cArray = HpdfArrayCreate(annot->mmgr);
    if (!cArray)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    ret += HPDF_Dict_Add(annot, "C", cArray);
-   ret += HPDF_Array_AddReal(cArray, color.c);
-   ret += HPDF_Array_AddReal(cArray, color.m);
-   ret += HPDF_Array_AddReal(cArray, color.y);
-   ret += HPDF_Array_AddReal(cArray, color.k);
+   ret += HpdfArrayAddReal(cArray, color.c);
+   ret += HpdfArrayAddReal(cArray, color.m);
+   ret += HpdfArrayAddReal(cArray, color.y);
+   ret += HpdfArrayAddReal(cArray, color.k);
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(annot->error);
@@ -633,12 +650,14 @@ HPDF_Annot_SetGrayColor(HPDF_Annotation annot, HpdfReal color)
 
    HPDF_PTRACE((" HPDF_Annot_SetGrayColor\n"));
 
-   cArray = HPDF_Array_New(annot->mmgr);
+   cArray = HpdfArrayCreate(annot->mmgr);
    if (!cArray)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    ret += HPDF_Dict_Add(annot, "C", cArray);
-   ret += HPDF_Array_AddReal(cArray, color);
+   ret += HpdfArrayAddReal(cArray, color);
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(annot->error);
@@ -654,9 +673,11 @@ HPDF_Annot_SetNoColor(HPDF_Annotation annot)
 
    HPDF_PTRACE((" HPDF_Annot_SetNoColor\n"));
 
-   cArray = HPDF_Array_New(annot->mmgr);
+   cArray = HpdfArrayCreate(annot->mmgr);
    if (!cArray)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    ret = HPDF_Dict_Add(annot, "C", cArray);
 
@@ -791,14 +812,16 @@ HPDF_MarkupAnnot_SetInteriorRGBColor(HPDF_Annotation  annot, HPDF_RGBColor color
 
    HPDF_PTRACE((" HPDF_MarkupAnnot_SetInteriorRGBColor\n"));
 
-   cArray = HPDF_Array_New(annot->mmgr);
+   cArray = HpdfArrayCreate(annot->mmgr);
    if (!cArray)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    ret += HPDF_Dict_Add(annot, "IC", cArray);
-   ret += HPDF_Array_AddReal(cArray, color.r);
-   ret += HPDF_Array_AddReal(cArray, color.g);
-   ret += HPDF_Array_AddReal(cArray, color.b);
+   ret += HpdfArrayAddReal(cArray, color.r);
+   ret += HpdfArrayAddReal(cArray, color.g);
+   ret += HpdfArrayAddReal(cArray, color.b);
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(annot->error);
@@ -814,15 +837,17 @@ HPDF_MarkupAnnot_SetInteriorCMYKColor(HPDF_Annotation  annot, HPDF_CMYKColor col
 
    HPDF_PTRACE((" HPDF_MarkupAnnot_SetInteriorCMYKColor\n"));
 
-   cArray = HPDF_Array_New(annot->mmgr);
+   cArray = HpdfArrayCreate(annot->mmgr);
    if (!cArray)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    ret += HPDF_Dict_Add(annot, "IC", cArray);
-   ret += HPDF_Array_AddReal(cArray, color.c);
-   ret += HPDF_Array_AddReal(cArray, color.m);
-   ret += HPDF_Array_AddReal(cArray, color.y);
-   ret += HPDF_Array_AddReal(cArray, color.k);
+   ret += HpdfArrayAddReal(cArray, color.c);
+   ret += HpdfArrayAddReal(cArray, color.m);
+   ret += HpdfArrayAddReal(cArray, color.y);
+   ret += HpdfArrayAddReal(cArray, color.k);
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(annot->error);
@@ -838,12 +863,14 @@ HPDF_MarkupAnnot_SetInteriorGrayColor(HPDF_Annotation  annot, HpdfReal color)/* 
 
    HPDF_PTRACE((" HPDF_MarkupAnnot_SetInteriorGrayColor\n"));
 
-   cArray = HPDF_Array_New(annot->mmgr);
+   cArray = HpdfArrayCreate(annot->mmgr);
    if (!cArray)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    ret += HPDF_Dict_Add(annot, "IC", cArray);
-   ret += HPDF_Array_AddReal(cArray, color);
+   ret += HpdfArrayAddReal(cArray, color);
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(annot->error);
@@ -859,9 +886,11 @@ HPDF_MarkupAnnot_SetInteriorTransparent(HPDF_Annotation  annot) /* IC with No Co
 
    HPDF_PTRACE((" HPDF_MarkupAnnot_SetInteriorTransparent\n"));
 
-   cArray = HPDF_Array_New(annot->mmgr);
+   cArray = HpdfArrayCreate(annot->mmgr);
    if (!cArray)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    ret = HPDF_Dict_Add(annot, "IC", cArray);
 
@@ -1042,7 +1071,7 @@ HPDF_EXPORT(HpdfStatus)
 
    HPDF_PTRACE((" HPDF_TextMarkupAnnot_SetQuadPoints\n"));
 
-   quadPoints = HPDF_Array_New(annot->mmgr);
+   quadPoints = HpdfArrayCreate(annot->mmgr);
    if (!quadPoints)
    {
       return HPDF_Error_GetCode(annot->error);
@@ -1053,14 +1082,14 @@ HPDF_EXPORT(HpdfStatus)
       return ret;
    }
 
-   ret += HPDF_Array_AddReal(quadPoints, lb.x);
-   ret += HPDF_Array_AddReal(quadPoints, lb.y);
-   ret += HPDF_Array_AddReal(quadPoints, rb.x);
-   ret += HPDF_Array_AddReal(quadPoints, rb.y);
-   ret += HPDF_Array_AddReal(quadPoints, lt.x);
-   ret += HPDF_Array_AddReal(quadPoints, lt.y);
-   ret += HPDF_Array_AddReal(quadPoints, rt.x);
-   ret += HPDF_Array_AddReal(quadPoints, rt.y);
+   ret += HpdfArrayAddReal(quadPoints, lb.x);
+   ret += HpdfArrayAddReal(quadPoints, lb.y);
+   ret += HpdfArrayAddReal(quadPoints, rb.x);
+   ret += HpdfArrayAddReal(quadPoints, rb.y);
+   ret += HpdfArrayAddReal(quadPoints, lt.x);
+   ret += HpdfArrayAddReal(quadPoints, lt.y);
+   ret += HpdfArrayAddReal(quadPoints, rt.x);
+   ret += HpdfArrayAddReal(quadPoints, rt.y);
 
    if (ret != HPDF_OK)
    {
@@ -1078,18 +1107,22 @@ HPDF_FreeTextAnnot_SetLineEndingStyle(HPDF_Annotation annot, HPDF_LineAnnotEndin
 
    HPDF_PTRACE((" HPDF_FreeTextAnnot_SetLineEndingStyle\n"));
 
-   lineEndStyles = HPDF_Array_New(annot->mmgr);
+   lineEndStyles = HpdfArrayCreate(annot->mmgr);
    if (!lineEndStyles)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    if ((ret = HPDF_Dict_Add(annot, "LE", lineEndStyles)) != HPDF_OK)
       return ret;
 
-   ret += HPDF_Array_AddName(lineEndStyles, HPDF_LINE_ANNOT_ENDING_STYLE_NAMES[(HpdfInt)startStyle]);
-   ret += HPDF_Array_AddName(lineEndStyles, HPDF_LINE_ANNOT_ENDING_STYLE_NAMES[(HpdfInt)endStyle]);
+   ret += HpdfArrayAddName(lineEndStyles, HPDF_LINE_ANNOT_ENDING_STYLE_NAMES[(HpdfInt)startStyle]);
+   ret += HpdfArrayAddName(lineEndStyles, HPDF_LINE_ANNOT_ENDING_STYLE_NAMES[(HpdfInt)endStyle]);
 
    if (ret != HPDF_OK)
+   {
       return HPDF_Error_GetCode(lineEndStyles->error);
+   }
 
    return HPDF_OK;
 }
@@ -1105,7 +1138,7 @@ HPDF_EXPORT(HpdfStatus)
 
    HPDF_PTRACE((" HPDF_MarkupAnnot_SetRectDiff\n"));
 
-   array = HPDF_Array_New(annot->mmgr);
+   array = HpdfArrayCreate(annot->mmgr);
    if (!array)
    {
       return HPDF_Error_GetCode(annot->error);
@@ -1123,10 +1156,10 @@ HPDF_EXPORT(HpdfStatus)
       rectTemp.bottom = rect.top;
    }
 
-   ret += HPDF_Array_AddReal(array, rectTemp.left);
-   ret += HPDF_Array_AddReal(array, rectTemp.bottom);
-   ret += HPDF_Array_AddReal(array, rectTemp.right);
-   ret += HPDF_Array_AddReal(array, rectTemp.top);
+   ret += HpdfArrayAddReal(array, rectTemp.left);
+   ret += HpdfArrayAddReal(array, rectTemp.bottom);
+   ret += HpdfArrayAddReal(array, rectTemp.right);
+   ret += HpdfArrayAddReal(array, rectTemp.top);
 
    if (ret != HPDF_OK)
    {
@@ -1169,7 +1202,7 @@ HPDF_EXPORT(HpdfStatus)
 
    HPDF_PTRACE((" HPDF_FreeTextAnnot_Set3PointCalloutLine\n"));
 
-   clPoints = HPDF_Array_New(annot->mmgr);
+   clPoints = HpdfArrayCreate(annot->mmgr);
    if (!clPoints)
    {
       return HPDF_Error_GetCode(annot->error);
@@ -1180,12 +1213,12 @@ HPDF_EXPORT(HpdfStatus)
       return ret;
    }
 
-   ret += HPDF_Array_AddReal(clPoints, startPoint.x);
-   ret += HPDF_Array_AddReal(clPoints, startPoint.y);
-   ret += HPDF_Array_AddReal(clPoints, kneePoint.x);
-   ret += HPDF_Array_AddReal(clPoints, kneePoint.y);
-   ret += HPDF_Array_AddReal(clPoints, endPoint.x);
-   ret += HPDF_Array_AddReal(clPoints, endPoint.y);
+   ret += HpdfArrayAddReal(clPoints, startPoint.x);
+   ret += HpdfArrayAddReal(clPoints, startPoint.y);
+   ret += HpdfArrayAddReal(clPoints, kneePoint.x);
+   ret += HpdfArrayAddReal(clPoints, kneePoint.y);
+   ret += HpdfArrayAddReal(clPoints, endPoint.x);
+   ret += HpdfArrayAddReal(clPoints, endPoint.y);
 
    if (ret != HPDF_OK)
    {
@@ -1206,7 +1239,7 @@ HPDF_EXPORT(HpdfStatus)
 
    HPDF_PTRACE((" HPDF_FreeTextAnnot_Set3PointCalloutLine\n"));
 
-   clPoints = HPDF_Array_New(annot->mmgr);
+   clPoints = HpdfArrayCreate(annot->mmgr);
    if (!clPoints)
    {
       return HPDF_Error_GetCode(annot->error);
@@ -1217,10 +1250,10 @@ HPDF_EXPORT(HpdfStatus)
       return ret;
    }
 
-   ret += HPDF_Array_AddReal(clPoints, startPoint.x);
-   ret += HPDF_Array_AddReal(clPoints, startPoint.y);
-   ret += HPDF_Array_AddReal(clPoints, endPoint.x);
-   ret += HPDF_Array_AddReal(clPoints, endPoint.y);
+   ret += HpdfArrayAddReal(clPoints, startPoint.x);
+   ret += HpdfArrayAddReal(clPoints, startPoint.y);
+   ret += HpdfArrayAddReal(clPoints, endPoint.x);
+   ret += HpdfArrayAddReal(clPoints, endPoint.y);
 
    if (ret != HPDF_OK)
    {
@@ -1264,7 +1297,7 @@ HPDF_EXPORT(HpdfStatus)
 
    HPDF_PTRACE((" HPDF_LineAnnot_SetPosition\n"));
 
-   lineEndPoints = HPDF_Array_New(annot->mmgr);
+   lineEndPoints = HpdfArrayCreate(annot->mmgr);
    if (!lineEndPoints)
    {
       return HPDF_Error_GetCode(annot->error);
@@ -1275,17 +1308,17 @@ HPDF_EXPORT(HpdfStatus)
       return ret;
    }
 
-   ret += HPDF_Array_AddReal(lineEndPoints, startPoint.x);
-   ret += HPDF_Array_AddReal(lineEndPoints, startPoint.y);
-   ret += HPDF_Array_AddReal(lineEndPoints, endPoint.x);
-   ret += HPDF_Array_AddReal(lineEndPoints, endPoint.y);
+   ret += HpdfArrayAddReal(lineEndPoints, startPoint.x);
+   ret += HpdfArrayAddReal(lineEndPoints, startPoint.y);
+   ret += HpdfArrayAddReal(lineEndPoints, endPoint.x);
+   ret += HpdfArrayAddReal(lineEndPoints, endPoint.y);
 
    if (ret != HPDF_OK)
    {
       return HPDF_Error_GetCode(lineEndPoints->error);
    }
 
-   lineEndStyles = HPDF_Array_New(annot->mmgr);
+   lineEndStyles = HpdfArrayCreate(annot->mmgr);
    if (!lineEndStyles)
    {
       return HPDF_Error_GetCode(annot->error);
@@ -1296,8 +1329,8 @@ HPDF_EXPORT(HpdfStatus)
       return ret;
    }
 
-   ret += HPDF_Array_AddName(lineEndStyles, HPDF_LINE_ANNOT_ENDING_STYLE_NAMES[(HpdfInt)startStyle]);
-   ret += HPDF_Array_AddName(lineEndStyles, HPDF_LINE_ANNOT_ENDING_STYLE_NAMES[(HpdfInt)endStyle]);
+   ret += HpdfArrayAddName(lineEndStyles, HPDF_LINE_ANNOT_ENDING_STYLE_NAMES[(HpdfInt)startStyle]);
+   ret += HpdfArrayAddName(lineEndStyles, HPDF_LINE_ANNOT_ENDING_STYLE_NAMES[(HpdfInt)endStyle]);
 
    if (ret != HPDF_OK)
    {
@@ -1337,15 +1370,17 @@ HPDF_LineAnnot_SetCaption(HPDF_Annotation annot, HpdfBool showCaption, HPDF_Line
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(annot->error);
 
-   capOffset = HPDF_Array_New(annot->mmgr);
+   capOffset = HpdfArrayCreate(annot->mmgr);
    if (!capOffset)
+   {
       return HPDF_Error_GetCode(annot->error);
+   }
 
    if ((ret = HPDF_Dict_Add(annot, "CO", capOffset)) != HPDF_OK)
       return ret;
 
-   ret += HPDF_Array_AddNumber(capOffset, horzOffset);
-   ret += HPDF_Array_AddNumber(capOffset, vertOffset);
+   ret += HpdfArrayAddNumber(capOffset, horzOffset);
+   ret += HpdfArrayAddNumber(capOffset, vertOffset);
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(capOffset->error);

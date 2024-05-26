@@ -361,20 +361,22 @@ CreatePallet(HPDF_Dict    image,
       *p++ = src_pl->blue;
    }
 
-   array = HPDF_Array_New(image->mmgr);
+   array = HpdfArrayCreate(image->mmgr);
    if (array) 
    {
       HpdfObjBinary *b;
 
       HPDF_Dict_Add(image, "ColorSpace", array);
 
-      HPDF_Array_AddName(array, "Indexed");
-      HPDF_Array_AddName(array, "DeviceRGB");
-      HPDF_Array_AddNumber(array, num_pl - 1);
+      HpdfArrayAddName(array, "Indexed");
+      HpdfArrayAddName(array, "DeviceRGB");
+      HpdfArrayAddNumber(array, num_pl - 1);
 
       b = HpdfObjBinaryCreate(image->mmgr, ppallet, num_pl * 3);
       if (b)
-         HPDF_Array_Add(array, b);
+      {
+         HpdfArrayAdd(array, b);
+      }
    }
 
    HpdfMemDestroy(image->mmgr, ppallet);

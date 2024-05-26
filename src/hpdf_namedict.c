@@ -104,9 +104,11 @@ HpdfObjNameTree
 
    ntree->header.obj_class |= HPDF_OSUBCLASS_NAMETREE;
 
-   items = HPDF_Array_New(mmgr);
+   items = HpdfArrayCreate(mmgr);
    if (!ntree)
+   {
       return NULL;
+   }
 
    ret += HPDF_Dict_Add(ntree, "Names", items);
    if (ret != HPDF_OK)
@@ -141,22 +143,22 @@ HpdfStatus
    ** Since we store keys sorted, it's best to do a linear insertion sort
    ** Find the first element larger than 'key', and insert 'key' and then
    ** 'obj' into the items. */
-   icount = HPDF_Array_Items(items);
+   icount = HpdfArrayGetCount(items);
 
    for (i = 0; i < icount; i += 2) 
    {
-      HpdfObjString *elem = HPDF_Array_GetItem(items, i, HPDF_OCLASS_STRING);
+      HpdfObjString *elem = HpdfArrayGetItem(items, i, HPDF_OCLASS_STRING);
       if (HpdfObjStringCmp(name, elem) < 0) 
       {
-         HPDF_Array_Insert(items, elem, name);
-         HPDF_Array_Insert(items, elem, obj);
+         HpdfArrayInsert(items, elem, name);
+         HpdfArrayInsert(items, elem, obj);
          return HPDF_OK;
       }
    }
 
    /* Items list is empty */
-   HPDF_Array_Add(items, name);
-   HPDF_Array_Add(items, obj);
+   HpdfArrayAdd(items, name);
+   HpdfArrayAdd(items, obj);
    return HPDF_OK;
 }
 

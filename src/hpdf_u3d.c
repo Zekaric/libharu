@@ -321,8 +321,9 @@ HPDF_EXPORT(HpdfStatus) HPDF_U3D_Add3DView(HPDF_U3D u3d, HPDF_Dict view)
    views = (HpdfArray *) HPDF_Dict_GetItem(u3d, "VA", HPDF_OCLASS_ARRAY);
    if (views == NULL) 
    {
-      views = HPDF_Array_New(u3d->mmgr);
-      if (!views) {
+      views = HpdfArrayCreate(u3d->mmgr);
+      if (!views)
+      {
          return HPDF_Error_GetCode(u3d->error);
       }
 
@@ -330,14 +331,16 @@ HPDF_EXPORT(HpdfStatus) HPDF_U3D_Add3DView(HPDF_U3D u3d, HPDF_Dict view)
       if (ret == HPDF_OK) {
          ret = HPDF_Dict_AddNumber(u3d, "DV", 0);
       }
-      else {
-         HPDF_Array_Free(views);
+      else
+      {
+         HpdfArrayDestroy(views);
          return ret;
       }
    }
 
-   if (ret == HPDF_OK) {
-      ret = HPDF_Array_Add(views, view);
+   if (ret == HPDF_OK) 
+   {
+      ret = HpdfArrayAdd(views, view);
    }
 
    return ret;
@@ -390,21 +393,24 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_AddNode(HPDF_Dict view, HPDF_Dict node)
    nodes = (HpdfArray *) HPDF_Dict_GetItem(view, "NA", HPDF_OCLASS_ARRAY);
    if (nodes == NULL) 
    {
-      nodes = HPDF_Array_New(view->mmgr);
-      if (!nodes) {
+      nodes = HpdfArrayCreate(view->mmgr);
+      if (!nodes)
+      {
          return HPDF_Error_GetCode(view->error);
       }
 
       ret = HPDF_Dict_Add(view, "NA", nodes);
-      if (ret != HPDF_OK) {
-         HPDF_Array_Free(nodes);
+      if (ret != HPDF_OK) 
+      {
+         HpdfArrayDestroy(nodes);
          return ret;
       }
    }
 
-   ret = HPDF_Array_Add(nodes, node);
-   if (ret != HPDF_OK) {
-      HPDF_Array_Free(nodes);
+   ret = HpdfArrayAdd(nodes, node);
+   if (ret != HPDF_OK)
+   {
+      HpdfArrayDestroy(nodes);
       return ret;
    }
 
@@ -480,30 +486,32 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DViewNode_SetMatrix(HPDF_Dict node, HPDF_3DMatrix 
       return HPDF_INVALID_U3D_DATA;
    }
 
-   array_m = HPDF_Array_New(node->mmgr);
+   array_m = HpdfArrayCreate(node->mmgr);
    if (!array_m)
+   {
       return HPDF_INVALID_U3D_DATA;
+   }
 
    ret = HPDF_Dict_Add(node, "M", array_m);
    if (ret != HPDF_OK) {
       return ret;
    }
 
-   ret += HPDF_Array_AddReal(array_m, Mat3D.a);
-   ret += HPDF_Array_AddReal(array_m, Mat3D.b);
-   ret += HPDF_Array_AddReal(array_m, Mat3D.c);
+   ret += HpdfArrayAddReal(array_m, Mat3D.a);
+   ret += HpdfArrayAddReal(array_m, Mat3D.b);
+   ret += HpdfArrayAddReal(array_m, Mat3D.c);
 
-   ret += HPDF_Array_AddReal(array_m, Mat3D.d);
-   ret += HPDF_Array_AddReal(array_m, Mat3D.e);
-   ret += HPDF_Array_AddReal(array_m, Mat3D.f);
+   ret += HpdfArrayAddReal(array_m, Mat3D.d);
+   ret += HpdfArrayAddReal(array_m, Mat3D.e);
+   ret += HpdfArrayAddReal(array_m, Mat3D.f);
 
-   ret += HPDF_Array_AddReal(array_m, Mat3D.g);
-   ret += HPDF_Array_AddReal(array_m, Mat3D.h);
-   ret += HPDF_Array_AddReal(array_m, Mat3D.i);
+   ret += HpdfArrayAddReal(array_m, Mat3D.g);
+   ret += HpdfArrayAddReal(array_m, Mat3D.h);
+   ret += HpdfArrayAddReal(array_m, Mat3D.i);
 
-   ret += HPDF_Array_AddReal(array_m, Mat3D.tx);
-   ret += HPDF_Array_AddReal(array_m, Mat3D.ty);
-   ret += HPDF_Array_AddReal(array_m, Mat3D.tz);
+   ret += HpdfArrayAddReal(array_m, Mat3D.tx);
+   ret += HpdfArrayAddReal(array_m, Mat3D.ty);
+   ret += HpdfArrayAddReal(array_m, Mat3D.tz);
 
    return ret;
 }
@@ -574,51 +582,58 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetBackgroundColor(HPDF_Dict view, HpdfReal 
       return HPDF_Error_GetCode(view->error);
    }
 
-   color = HPDF_Array_New(view->mmgr);
-   if (!color) {
+   color = HpdfArrayCreate(view->mmgr);
+   if (!color)
+   {
       HPDF_Dict_Free(background);
       return HPDF_Error_GetCode(view->error);
    }
 
-   ret = HPDF_Array_AddReal(color, r);
-   if (ret != HPDF_OK) {
-      HPDF_Array_Free(color);
+   ret = HpdfArrayAddReal(color, r);
+   if (ret != HPDF_OK)
+   {
+      HpdfArrayDestroy(color);
       HPDF_Dict_Free(background);
       return ret;
    }
 
-   ret = HPDF_Array_AddReal(color, g);
-   if (ret != HPDF_OK) {
-      HPDF_Array_Free(color);
+   ret = HpdfArrayAddReal(color, g);
+   if (ret != HPDF_OK)
+   {
+      HpdfArrayDestroy(color);
       HPDF_Dict_Free(background);
       return ret;
    }
 
-   ret = HPDF_Array_AddReal(color, b);
-   if (ret != HPDF_OK) {
-      HPDF_Array_Free(color);
+   ret = HpdfArrayAddReal(color, b);
+   if (ret != HPDF_OK)
+   {
+      HpdfArrayDestroy(color);
       HPDF_Dict_Free(background);
       return ret;
    }
 
 
    ret = HPDF_Dict_AddName(background, "Type", "3DBG");
-   if (ret != HPDF_OK) {
-      HPDF_Array_Free(color);
+   if (ret != HPDF_OK)
+   {
+      HpdfArrayDestroy(color);
       HPDF_Dict_Free(background);
       return ret;
    }
 
    ret = HPDF_Dict_Add(background, "C", color);
-   if (ret != HPDF_OK) {
-      HPDF_Array_Free(color);
+   if (ret != HPDF_OK)
+   {
+      HpdfArrayDestroy(color);
       HPDF_Dict_Free(background);
       return ret;
    }
 
    ret = HPDF_Dict_Add(view, "BG", background);
-   if (ret != HPDF_OK) {
-      HPDF_Array_Free(color);
+   if (ret != HPDF_OK)
+   {
+      HpdfArrayDestroy(color);
       HPDF_Dict_Free(background);
       return ret;
    }
@@ -817,45 +832,46 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCamera(HPDF_Dict view, HpdfReal coox, Hpd
    transz = cooz - roo*viewz;
 
    /* transformation matrix*/
-   matrix = HPDF_Array_New(view->mmgr);
-   if (!matrix) {
+   matrix = HpdfArrayCreate(view->mmgr);
+   if (!matrix)
+   {
       return HPDF_Error_GetCode(view->error);
    }
 
-   ret = HPDF_Array_AddReal(matrix, leftx);
+   ret = HpdfArrayAddReal(matrix, leftx);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, lefty);
+   ret = HpdfArrayAddReal(matrix, lefty);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, leftz);
+   ret = HpdfArrayAddReal(matrix, leftz);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, upx);
+   ret = HpdfArrayAddReal(matrix, upx);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, upy);
+   ret = HpdfArrayAddReal(matrix, upy);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, upz);
+   ret = HpdfArrayAddReal(matrix, upz);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, viewx);
+   ret = HpdfArrayAddReal(matrix, viewx);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, viewy);
+   ret = HpdfArrayAddReal(matrix, viewy);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, viewz);
+   ret = HpdfArrayAddReal(matrix, viewz);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, transx);
+   ret = HpdfArrayAddReal(matrix, transx);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, transy);
+   ret = HpdfArrayAddReal(matrix, transy);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, transz);
+   ret = HpdfArrayAddReal(matrix, transz);
    if (ret != HPDF_OK) goto failed;
 
    ret = HPDF_Dict_AddName(view, "MS", "M");
@@ -868,7 +884,7 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCamera(HPDF_Dict view, HpdfReal coox, Hpd
 
 failed:
    if (ret != HPDF_OK) {
-      HPDF_Array_Free(matrix);
+      HpdfArrayDestroy(matrix);
       return ret;
    }
    return ret;
@@ -886,45 +902,46 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCameraByMatrix(HPDF_Dict view, HPDF_3DMat
    }
 
    /* transformation matrix*/
-   matrix = HPDF_Array_New(view->mmgr);
-   if (!matrix) {
+   matrix = HpdfArrayCreate(view->mmgr);
+   if (!matrix)
+   {
       return HPDF_Error_GetCode(view->error);
    }
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.a);
+   ret = HpdfArrayAddReal(matrix, Mat3D.a);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.b);
+   ret = HpdfArrayAddReal(matrix, Mat3D.b);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.c);
+   ret = HpdfArrayAddReal(matrix, Mat3D.c);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.d);
+   ret = HpdfArrayAddReal(matrix, Mat3D.d);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.e);
+   ret = HpdfArrayAddReal(matrix, Mat3D.e);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.f);
+   ret = HpdfArrayAddReal(matrix, Mat3D.f);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.g);
+   ret = HpdfArrayAddReal(matrix, Mat3D.g);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.h);
+   ret = HpdfArrayAddReal(matrix, Mat3D.h);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.i);
+   ret = HpdfArrayAddReal(matrix, Mat3D.i);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.tx);
+   ret = HpdfArrayAddReal(matrix, Mat3D.tx);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.ty);
+   ret = HpdfArrayAddReal(matrix, Mat3D.ty);
    if (ret != HPDF_OK) goto failed;
 
-   ret = HPDF_Array_AddReal(matrix, Mat3D.tz);
+   ret = HpdfArrayAddReal(matrix, Mat3D.tz);
    if (ret != HPDF_OK) goto failed;
 
    ret = HPDF_Dict_AddName(view, "MS", "M");
@@ -937,8 +954,9 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCameraByMatrix(HPDF_Dict view, HPDF_3DMat
    if (ret != HPDF_OK) goto failed;
 
 failed:
-   if (ret != HPDF_OK) {
-      HPDF_Array_Free(matrix);
+   if (ret != HPDF_OK)
+   {
+      HpdfArrayDestroy(matrix);
       return ret;
    }
    return ret;
@@ -978,7 +996,7 @@ HPDF_3DView_SetCrossSectionOn(
       return ret;
    }
 
-   array_b = HPDF_Array_New(view->mmgr);
+   array_b = HpdfArrayCreate(view->mmgr);
    if (!array_b)
    {
       HPDF_Dict_Free(crosssection);
@@ -991,11 +1009,11 @@ HPDF_3DView_SetCrossSectionOn(
       return HPDF_INVALID_U3D_DATA;
    }
 
-   ret += HPDF_Array_AddReal(array_b, center.x);
-   ret += HPDF_Array_AddReal(array_b, center.y);
-   ret += HPDF_Array_AddReal(array_b, center.z);
+   ret += HpdfArrayAddReal(array_b, center.x);
+   ret += HpdfArrayAddReal(array_b, center.y);
+   ret += HpdfArrayAddReal(array_b, center.z);
 
-   array_b = HPDF_Array_New(view->mmgr);
+   array_b = HpdfArrayCreate(view->mmgr);
    if (!array_b)
    {
       HPDF_Dict_Free(crosssection);
@@ -1008,15 +1026,15 @@ HPDF_3DView_SetCrossSectionOn(
       return HPDF_INVALID_U3D_DATA;
    }
 
-   ret += HPDF_Array_AddNull(array_b);
-   ret += HPDF_Array_AddReal(array_b, Roll);
-   ret += HPDF_Array_AddReal(array_b, Pitch);
+   ret += HpdfArrayAddNull(array_b);
+   ret += HpdfArrayAddReal(array_b, Roll);
+   ret += HpdfArrayAddReal(array_b, Pitch);
 
    ret += HPDF_Dict_AddReal(crosssection, "PO", opacity);
 
    ret += HPDF_Dict_AddBoolean(crosssection, "IV", showintersection);
 
-   array_b = HPDF_Array_New(view->mmgr);
+   array_b = HpdfArrayCreate(view->mmgr);
    if (!array_b)
    {
       HPDF_Dict_Free(crosssection);
@@ -1027,12 +1045,12 @@ HPDF_3DView_SetCrossSectionOn(
       HPDF_Dict_Free(crosssection);
       return HPDF_INVALID_U3D_DATA;
    }
-   ret += HPDF_Array_AddName(array_b, "DeviceRGB");
-   ret += HPDF_Array_AddReal(array_b, 1.0);
-   ret += HPDF_Array_AddReal(array_b, 0.0);
-   ret += HPDF_Array_AddReal(array_b, 0.0);
+   ret += HpdfArrayAddName(array_b, "DeviceRGB");
+   ret += HpdfArrayAddReal(array_b, 1.0);
+   ret += HpdfArrayAddReal(array_b, 0.0);
+   ret += HpdfArrayAddReal(array_b, 0.0);
 
-   array_sa = HPDF_Array_New(view->mmgr);
+   array_sa = HpdfArrayCreate(view->mmgr);
    if (!array_sa)
    {
       HPDF_Dict_Free(crosssection);
@@ -1045,7 +1063,7 @@ HPDF_3DView_SetCrossSectionOn(
       return HPDF_INVALID_U3D_DATA;
    }
 
-   if (HPDF_Array_Add(array_sa, crosssection) != HPDF_OK)
+   if (HpdfArrayAdd(array_sa, crosssection) != HPDF_OK)
    {
       HPDF_Dict_Free(crosssection);
       return HPDF_INVALID_U3D_DATA;
@@ -1065,8 +1083,9 @@ HPDF_EXPORT(HpdfStatus) HPDF_3DView_SetCrossSectionOff(HPDF_Dict view)
       return HPDF_INVALID_U3D_DATA;
    }
 
-   array_sa = HPDF_Array_New(view->mmgr);
-   if (!array_sa) {
+   array_sa = HpdfArrayCreate(view->mmgr);
+   if (!array_sa)
+   {
       return HPDF_Error_GetCode(view->error);
    }
 
@@ -1155,15 +1174,17 @@ HPDF_3DView_Add3DC3DMeasure(HPDF_Dict       view,
    }
    else
    {
-      array = HPDF_Array_New(view->mmgr);
+      array = HpdfArrayCreate(view->mmgr);
       if (!array)
+      {
          return 0;
+      }
 
       if (HPDF_Dict_Add(view, "MA", array) != HPDF_OK)
          return 0;
    }
 
-   ret = HPDF_Array_Add(array, measure);
+   ret = HpdfArrayAdd(array, measure);
 
    return ret;
 }

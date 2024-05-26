@@ -54,7 +54,7 @@ static HpdfBool _GetDecodeArrayVertexValues(HPDF_Shading shading,
 
    for (i = 0; i < 4; ++i)
    {
-      r = HPDF_Array_GetItem(decodeArray, i, HPDF_OCLASS_REAL);
+      r = HpdfArrayGetItem(decodeArray, i, HPDF_OCLASS_REAL);
       if (!r) 
       {
          return HPDF_FALSE;
@@ -118,19 +118,19 @@ HPDF_Shading_New(
       return NULL;
    }
 
-   decodeArray = HPDF_Array_New(doc->mmgr);
+   decodeArray = HpdfArrayCreate(doc->mmgr);
    if (!decodeArray)
    {
       return NULL;
    }
 
    /* X-range */
-   ret += HPDF_Array_AddReal(decodeArray, xMin);
-   ret += HPDF_Array_AddReal(decodeArray, xMax);
+   ret += HpdfArrayAddReal(decodeArray, xMin);
+   ret += HpdfArrayAddReal(decodeArray, xMax);
 
    /* Y-range */
-   ret += HPDF_Array_AddReal(decodeArray, yMin);
-   ret += HPDF_Array_AddReal(decodeArray, yMax);
+   ret += HpdfArrayAddReal(decodeArray, yMin);
+   ret += HpdfArrayAddReal(decodeArray, yMax);
 
    char const *colName = NULL;
    switch (colorSpace)
@@ -139,8 +139,8 @@ HPDF_Shading_New(
       colName = COL_RGB;
       for (i = 0; i < 3; ++i)
       {
-         ret += HPDF_Array_AddReal(decodeArray, 0.0);
-         ret += HPDF_Array_AddReal(decodeArray, 1.0);
+         ret += HpdfArrayAddReal(decodeArray, 0.0);
+         ret += HpdfArrayAddReal(decodeArray, 1.0);
       }
       break;
 

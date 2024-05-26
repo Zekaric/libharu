@@ -116,7 +116,7 @@ HPDF_Pages
 
    /* add required elements */
    ret += HPDF_Dict_AddName(pages, "Type", "Pages");
-   ret += HPDF_Dict_Add(    pages, "Kids",  HPDF_Array_New(       pages->mmgr));
+   ret += HPDF_Dict_Add(    pages, "Kids",  HpdfArrayCreate(       pages->mmgr));
    ret += HPDF_Dict_Add(    pages, "Count", HpdfObjNumIntCreate(pages->mmgr, 0));
 
    if (ret == HPDF_OK && parent)
@@ -159,7 +159,7 @@ HPDF_Pages_AddKids(HPDF_Pages  parent,
       attr->parent = parent;
    }
 
-   return HPDF_Array_Add(kids, kid);
+   return HpdfArrayAdd(kids, kid);
 }
 
 
@@ -198,7 +198,7 @@ HPDF_Page_InsertBefore(HPDF_Page   page,
    attr = (HPDF_PageAttr) page->attr;
    attr->parent = parent;
 
-   return HPDF_Array_Insert(kids, target, page);
+   return HpdfArrayInsert(kids, target, page);
 }
 
 HpdfStatus
@@ -283,8 +283,9 @@ GetPageCount(HPDF_Dict    pages)
    if (!kids)
       return 0;
 
-   for (i = 0; i < kids->list->count; i++) {
-      void *obj = HPDF_Array_GetItem(kids, i, HPDF_OCLASS_DICT);
+   for (i = 0; i < kids->list->count; i++)
+   {
+      void *obj = HpdfArrayGetItem(kids, i, HPDF_OCLASS_DICT);
       HpdfObjHeader *header = (HpdfObjHeader *) obj;
 
       if (header->obj_class == (HPDF_OCLASS_DICT | HPDF_OSUBCLASS_PAGES))
@@ -363,8 +364,12 @@ HPDF_Page
 
    /* add required elements */
    ret += HPDF_Dict_AddName(page, "Type", "Page");
-   ret += HPDF_Dict_Add(page, "MediaBox", HPDF_Box_Array_New(page->mmgr,
-      HPDF_ToBox(0, 0, (HpdfInt16) (HPDF_DEF_PAGE_WIDTH), (HpdfInt16) (HPDF_DEF_PAGE_HEIGHT))));
+   ret += HPDF_Dict_Add(
+      page, 
+      "MediaBox", 
+      HpdfBoxArrayCreate(
+         page->mmgr,
+         HPDF_ToBox(0, 0, (HpdfInt16) (HPDF_DEF_PAGE_WIDTH), (HpdfInt16) (HPDF_DEF_PAGE_HEIGHT))));
    ret += HPDF_Dict_Add(page, "Contents", attr->contents);
 
    ret += AddResource(page);
@@ -486,18 +491,20 @@ AddResource(HPDF_Page  page)
 
    ret += HPDF_Dict_Add(page, "Resources", resource);
 
-   procset = HPDF_Array_New(page->mmgr);
+   procset = HpdfArrayCreate(page->mmgr);
    if (!procset)
+   {
       return HPDF_Error_GetCode(page->error);
+   }
 
    if (HPDF_Dict_Add(resource, "ProcSet", procset) != HPDF_OK)
       return HPDF_Error_GetCode(resource->error);
 
-   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "PDF"));
-   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "Text"));
-   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageB"));
-   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageC"));
-   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageI"));
+   ret += HpdfArrayAdd(procset, HpdfObjNameCreate(page->mmgr, "PDF"));
+   ret += HpdfArrayAdd(procset, HpdfObjNameCreate(page->mmgr, "Text"));
+   ret += HpdfArrayAdd(procset, HpdfObjNameCreate(page->mmgr, "ImageB"));
+   ret += HpdfArrayAdd(procset, HpdfObjNameCreate(page->mmgr, "ImageC"));
+   ret += HpdfArrayAdd(procset, HpdfObjNameCreate(page->mmgr, "ImageI"));
 
    if (ret != HPDF_OK)
       return HPDF_Error_GetCode(procset->error);
@@ -575,25 +582,25 @@ HPDF_Box
       {
          HpdfObjNumReal *r;
 
-         r = HPDF_Array_GetItem(array, 0, HPDF_OCLASS_REAL);
+         r = HpdfArrayGetItem(array, 0, HPDF_OCLASS_REAL);
          if (r)
          {
             media_box.left = r->value;
          }
 
-         r = HPDF_Array_GetItem(array, 1, HPDF_OCLASS_REAL);
+         r = HpdfArrayGetItem(array, 1, HPDF_OCLASS_REAL);
          if (r)
          {
             media_box.bottom = r->value;
          }
 
-         r = HPDF_Array_GetItem(array, 2, HPDF_OCLASS_REAL);
+         r = HpdfArrayGetItem(array, 2, HPDF_OCLASS_REAL);
          if (r)
          {
             media_box.right = r->value;
          }
 
-         r = HPDF_Array_GetItem(array, 3, HPDF_OCLASS_REAL);
+         r = HpdfArrayGetItem(array, 3, HPDF_OCLASS_REAL);
          if (r)
          {
             media_box.top = r->value;
@@ -650,15 +657,15 @@ HPDF_Page_CreateXObjectFromImage(
    ** compatibility */
    ret += HPDF_Dict_Add(fromxobject, "Resources", resource);
 
-   procset = HPDF_Array_New(page->mmgr);
+   procset = HpdfArrayCreate(page->mmgr);
    if (!procset)
    {
       return NULL;
    }
 
    ret += HPDF_Dict_Add(resource, "ProcSet", procset);
-   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "PDF"));
-   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageC"));
+   ret += HpdfArrayAdd(procset, HpdfObjNameCreate(page->mmgr, "PDF"));
+   ret += HpdfArrayAdd(procset, HpdfObjNameCreate(page->mmgr, "ImageC"));
 
    xobject = HPDF_Dict_New(page->mmgr);
    if (!xobject)
@@ -676,7 +683,7 @@ HPDF_Page_CreateXObjectFromImage(
       return NULL;
    }
 
-   array1 = HPDF_Array_New(page->mmgr);
+   array1 = HpdfArrayCreate(page->mmgr);
    if (!array1)
    {
       return NULL;
@@ -694,12 +701,12 @@ HPDF_Page_CreateXObjectFromImage(
       rectTemp.bottom = rect.top;
    }
 
-   ret += HPDF_Array_AddReal(array1, rectTemp.left);
-   ret += HPDF_Array_AddReal(array1, rectTemp.bottom);
-   ret += HPDF_Array_AddReal(array1, rectTemp.right);
-   ret += HPDF_Array_AddReal(array1, rectTemp.top);
+   ret += HpdfArrayAddReal(array1, rectTemp.left);
+   ret += HpdfArrayAddReal(array1, rectTemp.bottom);
+   ret += HpdfArrayAddReal(array1, rectTemp.right);
+   ret += HpdfArrayAddReal(array1, rectTemp.top);
 
-   array2 = HPDF_Array_New(page->mmgr);
+   array2 = HpdfArrayCreate(page->mmgr);
    if (!array2)
    {
       return NULL;
@@ -710,12 +717,12 @@ HPDF_Page_CreateXObjectFromImage(
       return NULL;
    }
 
-   ret += HPDF_Array_AddReal(array2, 1.0);
-   ret += HPDF_Array_AddReal(array2, 0.0);
-   ret += HPDF_Array_AddReal(array2, 0.0);
-   ret += HPDF_Array_AddReal(array2, 1.0);
-   ret += HPDF_Array_AddReal(array2, 0.0);
-   ret += HPDF_Array_AddReal(array2, 0.0);
+   ret += HpdfArrayAddReal(array2, 1.0);
+   ret += HpdfArrayAddReal(array2, 0.0);
+   ret += HpdfArrayAddReal(array2, 0.0);
+   ret += HpdfArrayAddReal(array2, 1.0);
+   ret += HpdfArrayAddReal(array2, 0.0);
+   ret += HpdfArrayAddReal(array2, 0.0);
 
    if (HPDF_Dict_AddNumber(fromxobject, "FormType", 1) != HPDF_OK)
    {
@@ -827,15 +834,15 @@ HPDF_Page_CreateXObjectAsWhiteRect(
 
    ret += HPDF_Dict_Add(fromxobject, "Resources", resource);
 
-   procset = HPDF_Array_New(page->mmgr);
+   procset = HpdfArrayCreate(page->mmgr);
    if (!procset)
    {
       return NULL;
    }
 
    ret += HPDF_Dict_Add(resource, "ProcSet", procset);
-   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "PDF"));
-   ret += HPDF_Array_Add(procset, HpdfObjNameCreate(page->mmgr, "ImageC"));
+   ret += HpdfArrayAdd(procset, HpdfObjNameCreate(page->mmgr, "PDF"));
+   ret += HpdfArrayAdd(procset, HpdfObjNameCreate(page->mmgr, "ImageC"));
 
    xobject = HPDF_Dict_New(page->mmgr);
    if (!xobject)
@@ -848,7 +855,7 @@ HPDF_Page_CreateXObjectAsWhiteRect(
       return NULL;
    }
 
-   array1 = HPDF_Array_New(page->mmgr);
+   array1 = HpdfArrayCreate(page->mmgr);
    if (!array1)
    {
       return NULL;
@@ -866,12 +873,12 @@ HPDF_Page_CreateXObjectAsWhiteRect(
       rectTemp.bottom = rect.top;
    }
 
-   ret += HPDF_Array_AddReal(array1, 0.0);
-   ret += HPDF_Array_AddReal(array1, 0.0);
-   ret += HPDF_Array_AddReal(array1, rectTemp.right - rectTemp.left);
-   ret += HPDF_Array_AddReal(array1, rectTemp.top   - rectTemp.bottom);
+   ret += HpdfArrayAddReal(array1, 0.0);
+   ret += HpdfArrayAddReal(array1, 0.0);
+   ret += HpdfArrayAddReal(array1, rectTemp.right - rectTemp.left);
+   ret += HpdfArrayAddReal(array1, rectTemp.top   - rectTemp.bottom);
 
-   array2 = HPDF_Array_New(page->mmgr);
+   array2 = HpdfArrayCreate(page->mmgr);
    if (!array2)
    {
       return NULL;
@@ -882,12 +889,12 @@ HPDF_Page_CreateXObjectAsWhiteRect(
       return NULL;
    }
 
-   ret += HPDF_Array_AddReal(array2, 1.0);
-   ret += HPDF_Array_AddReal(array2, 0.0);
-   ret += HPDF_Array_AddReal(array2, 0.0);
-   ret += HPDF_Array_AddReal(array2, 1.0);
-   ret += HPDF_Array_AddReal(array2, 0.0);
-   ret += HPDF_Array_AddReal(array2, 0.0);
+   ret += HpdfArrayAddReal(array2, 1.0);
+   ret += HpdfArrayAddReal(array2, 0.0);
+   ret += HpdfArrayAddReal(array2, 0.0);
+   ret += HpdfArrayAddReal(array2, 1.0);
+   ret += HpdfArrayAddReal(array2, 0.0);
+   ret += HpdfArrayAddReal(array2, 0.0);
 
    if (HPDF_Dict_AddNumber(fromxobject, "FormType", 1) != HPDF_OK)
    {
@@ -1109,18 +1116,24 @@ AddAnnotation(HPDF_Page        page,
    /* find "Annots" entry */
    array = HPDF_Dict_GetItem(page, "Annots", HPDF_OCLASS_ARRAY);
 
-   if (!array) {
-      array = HPDF_Array_New(page->mmgr);
+   if (!array) 
+   {
+      array = HpdfArrayCreate(page->mmgr);
       if (!array)
+      {
          return HPDF_Error_GetCode(page->error);
+      }
 
       ret = HPDF_Dict_Add(page, "Annots", array);
       if (ret != HPDF_OK)
          return ret;
    }
 
-   if ((ret = HPDF_Array_Add(array, annot)) != HPDF_OK)
+   ret = HpdfArrayAdd(array, annot);
+   if (ret != HPDF_OK)
+   {
       return ret;
+   }
 
    /* Add Parent to the annotation  */
    ret = HPDF_Dict_Add(annot, "P", page);
@@ -1720,7 +1733,7 @@ HpdfStatus
       return HPDF_SetError(page->error, HPDF_PAGE_CANNOT_FIND_OBJECT, 0);
    }
 
-   r = HPDF_Array_GetItem(array, index, HPDF_OCLASS_REAL);
+   r = HpdfArrayGetItem(array, index, HPDF_OCLASS_REAL);
    if (!r)
    {
       return HPDF_SetError(page->error, HPDF_PAGE_INVALID_INDEX, 0);
@@ -2147,7 +2160,7 @@ HPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint(
       return NULL;
    }
 
-   array_bg = HPDF_Array_New(annot->mmgr);
+   array_bg = HpdfArrayCreate(annot->mmgr);
    if (!array_bg)
    {
       return NULL;
@@ -2158,9 +2171,9 @@ HPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint(
       return NULL;
    }
 
-   ret = HPDF_Array_AddReal(array_bg, 1.0);
-   ret += HPDF_Array_AddReal(array_bg, 1.0);
-   ret += HPDF_Array_AddReal(array_bg, 1.0);
+   ret = HpdfArrayAddReal(array_bg, 1.0);
+   ret += HpdfArrayAddReal(array_bg, 1.0);
+   ret += HpdfArrayAddReal(array_bg, 1.0);
 
    ret += HPDF_Dict_AddName(annot, "FT", "Btn");
    if (ret != HPDF_OK)
@@ -2713,7 +2726,10 @@ HPDF_Page_SetBoundary(HPDF_Page           page,
       break;
    }
 
-   return HPDF_Dict_Add(page, key, HPDF_Box_Array_New(page->mmgr,
-      HPDF_ToBox((HpdfInt16) left, (HpdfInt16) bottom, (HpdfInt16) right, (HpdfInt16) top)));
-
+   return HPDF_Dict_Add(
+      page, 
+      key, 
+      HpdfBoxArrayCreate(
+         page->mmgr,
+         HPDF_ToBox((HpdfInt16) left, (HpdfInt16) bottom, (HpdfInt16) right, (HpdfInt16) top)));
 }

@@ -328,9 +328,9 @@ HPDF_PDFA_GenerateID(
    id = HPDF_Dict_GetItem(doc->trailer, "ID", HPDF_OCLASS_ARRAY);
    if (!id)
    {
-      id = HPDF_Array_New(doc->mmgr);
-
-      if (!id || HPDF_Dict_Add(doc->trailer, "ID", id) != HPDF_OK)
+      id = HpdfArrayCreate(doc->mmgr);
+      if (!id || 
+          HPDF_Dict_Add(doc->trailer, "ID", id) != HPDF_OK)
       {
          return doc->error.error_no;
       }
@@ -340,12 +340,12 @@ HPDF_PDFA_GenerateID(
       HPDF_MD5Update(&md5_ctx, currentTime, HPDF_StrLen((char const *) currentTime, -1));
       HPDF_MD5Final(idkey, &md5_ctx);
 
-      if (HPDF_Array_Add(id, HpdfObjBinaryCreate(doc->mmgr, idkey, HPDF_MD5_KEY_LEN)) != HPDF_OK)
+      if (HpdfArrayAdd(id, HpdfObjBinaryCreate(doc->mmgr, idkey, HPDF_MD5_KEY_LEN)) != HPDF_OK)
       {
          return doc->error.error_no;
       }
 
-      if (HPDF_Array_Add(id, HpdfObjBinaryCreate(doc->mmgr, idkey, HPDF_MD5_KEY_LEN)) != HPDF_OK)
+      if (HpdfArrayAdd(id, HpdfObjBinaryCreate(doc->mmgr, idkey, HPDF_MD5_KEY_LEN)) != HPDF_OK)
       {
          return doc->error.error_no;
       }
@@ -422,7 +422,7 @@ HPDF_PDFA_AppendOutputIntents(
    intents = HPDF_Dict_GetItem(doc->catalog, "OutputIntents", HPDF_OCLASS_ARRAY);
    if (intents == NULL)
    {
-      intents = HPDF_Array_New(doc->mmgr);
+      intents = HpdfArrayCreate(doc->mmgr);
       if (intents)
       {
          ret = HPDF_Dict_Add(doc->catalog, "OutputIntents", intents);
@@ -434,6 +434,6 @@ HPDF_PDFA_AppendOutputIntents(
       }
    }
 
-   HPDF_Array_Add(intents, intent);
+   HpdfArrayAdd(intents, intent);
    return HPDF_Error_GetDetailCode(&doc->error);
 }

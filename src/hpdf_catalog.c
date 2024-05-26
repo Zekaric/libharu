@@ -223,20 +223,25 @@ HPDF_Catalog_AddPageLabel(HPDF_Catalog   catalog,
 
    nums = HPDF_Dict_GetItem(labels, "Nums", HPDF_OCLASS_ARRAY);
 
-   if (!nums) {
-      nums = HPDF_Array_New(catalog->mmgr);
-
+   if (!nums)
+   {
+      nums = HpdfArrayCreate(catalog->mmgr);
       if (!nums)
+      {
          return catalog->error->error_no;
+      }
 
       if ((ret = HPDF_Dict_Add(labels, "Nums", nums)) != HPDF_OK)
          return ret;
    }
 
-   if ((ret = HPDF_Array_AddNumber(nums, page_num)) != HPDF_OK)
+   ret = HpdfArrayAddNumber(nums, page_num);
+   if (ret != HPDF_OK)
+   {
       return ret;
+   }
 
-   return HPDF_Array_Add(nums, page_label);
+   return HpdfArrayAdd(nums, page_label);
 }
 
 HpdfStatus

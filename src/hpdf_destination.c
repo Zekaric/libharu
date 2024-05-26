@@ -50,9 +50,11 @@ HpdfDestination *
       return NULL;
    }
 
-   dst = HPDF_Array_New(mmgr);
+   dst = HpdfArrayCreate(mmgr);
    if (!dst)
+   {
       return NULL;
+   }
 
    dst->header.obj_class |= HPDF_OSUBCLASS_DESTINATION;
 
@@ -60,13 +62,16 @@ HpdfDestination *
       return NULL;
 
    /* first item of array must be target page */
-   if (HPDF_Array_Add(dst, target) != HPDF_OK)
+   if (HpdfArrayAdd(dst, target) != HPDF_OK)
+   {
       return NULL;
+   }
 
    /* default type is HPDF_FIT */
-   if (HPDF_Array_AddName(dst,
-      HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT]) != HPDF_OK)
+   if (HpdfArrayAddName(dst, HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT]) != HPDF_OK)
+   {
       return NULL;
+   }
 
    return dst;
 }
@@ -87,7 +92,7 @@ HPDF_Destination_Validate(
    if (dst->list->count < 2)
       return HPDF_FALSE;
 
-   target = (HPDF_Page) HPDF_Array_GetItem(dst, 0, HPDF_OCLASS_DICT);
+   target = (HPDF_Page) HpdfArrayGetItem(dst, 0, HPDF_OCLASS_DICT);
    if (!HPDF_Page_Validate(target)) {
       HPDF_SetError(dst->error, HPDF_INVALID_PAGE, 0);
       return HPDF_FALSE;
@@ -115,18 +120,18 @@ HPDF_Destination_SetXYZ(HpdfDestination * const dst,
       return HPDF_RaiseError(dst->error, HPDF_INVALID_PARAMETER, 0);
 
 
-   target = (HPDF_Page) HPDF_Array_GetItem(dst, 0, HPDF_OCLASS_DICT);
+   target = (HPDF_Page) HpdfArrayGetItem(dst, 0, HPDF_OCLASS_DICT);
 
-   if (dst->list->count > 1) {
-      HPDF_Array_Clear(dst);
-      ret += HPDF_Array_Add(dst, target);
+   if (dst->list->count > 1)
+   {
+      HpdfArrayClear(dst);
+      ret += HpdfArrayAdd(dst, target);
    }
 
-   ret += HPDF_Array_AddName(dst,
-      HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_XYZ]);
-   ret += HPDF_Array_AddReal(dst, left);
-   ret += HPDF_Array_AddReal(dst, top);
-   ret += HPDF_Array_AddReal(dst, zoom);
+   ret += HpdfArrayAddName(dst, HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_XYZ]);
+   ret += HpdfArrayAddReal(dst, left);
+   ret += HpdfArrayAddReal(dst, top);
+   ret += HpdfArrayAddReal(dst, zoom);
 
    if (ret != HPDF_OK)
       return HPDF_CheckError(dst->error);
@@ -146,18 +151,20 @@ HPDF_Destination_SetFit(HpdfDestination * const dst)
    if (!HPDF_Destination_Validate(dst))
       return HPDF_INVALID_DESTINATION;
 
-   target = (HPDF_Page) HPDF_Array_GetItem(dst, 0, HPDF_OCLASS_DICT);
+   target = (HPDF_Page) HpdfArrayGetItem(dst, 0, HPDF_OCLASS_DICT);
 
-   if (dst->list->count > 1) {
-      HPDF_Array_Clear(dst);
-      ret += HPDF_Array_Add(dst, target);
+   if (dst->list->count > 1)
+   {
+      HpdfArrayClear(dst);
+      ret += HpdfArrayAdd(dst, target);
    }
 
-   ret += HPDF_Array_AddName(dst,
-      HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT]);
+   ret += HpdfArrayAddName(dst, HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT]);
 
    if (ret != HPDF_OK)
+   {
       return HPDF_CheckError(dst->error);
+   }
 
    return HPDF_OK;
 }
@@ -175,16 +182,16 @@ HPDF_Destination_SetFitH(HpdfDestination * const dst,
    if (!HPDF_Destination_Validate(dst))
       return HPDF_INVALID_DESTINATION;
 
-   target = (HPDF_Page) HPDF_Array_GetItem(dst, 0, HPDF_OCLASS_DICT);
+   target = (HPDF_Page) HpdfArrayGetItem(dst, 0, HPDF_OCLASS_DICT);
 
-   if (dst->list->count > 1) {
-      HPDF_Array_Clear(dst);
-      ret += HPDF_Array_Add(dst, target);
+   if (dst->list->count > 1)
+   {
+      HpdfArrayClear(dst);
+      ret += HpdfArrayAdd(dst, target);
    }
 
-   ret += HPDF_Array_AddName(dst,
-      HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_H]);
-   ret += HPDF_Array_AddReal(dst, top);
+   ret += HpdfArrayAddName(dst, HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_H]);
+   ret += HpdfArrayAddReal(dst, top);
 
    if (ret != HPDF_OK)
       return HPDF_CheckError(dst->error);
@@ -204,16 +211,16 @@ HPDF_Destination_SetFitV(HpdfDestination * const dst,
    if (!HPDF_Destination_Validate(dst))
       return HPDF_INVALID_DESTINATION;
 
-   target = (HPDF_Page) HPDF_Array_GetItem(dst, 0, HPDF_OCLASS_DICT);
+   target = (HPDF_Page) HpdfArrayGetItem(dst, 0, HPDF_OCLASS_DICT);
 
-   if (dst->list->count > 1) {
-      HPDF_Array_Clear(dst);
-      ret += HPDF_Array_Add(dst, target);
+   if (dst->list->count > 1)
+   {
+      HpdfArrayClear(dst);
+      ret += HpdfArrayAdd(dst, target);
    }
 
-   ret += HPDF_Array_AddName(dst,
-      HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_V]);
-   ret += HPDF_Array_AddReal(dst, left);
+   ret += HpdfArrayAddName(dst, HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_V]);
+   ret += HpdfArrayAddReal(dst, left);
 
    if (ret != HPDF_OK)
       return HPDF_CheckError(dst->error);
@@ -237,19 +244,19 @@ HPDF_Destination_SetFitR(HpdfDestination * const dst,
    if (!HPDF_Destination_Validate(dst))
       return HPDF_INVALID_DESTINATION;
 
-   target = (HPDF_Page) HPDF_Array_GetItem(dst, 0, HPDF_OCLASS_DICT);
+   target = (HPDF_Page) HpdfArrayGetItem(dst, 0, HPDF_OCLASS_DICT);
 
-   if (dst->list->count > 1) {
-      HPDF_Array_Clear(dst);
-      ret += HPDF_Array_Add(dst, target);
+   if (dst->list->count > 1)
+   {
+      HpdfArrayClear(dst);
+      ret += HpdfArrayAdd(dst, target);
    }
 
-   ret += HPDF_Array_AddName(dst,
-      HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_R]);
-   ret += HPDF_Array_AddReal(dst, left);
-   ret += HPDF_Array_AddReal(dst, bottom);
-   ret += HPDF_Array_AddReal(dst, right);
-   ret += HPDF_Array_AddReal(dst, top);
+   ret += HpdfArrayAddName(dst, HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_R]);
+   ret += HpdfArrayAddReal(dst, left);
+   ret += HpdfArrayAddReal(dst, bottom);
+   ret += HpdfArrayAddReal(dst, right);
+   ret += HpdfArrayAddReal(dst, top);
 
    if (ret != HPDF_OK)
       return HPDF_CheckError(dst->error);
@@ -269,18 +276,20 @@ HPDF_Destination_SetFitB(HpdfDestination * const dst)
    if (!HPDF_Destination_Validate(dst))
       return HPDF_INVALID_DESTINATION;
 
-   target = (HPDF_Page) HPDF_Array_GetItem(dst, 0, HPDF_OCLASS_DICT);
+   target = (HPDF_Page) HpdfArrayGetItem(dst, 0, HPDF_OCLASS_DICT);
 
-   if (dst->list->count > 1) {
-      HPDF_Array_Clear(dst);
-      ret += HPDF_Array_Add(dst, target);
+   if (dst->list->count > 1)
+   {
+      HpdfArrayClear(dst);
+      ret += HpdfArrayAdd(dst, target);
    }
 
-   ret += HPDF_Array_AddName(dst,
-      HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_B]);
-
+   ret += HpdfArrayAddName(dst, HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_B]);
+   
    if (ret != HPDF_OK)
+   {
       return HPDF_CheckError(dst->error);
+   }
 
    return HPDF_OK;
 }
@@ -298,16 +307,16 @@ HPDF_Destination_SetFitBH(HpdfDestination * const dst,
    if (!HPDF_Destination_Validate(dst))
       return HPDF_INVALID_DESTINATION;
 
-   target = (HPDF_Page) HPDF_Array_GetItem(dst, 0, HPDF_OCLASS_DICT);
+   target = (HPDF_Page) HpdfArrayGetItem(dst, 0, HPDF_OCLASS_DICT);
 
-   if (dst->list->count > 1) {
-      HPDF_Array_Clear(dst);
-      ret += HPDF_Array_Add(dst, target);
+   if (dst->list->count > 1)
+   {
+      HpdfArrayClear(dst);
+      ret += HpdfArrayAdd(dst, target);
    }
 
-   ret += HPDF_Array_AddName(dst,
-      HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_BH]);
-   ret += HPDF_Array_AddReal(dst, top);
+   ret += HpdfArrayAddName(dst, HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_BH]);
+   ret += HpdfArrayAddReal(  dst, top);
 
    if (ret != HPDF_OK)
       return HPDF_CheckError(dst->error);
@@ -327,16 +336,16 @@ HPDF_Destination_SetFitBV(HpdfDestination * const dst,
    if (!HPDF_Destination_Validate(dst))
       return HPDF_INVALID_DESTINATION;
 
-   target = (HPDF_Page) HPDF_Array_GetItem(dst, 0, HPDF_OCLASS_DICT);
+   target = (HPDF_Page) HpdfArrayGetItem(dst, 0, HPDF_OCLASS_DICT);
 
-   if (dst->list->count > 1) {
-      HPDF_Array_Clear(dst);
-      ret += HPDF_Array_Add(dst, target);
+   if (dst->list->count > 1) 
+   {
+      HpdfArrayClear(dst);
+      ret += HpdfArrayAdd(dst, target);
    }
 
-   ret += HPDF_Array_AddName(dst,
-      HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_BV]);
-   ret += HPDF_Array_AddReal(dst, left);
+   ret += HpdfArrayAddName(dst, HPDF_DESTINATION_TYPE_NAMES[(HpdfInt) HPDF_FIT_BV]);
+   ret += HpdfArrayAddReal(dst, left);
 
    if (ret != HPDF_OK)
       return HPDF_CheckError(dst->error);

@@ -2879,10 +2879,13 @@ HPDF_Page_New_Content_Stream(HPDF_Page page,
       HPDF_Error_Reset(page->error);
       /* no contents_array already -- create one
          and replace current single contents item */
-      contents_array = HPDF_Array_New(page->mmgr);
+      contents_array = HpdfArrayCreate(page->mmgr);
       if (!contents_array)
+      {
          return HPDF_Error_GetCode(page->error);
-      ret += HPDF_Array_Add(contents_array, attr->contents);
+      }
+
+      ret += HpdfArrayAdd(contents_array, attr->contents);
       ret += HPDF_Dict_Add(page, "Contents", contents_array);
    }
 
@@ -2894,7 +2897,7 @@ HPDF_Page_New_Content_Stream(HPDF_Page page,
    if (!attr->contents)
       return HPDF_Error_GetCode(page->error);
 
-   ret += HPDF_Array_Add(contents_array, attr->contents);
+   ret += HpdfArrayAdd(contents_array, attr->contents);
 
    /* return the value of the new stream, so that
       the application can use it as a shared contents stream */
@@ -2930,15 +2933,17 @@ HPDF_Page_Insert_Shared_Content_Stream(HPDF_Page page,
       HPDF_Error_Reset(page->error);
       /* no contents_array already -- create one
          and replace current single contents item */
-      contents_array = HPDF_Array_New(page->mmgr);
+      contents_array = HpdfArrayCreate(page->mmgr);
       if (!contents_array)
+      {
          return HPDF_Error_GetCode(page->error);
+      }
       attr = (HPDF_PageAttr) page->attr;
-      ret += HPDF_Array_Add(contents_array, attr->contents);
+      ret += HpdfArrayAdd(contents_array, attr->contents);
       ret += HPDF_Dict_Add(page, "Contents", contents_array);
    }
 
-   ret += HPDF_Array_Add(contents_array, shared_stream);
+   ret += HpdfArrayAdd(contents_array, shared_stream);
 
    /* Continue with a new stream */
    ret += HPDF_Page_New_Content_Stream(page, NULL);

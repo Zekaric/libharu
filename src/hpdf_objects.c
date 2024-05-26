@@ -70,7 +70,7 @@ void
       break;
 
    case HPDF_OCLASS_ARRAY:
-      HPDF_Array_Free(obj);
+      HpdfArrayDestroy(obj);
       break;
 
    case HPDF_OCLASS_DICT:
@@ -160,7 +160,7 @@ HpdfStatus
       break;
    
    case HPDF_OCLASS_ARRAY:
-      ret = HPDF_Array_Write(obj, stream, e);
+      ret = HpdfArrayWrite(obj, stream, e);
       break;
    
    case HPDF_OCLASS_DICT:

@@ -134,15 +134,18 @@ HPDF_Dict_Add_FilterParams(HPDF_Dict    dict, HPDF_Dict filterParam)
    /* prepare params object */
    paramArray = HPDF_Dict_GetItem(dict, "DecodeParms",
       HPDF_OCLASS_ARRAY);
-   if (paramArray==NULL) {
-      paramArray = HPDF_Array_New(dict->mmgr);
+   if (paramArray == NULL)
+   {
+      paramArray = HpdfArrayCreate(dict->mmgr);
       if (!paramArray)
+      {
          return HPDF_Error_GetCode(dict->error);
+      }
 
       /* add parameters */
       HPDF_Dict_Add(dict, "DecodeParms", paramArray);
    }
-   HPDF_Array_Add(paramArray, filterParam);
+   HpdfArrayAdd(paramArray, filterParam);
    return HPDF_OK;
 }
 
@@ -189,7 +192,7 @@ HpdfStatus
 
          if (!array) 
          {
-            array = HPDF_Array_New(dict->mmgr);
+            array = HpdfArrayCreate(dict->mmgr);
             if (!array)
             {
                return HPDF_Error_GetCode(dict->error);
@@ -202,23 +205,23 @@ HpdfStatus
             }
          }
 
-         HPDF_Array_Clear(array);
+         HpdfArrayClear(array);
 
 #ifdef LIBHPDF_HAVE_ZLIB
          if (dict->filter & HPDF_STREAM_FILTER_FLATE_DECODE)
          {
-            HPDF_Array_AddName(array, "FlateDecode");
+            HpdfArrayAddName(array, "FlateDecode");
          }
 #endif /* LIBHPDF_HAVE_ZLIB */
 
          if (dict->filter & HPDF_STREAM_FILTER_DCT_DECODE)
          {
-            HPDF_Array_AddName(array, "DCTDecode");
+            HpdfArrayAddName(array, "DCTDecode");
          }
 
          if (dict->filter & HPDF_STREAM_FILTER_CCITT_DECODE)
          {
-            HPDF_Array_AddName(array, "CCITTFaxDecode");
+            HpdfArrayAddName(array, "CCITTFaxDecode");
          }
 
          if (dict->filterParams!=NULL)

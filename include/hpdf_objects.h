@@ -221,28 +221,35 @@ HpdfUInt        HpdfObjBinaryGetLength(HpdfObjBinary const * const obj);
 /*---------------------------------------------------------------------------*/
 /*----- HPDF_Array ----------------------------------------------------------*/
 
-typedef struct _HPDF_Array HpdfArray;
+typedef struct _HpdfArray HpdfArray;
 
-struct _HPDF_Array {
+struct _HpdfArray 
+{
    HpdfObjHeader    header;
    HpdfMemMgr        *mmgr;
    HpdfError         *error;
    HpdfList          *list;
 };
 
-HpdfArray *HPDF_Array_New(HpdfMemMgr * const mmgr);
-HpdfArray *HPDF_Box_Array_New(HpdfMemMgr * const mmgr, HPDF_Box   box);
-void HPDF_Array_Free(HpdfArray * const array);
-HpdfStatus HPDF_Array_Write(HpdfArray const * const array, HPDF_Stream  stream, HPDF_Encrypt e);
-HpdfStatus HPDF_Array_Add(HpdfArray * const array, void        *obj);
-HpdfStatus HPDF_Array_Insert(HpdfArray * const array, void        *target, void        *obj);
-void *HPDF_Array_GetItem(HpdfArray * const array, HpdfUInt    index, HpdfUInt16  obj_class);
-HpdfStatus HPDF_Array_AddNumber(HpdfArray * const array, HpdfInt32  value);
-HpdfStatus HPDF_Array_AddReal(HpdfArray * const array, HpdfReal   value);
-HpdfStatus HPDF_Array_AddNull(HpdfArray * const array);
-HpdfStatus HPDF_Array_AddName(HpdfArray * const array, char const *value);
-void HPDF_Array_Clear(HpdfArray * const array);
-HpdfUInt HPDF_Array_Items(HpdfArray const * const array);
+HpdfStatus   HpdfArrayAdd(       HpdfArray * const array, void       *obj);
+HpdfStatus   HpdfArrayAddName(   HpdfArray * const array, char const *value);
+HpdfStatus   HpdfArrayAddNull(   HpdfArray * const array);
+HpdfStatus   HpdfArrayAddNumber( HpdfArray * const array, HpdfInt32   value);
+HpdfStatus   HpdfArrayAddReal(   HpdfArray * const array, HpdfReal    value);
+
+void         HpdfArrayClear(     HpdfArray * const array);
+HpdfArray   *HpdfArrayCreate(    HpdfMemMgr * const mmgr);
+
+void         HpdfArrayDestroy(   HpdfArray * const array);
+
+HpdfUInt     HpdfArrayGetCount(  HpdfArray const * const array);
+void        *HpdfArrayGetItem(   HpdfArray * const array, HpdfUInt index, HpdfUInt16  obj_class);
+
+HpdfStatus   HpdfArrayInsert(    HpdfArray * const array, void *target, void *obj);
+
+HpdfStatus   HpdfArrayWrite(     HpdfArray const * const array, HPDF_Stream  stream, HPDF_Encrypt e);
+
+HpdfArray   *HpdfBoxArrayCreate( HpdfMemMgr * const mmgr, HPDF_Box box);
 
 /*---------------------------------------------------------------------------*/
 /*----- HPDF_Dict -----------------------------------------------------------*/
